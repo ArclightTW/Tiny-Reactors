@@ -1,6 +1,20 @@
 # Tiny-Reactors
 Build a tiny reactor... Or a massive one!  
 
+### Navigation
+
+* [About](#about)  
+* [Configuration](#configuration)  
+* [Notes](#notes)  
+
+### About
+
+Tiny Reactors is a Minecraft mod developed for Minecraft 1.12.2.  It is a power generation mod that can either be used passively or actively, depending on several configuration settings modifiable by the mod user.
+
+### Configuration
+
+### Notes
+
 __The new face of the Tiny Reactors project!__  
 
 _Where has all the content gone?_  
