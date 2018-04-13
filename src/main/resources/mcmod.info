@@ -1,0 +1,23 @@
+[
+	{
+		"modid"				: "tinyreactors",
+		"name"				: "Tiny Reactors",
+		"description"		: "Build a tiny reactor... Or a massive one!",
+		
+		"version"			: "1.0-SNAPSHOT",
+		"mcversion"			: "1.12.2",
+		
+		"url"				: "https://minecraft.curseforge.com/projects/tiny-reactors",
+		"updateUrl"			: "",
+		
+		"credits"			: "",
+		"authors"			: [
+			"ArclightTW"
+		],
+		
+		"logoFile"			: "assets/tinyreactors/logo.png",
+		
+		"screenshots"		: [],
+		"dependencies"		: []
+	}
+]
