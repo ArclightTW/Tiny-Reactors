@@ -2,7 +2,7 @@
 
 [![Github All Releases](https://img.shields.io/github/downloads/ArclightTW/Tiny-Reactors/total.svg?style=for-the-badge)](https://github.com/ArclightTW/Tiny-Reactors/releases)
 [![GitHub issues](https://img.shields.io/github/issues/ArclightTW/Tiny-Reactors.svg?style=for-the-badge)](https://github.com/ArclightTW/Tiny-Reactors/issues)
-[![Twitter Follow](https://img.shields.io/twitter/follow/ArclightTW.svg?style=for-the-badge&label=Follow%20ArclightTW)](https://twitter.com/intent/user?screen_name=ArclightTW)
+[![Twitter Follow](https://img.shields.io/twitter/follow/ArclightTW.svg?style=for-the-badge&label=Follow%20ArclightTW)](https://twitter.com/ArclightTW)
 
 # Tiny-Reactors
 ### Build a tiny reactor... Or a massive one!  
