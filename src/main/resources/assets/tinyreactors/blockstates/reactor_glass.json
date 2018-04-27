@@ -1,0 +1,28 @@
+{
+	"forge_marker"					: 1,
+	
+	"defaults"						: {
+		"model"						: "tinyreactors:reactor_glass"
+	},
+	
+	"variants"						: {
+		"normal"					: [{ }],
+		"inventory"					: [{ }],
+		
+		"structure"					: {
+			"true"					: {
+				"textures"			: {
+					"all"			: "tinyreactors:blocks/reactor_glass_structure",
+					"particle"		: "tinyreactors:blocks/reactor_glass_structure"
+				}
+			},
+			
+			"false"					: {
+				"textures"			: {
+					"all"			: "tinyreactors:blocks/reactor_glass",
+					"particle"		: "tinyreactors:blocks/reactor_glass"
+				}
+			}
+		}
+	}
+}

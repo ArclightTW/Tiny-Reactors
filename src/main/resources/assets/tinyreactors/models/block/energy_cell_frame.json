@@ -1,0 +1,26 @@
+{
+	"parent"			: "block/block",
+	
+	"textures"			: {
+		"all"			: "tinyreactors:blocks/energy_cell_frame",
+		"particle"		: "tinyreactors:blocks/energy_cell_frame"
+	},
+	
+	"elements"			: [
+		{
+			"from"		: [  0,  0,  0 ],
+			"to"		: [ 16, 16, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#all" },
+				"down"	: { "texture" : "#all" },
+				
+				"north"	: { "texture" : "#all" },
+				"south"	: { "texture" : "#all" },
+				
+				"east"	: { "texture" : "#all" },
+				"west"	: { "texture" : "#all" }
+			}
+		}
+	]
+}

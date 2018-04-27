@@ -1,0 +1,7 @@
+{
+	"parent"			: "tinyreactors:block/reactor_glass",
+	
+	"textures"			: {
+		"all"			: "tinyreactors:blocks/reactor_glass"
+	}
+}

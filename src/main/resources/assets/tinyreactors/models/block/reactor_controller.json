@@ -1,0 +1,27 @@
+{
+	"parent"			: "block/block",
+	
+	"textures"			: {
+		"front"			: "tinyreactors:blocks/reactor_controller",
+		"side"			: "tinyreactors:blocks/reactor_casing",
+		"particle"		: "tinyreactors:blocks/reactor_controller"
+	},
+	
+	"elements"			: [
+		{
+			"from"		: [  0,  0,  0 ],
+			"to"		: [ 16, 16, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#side" },
+				"down"	: { "texture" : "#side" },
+				
+				"north"	: { "texture" : "#front" },
+				"south"	: { "texture" : "#side" },
+				
+				"east"	: { "texture" : "#side" },
+				"west"	: { "texture" : "#side" }
+			}
+		}
+	]
+}

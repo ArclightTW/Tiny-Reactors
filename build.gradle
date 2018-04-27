@@ -1,0 +1,46 @@
+buildscript {
+	repositories {
+		jcenter()
+		maven { url = "http://files.minecraftforge.net/maven" }
+	}
+	
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+	}
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "${version}"
+group = "com.immersiveworks.tinyreactors"
+archivesBaseName = "tinyreactors"
+
+sourceCompatibility = targetCompatibility = 1.8
+compileJava {
+	sourceCompatibility = targetCompatibility = 1.8
+}
+
+minecraft {
+	runDir = "run"
+	mappings = "${mappingsversion}"
+	version = "${mcversion}-${forgeversion}"
+	
+	replaceIn "${modinfo}"
+	replace "@VERSION@", "${version}"
+	replace "@FORGE_VERSION", "${forgeversion}"
+}
+
+version = "${mcversion}-${modversion}"
+
+processResources {
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+	
+	from( sourceSets.main.resources.srcDirs ) {
+		include 'mcmod.info'
+		expand 'version' : project.version, 'mcversion' : project.minecraft.version
+	}
+	
+	from( sourceSets.main.resources.srcDirs ) {
+		exclude 'mcmod.info'
+	}
+}

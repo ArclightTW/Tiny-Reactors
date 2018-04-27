@@ -1,0 +1,42 @@
+{
+	"parent"			: "block/block",
+	
+	"textures"			: {
+		"up"			: "tinyreactors:blocks/energy_conduit_interior_small",
+		"edge"			: "tinyreactors:blocks/energy_conduit_edge",
+		
+		"particle"		: "tinyreactors:blocks/energy_conduit_edge"
+	},
+	
+	"elements"			: [
+		{
+			"from"		: [  6, 16,  6 ],
+			"to"		: [ 10, 16, 10 ],
+			"faces"		: { "up" : { "texture" : "#up" } }
+		},
+	
+		{
+			"from"		: [  6, 11,  6 ],
+			"to"		: [ 10, 16,  6 ],
+			"faces"		: { "north" : { "texture" : "#edge" } }
+		},
+		
+		{
+			"from"		: [  6, 11, 10 ],
+			"to"		: [ 10, 16, 10 ],
+			"faces"		: { "south" : { "texture" : "#edge" } }
+		},
+		
+		{
+			"from"		: [ 10, 11,  6 ],
+			"to"		: [ 10, 16, 10 ],
+			"faces"		: { "east" : { "texture" : "#edge" } }
+		},
+		
+		{
+			"from"		: [  6, 11,  6 ],
+			"to"		: [  6, 16, 10 ],
+			"faces"		: { "west" : { "texture" : "#edge" } }
+		}
+	]
+}

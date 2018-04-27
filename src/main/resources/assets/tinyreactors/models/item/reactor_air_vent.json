@@ -1,0 +1,7 @@
+{
+	"parent"			: "tinyreactors:block/reactor_air_vent",
+	
+	"textures"			: {
+		"top"			: "tinyreactors:blocks/reactor_air_vent"
+	}
+}

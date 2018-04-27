@@ -1,0 +1,8 @@
+{
+	"parent"			: "tinyreactors:block/reactor_transfer_port",
+	
+	"textures"			: {
+		"front"			: "tinyreactors:blocks/reactor_transfer_port_energy",
+		"particle"		: "tinyreactors:blocks/reactor_transfer_port_energy"
+	}
+}

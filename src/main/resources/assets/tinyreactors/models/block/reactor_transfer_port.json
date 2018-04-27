@@ -1,0 +1,25 @@
+{
+	"parent"			: "block/block",
+	
+	"textures"			: {
+		"side"			: "tinyreactors:blocks/reactor_casing"
+	},
+	
+	"elements"			: [
+		{
+			"from"		: [  0,  0,  0 ],
+			"to"		: [ 16, 16, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#side" },
+				"down"	: { "texture" : "#side" },
+				
+				"north"	: { "texture" : "#front" },
+				"south"	: { "texture" : "#side" },
+				
+				"east"	: { "texture" : "#side" },
+				"west"	: { "texture" : "#side" }
+			}
+		}
+	]
+}

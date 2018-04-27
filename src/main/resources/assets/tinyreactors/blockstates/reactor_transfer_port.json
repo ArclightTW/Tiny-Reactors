@@ -1,0 +1,42 @@
+{
+	"forge_marker"					: 1,
+	
+	"defaults"						: {
+		"model"						: "tinyreactors:reactor_transfer_port"
+	},
+	
+	"variants"						: {
+		"normal"					: [{ }],
+		"inventory"					: [{ }],
+		
+		"facing"					: {
+			"up"					: { },
+			"down"					: { },
+			"north"					: { },
+			"south"					: { "y" : 180 },
+			"east"					: { "y" : 90 },
+			"west"					: { "y" : -90 }
+		},
+		
+		"transfer"					: {
+			"energy"				: {
+				"textures"			: {
+					"front"			: "tinyreactors:blocks/reactor_transfer_port_energy",
+					"particle"		: "tinyreactors:blocks/reactor_transfer_port_energy"
+				}
+			},
+			"item"					: {
+				"textures"			: {
+					"front"			: "tinyreactors:blocks/reactor_transfer_port_item",
+					"particle"		: "tinyreactors:blocks/reactor_transfer_port_item"
+				}
+			},
+			"liquid"				: {
+				"textures"			: {
+					"front"			: "tinyreactors:blocks/reactor_transfer_port_liquid",
+					"particle"		: "tinyreactors:blocks/reactor_transfer_port_liquid"
+				}
+			}
+		}
+	}
+}

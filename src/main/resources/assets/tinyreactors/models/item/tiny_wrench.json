@@ -1,0 +1,7 @@
+{
+	"parent"			: "item/handheld",
+	
+	"textures"			: {
+		"layer0"		: "tinyreactors:items/tiny_wrench"
+	}
+}

@@ -1,0 +1,38 @@
+{
+	"forge_marker"					: 1,
+	
+	"defaults"						: {
+		"textures"					: {
+		},
+		
+		"model"						: "tinyreactors:energy_relay.obj"
+	},
+	
+	"variants"						: {
+		"normal"					: [{}],
+		
+		"inventory"					: [{
+			"transform"				: {
+				"firstperson"		: {
+					"translation"	: [ 0.8, 0, 0 ]
+				},
+				
+				"thirdperson"		: {
+				},
+				
+				"gui"				: {
+					"translation"	: [ 0.5, 0.2, 0 ]
+				}
+			}
+		}],
+		
+		"facing"		: {
+			"up"		: { "transform" : { "translation" : [ 0.5, 0, 0.5 ], "scale" : 1 } },
+			"down"		: { "transform" : { "translation" : [ 0.5, 0, -0.5 ], "scale" : 1, "rotation" : [ { "x" : 180 } ] } },
+			"north"		: { "transform" : { "translation" : [ 0.5, 0.5, 0 ], "scale" : 1, "rotation" : [ { "x" : -90 } ] } },
+			"south"		: { "transform" : { "translation" : [ 0.5, -0.5, 0 ], "scale" : 1, "rotation" : [ { "x" : 90 } ] } },
+			"east"		: { "transform" : { "translation" : [ 0, -0.5, -0.5 ], "scale" : 1, "rotation" : [ { "y" : 90 }, { "x" : 90 } ] } },
+			"west"		: { "transform" : { "translation" : [ 0, 0.5, -0.5 ], "scale" : 1, "rotation" : [ { "y" : 90 }, { "x" : -90 } ] } }
+		}
+	}
+}

@@ -1,0 +1,108 @@
+{
+	"multipart"			: [
+		{
+			"when"		: { "core" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_frame"
+			}
+		},
+		
+		{
+			"when"		: { "up" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_input"
+			}
+		},
+		
+		{
+			"when"		: { "up" : "false" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_output"
+			}
+		},
+		
+		{
+			"when"		: { "down" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_input",
+				"x"		: 180
+			}
+		},
+		
+		{
+			"when"		: { "down" : "false" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_output",
+				"x"		: 180
+			}
+		},
+		
+		{
+			"when"		: { "north" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_input",
+				"x"		: 90
+			}
+		},
+		
+		{
+			"when"		: { "north" : "false" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_output",
+				"x"		: 90
+			}
+		},
+		
+		{
+			"when"		: { "south" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_input",
+				"x"		: -90
+			}
+		},
+		
+		{
+			"when"		: { "south" : "false" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_output",
+				"x"		: -90
+			}
+		},
+		
+		{
+			"when"		: { "east" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_input",
+				"y"		: 90,
+				"x"		: 90
+			}
+		},
+		
+		{
+			"when"		: { "east" : "false" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_output",
+				"y"		: 90,
+				"x"		: 90
+			}
+		},
+		
+		{
+			"when"		: { "west" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_input",
+				"y"		: 90,
+				"x"		: -90
+			}
+		},
+		
+		{
+			"when"		: { "west" : "false" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_cell_output",
+				"y"		: 90,
+				"x"		: -90
+			}
+		}
+	]
+}

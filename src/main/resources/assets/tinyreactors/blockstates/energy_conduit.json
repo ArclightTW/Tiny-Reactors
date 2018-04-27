@@ -1,0 +1,59 @@
+{
+	"multipart"			: [
+		{
+			"when"		: { "core" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_core"
+			}
+		},
+		
+		{
+			"when"		: { "up" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_connector"
+			}
+		},
+		
+		{
+			"when"		: { "down" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_connector",
+				"x"		: 180
+			}
+		},
+		
+		{
+			"when"		: { "north" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_connector",
+				"x"		: 90
+			}
+		},
+		
+		{
+			"when"		: { "south" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_connector",
+				"x"		: -90
+			}
+		},
+		
+		{
+			"when"		: { "east" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_connector",
+				"y"		: 90,
+				"x"		: 90
+			}
+		},
+		
+		{
+			"when"		: { "west" : "true" },
+			"apply"		: {
+				"model"	: "tinyreactors:energy_conduit_connector",
+				"y"		: 90,
+				"x"		: -90
+			}
+		}
+	]
+}

@@ -1,0 +1,57 @@
+{
+	"parent"			: "block/block",
+	
+	"textures"			: {
+		"bottom"		: "tinyreactors:blocks/reactor_air_vent_bottom",
+		"side"			: "tinyreactors:blocks/reactor_casing",
+		"particle"		: "tinyreactors:blocks/reactor_casing"
+	},
+	
+	"elements"			: [
+		{
+			"from"		: [  0,  0,  0 ],
+			"to"		: [ 16, 16, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#top" },
+				"down"	: { "texture" : "#bottom" },
+				
+				"north"	: { "texture" : "#side" },
+				"south"	: { "texture" : "#side" },
+				
+				"east"	: { "texture" : "#side" },
+				"west"	: { "texture" : "#side" }
+			}
+		},
+		
+		{
+			"from"		: [ 16, 16, 16 ],
+			"to"		: [  0,  0,  0 ],
+			
+			"faces"		: {
+				"north"	: { "texture" : "#side" },
+				"south"	: { "texture" : "#side" },
+				"east"	: { "texture" : "#side" },
+				"west"	: { "texture" : "#side" }
+			}
+		},
+		
+		{
+			"from"		: [ 0, 15, 0 ],
+			"to"		: [ 16, 15, 16 ],
+			
+			"faces"		: {
+				"down"	: { "texture" : "#top_inside" }
+			}
+		},
+		
+		{
+			"from"		: [ 0, 1, 0 ],
+			"to"		: [ 16, 1, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#top" }
+			}
+		}
+	]
+}

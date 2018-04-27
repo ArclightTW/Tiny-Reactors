@@ -9,12 +9,14 @@ import com.immersiveworks.tinyreactors.common.TinyReactors;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 
 public class Registries {
 
 	public static Registry<Block> BLOCKS = new Registry<>();
 	public static Registry<Item> ITEMS = new Registry<>();
 	public static Registry<Entity> ENTITIES = new Registry<>();
+	public static Registry<IRecipe> RECIPES = new Registry<>();
 	
 	public static class Registry<T> {
 		
