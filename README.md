@@ -1,17 +1,22 @@
+
+
+[![Github All Releases](https://img.shields.io/github/downloads/ArclightTW/Tiny-Reactors/total.svg?style=for-the-badge)](https://github.com/ArclightTW/Tiny-Reactors/releases)
+[![GitHub issues](https://img.shields.io/github/issues/ArclightTW/Tiny-Reactors.svg?style=for-the-badge)](https://github.com/ArclightTW/Tiny-Reactors/issues)
+[![Twitter Follow](https://img.shields.io/twitter/follow/ArclightTW.svg?style=for-the-badge&label=Follow%20ArclightTW)](https://twitter.com/ArclightTW)
+
 # Tiny-Reactors
 ### Build a tiny reactor... Or a massive one!  
 
 ### Navigation
 
 * [About](#about)  
-* [Configuration](#configuration)  
 * [Notes](#notes)  
 
 ### About
 
 Tiny Reactors is a Minecraft mod developed for Minecraft 1.12.2.  It is a power generation mod that can either be used passively or actively, depending on several configuration settings modifiable by the mod user.
 
-### Configuration
+For additional information on new blocks, items and various mechanics, please review the new Wiki!
 
 ### Notes
 
