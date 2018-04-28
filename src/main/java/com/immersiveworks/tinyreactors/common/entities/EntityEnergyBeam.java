@@ -10,6 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityEnergyBeam extends EntityEnergyOrb {
 
@@ -27,6 +29,7 @@ public class EntityEnergyBeam extends EntityEnergyOrb {
 	}
 	
 	@Override
+	@SideOnly( Side.CLIENT )
 	public void particles() {
 		if( !PlayerHelper.hasWrenchVisibility( Minecraft.getMinecraft().player ) )
 			return;

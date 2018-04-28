@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class EntityEnergyOrb extends EntityThrowable {
 
@@ -101,6 +103,7 @@ public abstract class EntityEnergyOrb extends EntityThrowable {
 		posZ += motionZ;
 	}
 	
+	@SideOnly( Side.CLIENT )
 	protected abstract void particles();
 	
 	protected abstract void onDestinationInterrupted( EnumFacing side );

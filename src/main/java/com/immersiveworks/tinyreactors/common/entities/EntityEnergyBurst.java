@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityEnergyBurst extends EntityEnergyOrb {
 
@@ -44,6 +46,7 @@ public class EntityEnergyBurst extends EntityEnergyOrb {
 	}
 	
 	@Override
+	@SideOnly( Side.CLIENT )
 	public void particles() {
 		float percent = ( float )dataManager.get( ENERGY_START ) / ( float )dataManager.get( ENERGY_MAX );
 		

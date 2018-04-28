@@ -7,8 +7,6 @@ import com.immersiveworks.tinyreactors.common.proxy.IProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.b3d.B3DLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -29,9 +27,6 @@ public class TinyReactors {
 		proxy.onPreInit();
 		
 		CapabilityTemperature.register();
-		
-		B3DLoader.INSTANCE.addDomain( ID );
-		OBJLoader.INSTANCE.addDomain( ID );
 	}
 
 	public static final String ID			= "tinyreactors";

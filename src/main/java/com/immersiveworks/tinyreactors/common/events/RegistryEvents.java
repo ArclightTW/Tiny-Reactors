@@ -15,7 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber( modid = TinyReactors.ID )
@@ -29,10 +30,6 @@ public class RegistryEvents {
 			if( block.hasTileEntity( null ) )
 				GameRegistry.registerTileEntity( block.createTileEntity( null, null ).getClass(), name );
 		} );
-		
-		Registries.ENTITIES.registerAll( Entities.class, ( entity, name ) -> {
-			EntityRegistry.registerModEntity( new ResourceLocation( name ), entity.getClass(), name, Registries.ENTITIES.counter, TinyReactors.instance, 64, 10, true );
-		} );
 	}
 	
 	@SubscribeEvent
@@ -43,6 +40,13 @@ public class RegistryEvents {
 		
 		Registries.ITEMS.registerAll( Items.class, ( item, name ) -> {
 			event.getRegistry().register( item.setUnlocalizedName( name ).setRegistryName( name ) );
+		} );
+	}
+	
+	@SubscribeEvent
+	public static void onRegisterEntity( RegistryEvent.Register<EntityEntry> event ) {
+		Registries.ENTITIES.registerAll( Entities.class, ( entity, name ) -> {
+			event.getRegistry().register( EntityEntryBuilder.create().entity( entity.getClass() ).id( name, Registries.ENTITIES.counter ).name( name ).tracker( 64, 10, true ).build() );
 		} );
 	}
 	
