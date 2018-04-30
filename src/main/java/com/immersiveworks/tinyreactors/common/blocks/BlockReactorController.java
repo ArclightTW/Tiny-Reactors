@@ -85,8 +85,15 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 	
 	@Override
 	public String[] getWrenchOverlayInfo( World world, BlockPos pos, IBlockState state ) {
+		TileEntityReactorController controller = getTileEntity( world, pos );
+		StorageReactor structure = controller.getStructure();
+		
+		if( !structure.isValid() )
+			return new String[] { "Operational: false" };
+		
 		return new String[] {
-				String.format( "Operational: %s", getTileEntity( world, pos ).getStructure().isValid() )
+				"Operational: true",
+				String.format( "Temperature: %,.0f C / %,.0f C", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature() )
 		};
 	}
 	

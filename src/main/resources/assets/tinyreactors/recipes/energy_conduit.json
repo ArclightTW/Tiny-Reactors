@@ -1,0 +1,28 @@
+{
+	"type"							: "forge:ore_shaped",
+	"group"							: "tinyreactors:energy_conduit",
+	
+	"result"						: {
+		"item"						: "tinyreactors:energy_conduit",
+		"count"						: 8,
+		"data"						: 0
+	},
+	
+	"pattern"						: [
+		" I ",
+		"IRI",
+		" I "
+	],
+	
+	"key"							: {
+		"I"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "ingotIron"
+		}],
+		
+		"R"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "dustRedstone"
+		}]
+	}
+}

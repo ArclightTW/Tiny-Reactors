@@ -1,0 +1,28 @@
+{
+	"type"							: "forge:ore_shaped",
+	"group"							: "tinyreactors:reactor_casing",
+	
+	"result"						: {
+		"item"						: "tinyreactors:reactor_casing",
+		"count"						: 8,
+		"data"						: 0
+	},
+	
+	"pattern"						: [
+		"III",
+		"IRI",
+		"III"
+	],
+	
+	"key"							: {
+		"I"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "ingotIron"
+		}],
+		
+		"R"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "dustRedstone"
+		}]
+	}
+}

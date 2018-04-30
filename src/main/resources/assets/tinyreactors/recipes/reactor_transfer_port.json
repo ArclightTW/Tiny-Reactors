@@ -1,0 +1,31 @@
+{
+	"type"							: "forge:ore_shaped",
+	"group"							: "tinyreactors:reactor_transfer_port",
+	
+	"result"						: {
+		"item"						: "tinyreactors:reactor_transfer_port",
+		"count"						: 1,
+		"data"						: 0
+	},
+	
+	"pattern"						: [
+		"CCC",
+		"cRC",
+		"CCC"
+	],
+	
+	"key"							: {
+		"C"							: [{
+			"item"					: "tinyreactors:reactor_casing"
+		}],
+		
+		"R"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "dustRedstone"
+		}],
+		
+		"c"							: [{
+			"item"					: "tinyreactors:energy_conduit"
+		}]
+	}
+}

@@ -1,0 +1,49 @@
+{
+	"type"							: "forge:ore_shapeless",
+	"group"							: "tinyreactors:reactor_glass",
+	
+	"result"						: {
+		"item"						: "tinyreactors:reactor_glass",
+		"count"						: 7,
+		"data"						: 0
+	},
+	
+	"ingredients"					: [
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "dustRedstone"
+		},
+		{
+			"type"					: "forge:ore_dict",
+			"ore"					: "ingotIron"
+		}
+	]
+}
