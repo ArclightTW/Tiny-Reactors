@@ -2,56 +2,56 @@
 	"multipart"				: [
 		{
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_frame"
+				"model"		: "tinyreactors:air_vent/frame"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "empty" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_empty"
+				"model"		: "tinyreactors:air_vent/fan_empty"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "wood|stone|iron|gold|diamond", "operational" : "false" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_closed"
+				"model"		: "tinyreactors:air_vent/fan_closed"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "wood", "operational" : "true" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_wood"
+				"model"		: "tinyreactors:air_vent/fan_wood"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "stone", "operational" : "true" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_stone"
+				"model"		: "tinyreactors:air_vent/fan_stone"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "iron", "operational" : "true" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_iron"
+				"model"		: "tinyreactors:air_vent/fan_iron"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "gold", "operational" : "true" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_gold"
+				"model"		: "tinyreactors:air_vent/fan_gold"
 			}
 		},
 		
 		{
 			"when"			: { "vent" : "diamond", "operational" : "true" },
 			"apply"			: {
-				"model"		: "tinyreactors:reactor_air_vent_fan_diamond"
+				"model"		: "tinyreactors:air_vent/fan_diamond"
 			}
 		}
 	]

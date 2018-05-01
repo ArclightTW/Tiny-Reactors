@@ -1,8 +1,8 @@
 package com.immersiveworks.tinyreactors.common.tiles;
 
 import com.immersiveworks.tinyreactors.common.properties.EnumAirVent;
-import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
@@ -11,34 +11,51 @@ import net.minecraft.util.math.BlockPos;
 public class TileEntityReactorAirVent extends TileEntityTiny implements IReactorTile {
 
 	private EnumAirVent type;
-	private int oldTier;
 	private int tier;
 	private boolean operational;
 	
-	private BlockPos structurePos;
-	private StorageReactor structure;
+	private BlockPos controllerPos;
+	private TileEntityReactorController controller;
+	
+	private int burnTimer = -1;
 	
 	public TileEntityReactorAirVent() {
 		type = EnumAirVent.EMPTY;
-		oldTier = 0;
 		tier = 0;
 		operational = false;
+		
+		registerPulsar( () -> {
+			if( controller == null )
+				return;
+			
+			if( burnTimer == -1 && type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() >= type.getMeltingPoint() )
+				burnTimer = 400;
+			
+			if( burnTimer == -1 )
+				return;
+			
+			burnTimer--;
+			if( burnTimer > 0 )
+				return;
+			
+			// TODO: burn out Vent
+		} );
 	}
 	
 	@Override
-	public void onStructureValidated( StorageReactor reactor ) {
-		structure = reactor == null ? null : reactor.isValid() ? reactor : null;
-		structurePos = structure != null ? structure.origin : null;
+	public void onStructureValidated( TileEntityReactorController controller ) {
+		this.controller = controller;
+		this.controllerPos = this.controller != null ? this.controller.getPos() : null;
 		syncClient();
 	}
 	
 	@Override
 	public void onLoad() {
-		structure = null;
-		if( structurePos != null ) {
-			TileEntity tile = world.getTileEntity( structurePos );
+		controller = null;
+		if( controllerPos != null ) {
+			TileEntity tile = world.getTileEntity( controllerPos );
 			if( tile != null && tile instanceof TileEntityReactorController )
-				structure = ( ( TileEntityReactorController )tile ).getStructure();
+				controller = ( TileEntityReactorController )tile;
 		}
 		
 		syncClient();
@@ -50,11 +67,11 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		
 		NBTTagCompound airVent = new NBTTagCompound();
 		airVent.setInteger( "type", type.ordinal() );
-		airVent.setInteger( "oldTier", oldTier );
 		airVent.setInteger( "tier", tier );
 		airVent.setBoolean( "operational", operational );
-		if( structurePos != null )
-			airVent.setTag( "structure", NBTUtil.createPosTag( structurePos ) );
+		airVent.setInteger( "burnTimer", burnTimer );
+		if( controllerPos != null )
+			airVent.setTag( "controller", NBTUtil.createPosTag( controllerPos ) );
 		
 		compound.setTag( "airVent", airVent );		
 		return compound;
@@ -67,23 +84,36 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		
 		type = EnumAirVent.values()[ airVent.getInteger( "type" ) ];
 		tier = airVent.getInteger( "tier" );
-		oldTier = airVent.getInteger( "oldTier" );
 		operational = airVent.getBoolean( "operational" );
-		structurePos = airVent.hasKey( "structure" ) ? NBTUtil.getPosFromTag( airVent.getCompoundTag( "structure" ) ) : null;
+		burnTimer = airVent.getInteger( "burnTimer" );
+		controllerPos = airVent.hasKey( "controller" ) ? NBTUtil.getPosFromTag( airVent.getCompoundTag( "controller" ) ) : null;
 		
 		if( world != null )
 			onLoad();
 	}
 	
-	// TODO: Vent Type changed -- inform structure
+	public void ignite() {
+		burnTimer = 400;
+		world.setBlockState( pos.up(), Blocks.FIRE.getDefaultState() );
+	}
+	
 	public void setVentType( EnumAirVent type ) {
+		boolean op = operational;
+		if( controller != null && operational ) {
+			operational = false;
+			controller.getStructure().changeTemperatureCooldown( this );
+		}
+		operational = op;
+		
 		this.type = type;
-		syncClient();
+		tier = 10;
 		
 		if( this.type == EnumAirVent.EMPTY && operational )
 			toggleOperational();
-		else if( structure != null )
-			structure.changeTemperatureCooldown( this );
+		else if( controller != null && operational )
+			controller.getStructure().changeTemperatureCooldown( this );
+		
+		syncClient();
 	}
 	
 	public EnumAirVent getVentType() {
@@ -91,43 +121,45 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	}
 	
 	public void incrementTier() {
-		oldTier = tier;
+		boolean op = operational;
+		if( controller != null && operational ) {
+			operational = false;
+			controller.getStructure().changeTemperatureCooldown( this );
+		}
+		operational = op;
 		
-		tier += 1;
-		if( tier >= type.ordinal() )
-			tier = 0;
+		tier -= 1;
+		if( tier <= 0 )
+			tier = 10;
+		
+		if( controller != null && operational )
+			controller.getStructure().changeTemperatureCooldown( this );
 		
 		syncClient();
-		
-		if( structure != null )
-			structure.changeTemperatureCooldown( this );
 	}
 	
 	public int getTier() {
 		return tier;
 	}
 
-	public int getOldTier() {
-		return oldTier;
-	}
-	
 	public void toggleOperational() {
 		if( type == EnumAirVent.EMPTY )
 			return;
 		
-		operational = !operational;
-		syncClient();
+		operational = type == EnumAirVent.EMPTY ? false : !operational;
 		
-		if( structure != null )
-			structure.changeTemperatureCooldown( this );
+		if( controller != null )
+			controller.getStructure().changeTemperatureCooldown( this );
+		
+		syncClient();
 	}
 	
 	public boolean isOperational() {
 		return operational;
 	}
 	
-	public StorageReactor getStructure() {
-		return structure;
+	public TileEntityReactorController getController() {
+		return controller;
 	}
 	
 }

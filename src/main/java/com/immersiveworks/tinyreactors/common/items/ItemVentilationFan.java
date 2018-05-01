@@ -1,9 +1,12 @@
 package com.immersiveworks.tinyreactors.common.items;
 
+import java.util.List;
+
 import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.properties.EnumAirVent;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
 
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -16,11 +19,15 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-// TODO: Apply same textures as BlockReactorAirVent
 public class ItemVentilationFan extends ItemTiny {
 
 	public ItemVentilationFan() {
 		setHasSubtypes( true );
+	}
+	
+	@Override
+	public void addInformation( ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag ) {
+		tooltip.add( String.format( "Melting Point: %,.0f C", EnumAirVent.FANS[ stack.getItemDamage() ].getMeltingPoint() ) );
 	}
 
 	@Override

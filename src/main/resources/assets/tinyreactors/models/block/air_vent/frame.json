@@ -2,7 +2,7 @@
 	"parent"			: "block/block",
 	
 	"textures"			: {
-		"bottom"		: "tinyreactors:blocks/reactor_air_vent_bottom",
+		"bottom"		: "tinyreactors:blocks/air_vent/bottom",
 		"side"			: "tinyreactors:blocks/reactor_casing",
 		"particle"		: "tinyreactors:blocks/reactor_casing"
 	},

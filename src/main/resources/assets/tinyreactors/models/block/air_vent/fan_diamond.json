@@ -2,7 +2,7 @@
 	"parent"			: "block/block",
 	
 	"textures"			: {
-		"top"			: "tinyreactors:blocks/reactor_air_vent_iron"
+		"top"			: "tinyreactors:blocks/air_vent/diamond_open"
 	},
 	
 	"elements"			: [

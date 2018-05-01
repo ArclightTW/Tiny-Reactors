@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
+import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.properties.EnumAirVent;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
 
@@ -13,6 +14,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +22,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-// TODO: Make texture look likes it's spinning, not spazzing
 public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent> implements IEnergyNetworkBlockRenderer {
 
 	private static final PropertyBool OPERATIONAL = PropertyBool.create( "operational" );
@@ -72,30 +73,48 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 	
 	@Override
 	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack ) {
-		getTileEntity( world, pos ).incrementTier();
-		return true;
+		if( player.isSneaking() ) {
+			getTileEntity( world, pos ).incrementTier();
+			return true;
+		}
+		
+		return false;
 	}
 	
 	@Override
 	public String[] getWrenchOverlayInfo( World world, BlockPos pos, IBlockState state ) {
+		if( !Configs.REACTOR_TEMPERATURE || !Configs.REACTOR_AIR_VENT )
+			return new String[] { TextFormatting.RED + "No operational usage" };
+			
 		TileEntityReactorAirVent airVent = getTileEntity( world, pos );
 		if( airVent.getVentType() == EnumAirVent.EMPTY )
 			return new String[] { "Missing Vent Component" };
 		
 		return new String[] {
 				String.format( "Component: %s", airVent.getVentType() ),
-				String.format( "Operational: %s", airVent.isOperational() )
+				String.format( "Operational: %s", airVent.isOperational() ),
+				String.format( "Rate: %,.2f C / %,.1f C", ( airVent.getTier() / 10F ) * airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT, airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT ),
+				String.format( "Melting Point: %,.0f C", airVent.getVentType().getMeltingPoint() )
 		};
 	}
 	
 	@Override
 	public boolean onBlockActivated( World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing facing, float hitX, float hitY, float hitZ ) {
-		if( !world.isRemote && player.isSneaking() ) {
+		if( !world.isRemote ) {
 			getTileEntity( world, pos ).toggleOperational();
 			return true;
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public void breakBlock( World world, BlockPos pos, IBlockState state ) {
+		TileEntityReactorAirVent airVent = getTileEntity( world, pos );
+		if( airVent.getVentType() != EnumAirVent.EMPTY )
+			InventoryHelper.spawnItemStack( world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack( Items.VENTILATION_FAN, 1, airVent.getVentType().ordinal() - 1 ) );
+		
+		super.breakBlock( world, pos, state );
 	}
 	
 }

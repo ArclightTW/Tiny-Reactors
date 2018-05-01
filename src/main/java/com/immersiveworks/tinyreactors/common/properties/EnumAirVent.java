@@ -5,12 +5,12 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumAirVent implements IStringSerializable {
 
-	EMPTY,
-	WOOD,
-	STONE,
-	IRON,
-	GOLD,
-	DIAMOND {
+	EMPTY( 0 ),
+	WOOD( 200 ),
+	STONE( 350 ),
+	IRON( 816 ),
+	GOLD( 1094 ),
+	DIAMOND( 3316 ) {
 		@Override
 		public EnumAirVent next() {
 			return EMPTY;
@@ -19,7 +19,10 @@ public enum EnumAirVent implements IStringSerializable {
 	
 	public static EnumAirVent[] FANS = { WOOD, STONE, IRON, GOLD, DIAMOND };
 	
-	private EnumAirVent() {
+	private float meltingPoint;
+	
+	private EnumAirVent( float meltingPoint ) {
+		this.meltingPoint = meltingPoint;
 	}
 	
 	@Override
@@ -29,6 +32,10 @@ public enum EnumAirVent implements IStringSerializable {
 	
 	public EnumAirVent next() {
 		return values()[ ordinal() + 1 ];
+	}
+	
+	public float getMeltingPoint() {
+		return meltingPoint;
 	}
 	
 	public static PropertyEnum<EnumAirVent> PROPERTY = PropertyEnum.create( "vent", EnumAirVent.class );

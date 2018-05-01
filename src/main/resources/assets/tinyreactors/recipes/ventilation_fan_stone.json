@@ -1,0 +1,34 @@
+{
+	"type"							: "forge:ore_shaped",
+	"group"							: "tinyreactors:ventilation_fan",
+	
+	"result"						: {
+		"item"						: "tinyreactors:ventilation_fan",
+		"count"						: 1,
+		"data"						: 1
+	},
+	
+	"pattern"						: [
+		"C C",
+		" I ",
+		"C C"
+	],
+	
+	"key"							: {
+		"C"							: [
+			{
+				"type"				: "forge:ore_dict",
+				"ore"				: "stone"
+			},
+			{
+				"type"				: "forge:ore_dict",
+				"ore"				: "cobblestone"
+			}
+		],
+		
+		"I"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "ingotIron"
+		}]
+	}
+}
