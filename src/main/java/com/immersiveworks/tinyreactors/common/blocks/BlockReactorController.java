@@ -2,6 +2,7 @@ package com.immersiveworks.tinyreactors.common.blocks;
 
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork.Priority;
+import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 
@@ -10,35 +11,19 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class BlockReactorController extends BlockTinyTile<TileEntityReactorController> implements IEnergyNetworkBlockRenderer {
 
 	public BlockReactorController() {
 		super( Material.IRON, TileEntityReactorController.class );
-		
 		setDefaultState( blockState.getBaseState().withProperty( BlockDirectional.FACING, EnumFacing.NORTH ) );
-	}
-	
-	@Override
-	public boolean onBlockActivated( World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing facing, float hitX, float hitY, float hitZ ) {
-		if( !world.isRemote ) {
-			StorageReactor reactor = getTileEntity( world, pos ).getStructure();
-			System.out.println(
-					"Energy: " + reactor.getEnergyGain() + " RF/tick " +
-					"(Multiplier: " + reactor.getEnergyMultiplier() + "x); " +
-					"Temperature: " + reactor.getTemperature().getCurrentTemperature() + "C / " + reactor.getTemperature().getMaximumTemperature() + "C " +
-					"(Gain: " + reactor.getTemperatureGain() + "C/tick / Cooldown: " + reactor.getTemperatureCooldown() + "C/tick) "
-				);
-		}
-		
-		return super.onBlockActivated( world, pos, state, player, facing, hitX, hitY, hitZ);
 	}
 	
 	@Override
@@ -91,9 +76,18 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 		if( !structure.isValid() )
 			return new String[] { "Operational: false" };
 		
+		if( !Configs.REACTOR_TEMPERATURE )
+			return new String[] { "Operational: true" };
+		
+		float change = structure.getTemperatureGain() - structure.getTemperatureCooldown();
+		String changeString = String.format( "Change: %s%,.2f C", change > 0 ? TextFormatting.RED + "+" : TextFormatting.GREEN, change );
+		if( change > -0.001F && change < 0.001F )
+			changeString = "Change: 0.00 C";
+		
 		return new String[] {
 				"Operational: true",
-				String.format( "Temperature: %,.0f C / %,.0f C", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature() )
+				String.format( "Temperature: %,.0f C / %,.0f C", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature() ),
+				changeString
 		};
 	}
 	
