@@ -28,7 +28,7 @@ public class BlockReactorGlass extends BlockTinyTile<TileEntityReactorGlass> {
 	
 	@Override
 	public IBlockState getActualState( IBlockState state, IBlockAccess world, BlockPos pos ) {
-		return state.withProperty( STRUCTURE, getTileEntity( world, pos ).getStructure() != null );
+		return state.withProperty( STRUCTURE, getTileEntity( world, pos ).getController() != null );
 	}
 	
 	@Override
@@ -42,10 +42,10 @@ public class BlockReactorGlass extends BlockTinyTile<TileEntityReactorGlass> {
 			return;
 		
 		TileEntityReactorGlass glass = getTileEntity( world, pos );
-		if( glass.getStructure() == null )
+		if( glass.getController() == null )
 			return;
 		
-		BlockPos p = glass.getStructure().origin;
+		BlockPos p = glass.getController().getPos();
 		if( removed.getX() == p.getX() && removed.getY() == p.getY() && removed.getZ() == p.getZ() )
 			glass.onStructureValidated( null );
 	}

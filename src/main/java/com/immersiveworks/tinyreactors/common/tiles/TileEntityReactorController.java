@@ -9,7 +9,7 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 	private StorageReactor structure;
 	
 	public TileEntityReactorController() {
-		structure = new StorageReactor();
+		structure = new StorageReactor( this );
 		structure.setValidationListener( () -> {
 			syncClient();
 		} );
@@ -25,7 +25,7 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 	}
 	
 	@Override
-	public void onStructureValidated( StorageReactor storage ) {
+	public void onStructureValidated( TileEntityReactorController controller ) {
 	}
 	
 	@Override

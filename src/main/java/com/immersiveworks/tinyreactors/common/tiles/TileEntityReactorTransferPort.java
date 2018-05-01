@@ -4,7 +4,6 @@ import com.immersiveworks.tinyreactors.api.item.IItemHandlerNBT;
 import com.immersiveworks.tinyreactors.api.item.ItemHandlerNBT;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.properties.EnumTransferPort;
-import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
 import com.immersiveworks.tinyreactors.common.util.Reactants;
 
 import net.minecraft.block.BlockDirectional;
@@ -29,8 +28,8 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 	private int counter;
 	private EnumTransferPort mode;
 	
-	private BlockPos structurePos;
-	private StorageReactor structure;
+	private BlockPos controllerPos;
+	private TileEntityReactorController controller;
 		
 	public TileEntityReactorTransferPort() {
 		super( 1000000, 1, 1024 );
@@ -78,7 +77,7 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 			}
 			
 			try {
-				if( slotToUse == -1 || maxRate <= 0 || structure == null || !structure.hasAvailableSpace() ) {
+				if( slotToUse == -1 || maxRate <= 0 || controller == null || !controller.getStructure().hasAvailableSpace() ) {
 					counter = 0;
 					return;
 				}
@@ -99,7 +98,7 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 			powerDemand = 0;
 			
 			energy.extractEnergy( Configs.TRANSFER_ITEM_ENERGY_USAGE, false );
-			structure.insertBlock( world, item.extractItem( slotToUse, 1, false ) );
+			controller.getStructure().insertBlock( world, item.extractItem( slotToUse, 1, false ) );
 			syncClient();
 			
 			break;
@@ -120,21 +119,21 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 	}
 	
 	@Override
-	public void onStructureValidated( StorageReactor reactor ) {
-		structure = reactor == null ? null : reactor.isValid() ? reactor : null;
-		structurePos = structure != null ? structure.origin : null;
+	public void onStructureValidated( TileEntityReactorController controller ) {
+		this.controller = controller;
+		this.controllerPos = this.controller != null ? this.controller.getPos() : null;
 		syncClient();
 	}
 	
 	@Override
 	public void onLoad() {
-		structure = null;
-		if( structurePos == null )
+		controller = null;
+		if( controllerPos == null )
 			return;
 		
-		TileEntity tile = world.getTileEntity( structurePos );
+		TileEntity tile = world.getTileEntity( controllerPos );
 		if( tile != null && tile instanceof TileEntityReactorController )
-			structure = ( ( TileEntityReactorController )tile ).getStructure();
+			controller = ( TileEntityReactorController )tile;
 	}
 	
 	@Override
@@ -148,7 +147,7 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 		transferPort.setInteger( "counter", counter );
 		transferPort.setString( "mode", mode.name() );
 		
-		if( structurePos != null ) transferPort.setTag( "structure", NBTUtil.createPosTag( structurePos ) );
+		if( controllerPos != null ) transferPort.setTag( "controller", NBTUtil.createPosTag( controllerPos ) );
 		
 		compound.setTag( "transferPort", transferPort );
 		return compound;
@@ -165,7 +164,7 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 		counter = transferPort.getInteger( "counter" );
 		mode = EnumTransferPort.valueOf( transferPort.getString( "mode" ) );
 		
-		structurePos = transferPort.hasKey( "structure" ) ? NBTUtil.getPosFromTag( transferPort.getCompoundTag( "structure" ) ) : null;
+		controllerPos = transferPort.hasKey( "controller" ) ? NBTUtil.getPosFromTag( transferPort.getCompoundTag( "controller" ) ) : null;
 		if( world != null )
 			onLoad();
 	}
@@ -235,7 +234,7 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 			if( powerDemand > 0 )
 				return "Charging";
 			
-			if( structure != null && !structure.hasAvailableSpace() )
+			if( controller != null && !controller.getStructure().hasAvailableSpace() )
 				return "Reactor Full";
 			
 			for( int i = 0; i < item.getSlots(); i++ ) {

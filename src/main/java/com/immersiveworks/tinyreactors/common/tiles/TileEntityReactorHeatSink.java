@@ -1,7 +1,5 @@
 package com.immersiveworks.tinyreactors.common.tiles;
 
-import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
-
 import net.minecraft.nbt.NBTTagCompound;
 
 public class TileEntityReactorHeatSink extends TileEntityTiny implements IReactorTile {
@@ -10,7 +8,7 @@ public class TileEntityReactorHeatSink extends TileEntityTiny implements IReacto
 	}
 	
 	@Override
-	public void onStructureValidated( StorageReactor storage ) {
+	public void onStructureValidated( TileEntityReactorController controller ) {
 	}
 	
 	@Override

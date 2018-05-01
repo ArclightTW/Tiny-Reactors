@@ -14,6 +14,7 @@ import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.temperature.TemperatureStorageCritical;
 import com.immersiveworks.tinyreactors.common.tiles.IReactorTile;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
+import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorTransferPort;
 import com.immersiveworks.tinyreactors.common.util.Reactants;
 
@@ -31,6 +32,8 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 public class StorageReactor extends StorageMultiblock {
 	
+	private TileEntityReactorController controller;
+	
 	private ITemperatureStorage temperature;
 	private float temperatureGain;
 	private float temperatureCooldown;
@@ -43,7 +46,9 @@ public class StorageReactor extends StorageMultiblock {
 	
 	private int countController;
 	
-	public StorageReactor() {
+	public StorageReactor( TileEntityReactorController controller ) {
+		this.controller = controller;
+		
 		temperature = new TemperatureStorageCritical( 1000, false, true );
 		energy = new EnergyStorageNBT( 1000000 );
 		
@@ -135,7 +140,7 @@ public class StorageReactor extends StorageMultiblock {
 			try {
 				TileEntity tile = world.getTileEntity( structure.get( i ) );
 				if(  tile instanceof IReactorTile )
-					( ( IReactorTile )tile ).onStructureValidated( this );
+					( ( IReactorTile )tile ).onStructureValidated( controller );
 			}
 			catch( Exception e ) {
 			}
@@ -172,9 +177,11 @@ public class StorageReactor extends StorageMultiblock {
 		if( state.getBlock() == Blocks.REACTOR_HEAT_SINK )
 			temperature.setMaximumTemperature( temperature.getMaximumTemperature() + ( Configs.REACTOR_TEMPERATURE && Configs.REACTOR_HEAT_SINK ? Configs.REACTOR_HEAT_SINK_AMOUNT : 0 ) );
 		
-		if( state.getBlock() == Blocks.REACTOR_AIR_VENT )
-			if( ( ( BlockReactorAirVent )state.getBlock() ).getTileEntity( world, pos ).isOperational() )
-				temperatureCooldown += Configs.REACTOR_TEMPERATURE && Configs.REACTOR_AIR_VENT ? Configs.REACTOR_AIR_VENT_AMOUNT : 0;
+		if( state.getBlock() == Blocks.REACTOR_AIR_VENT ) {
+			TileEntityReactorAirVent vent = ( ( BlockReactorAirVent )state.getBlock() ).getTileEntity( world, pos );
+			if( vent.isOperational() )
+				temperatureCooldown += Configs.REACTOR_TEMPERATURE && Configs.REACTOR_AIR_VENT ? ( Configs.REACTOR_AIR_VENT_AMOUNT * vent.getVentType().ordinal() * ( vent.getTier() / 10F ) ) : 0;
+		}
 	}
 	
 	@Override
@@ -251,13 +258,13 @@ public class StorageReactor extends StorageMultiblock {
 		if( !Configs.REACTOR_TEMPERATURE || !Configs.REACTOR_AIR_VENT )
 			return;
 		
-		if( airVent.getOldTier() != airVent.getTier() && airVent.isOperational() )
-			temperatureCooldown -= Configs.REACTOR_AIR_VENT_AMOUNT * ( airVent.getOldTier() + 1 );
-		
 		if( airVent.isOperational() )
-			temperatureCooldown += Configs.REACTOR_AIR_VENT_AMOUNT * ( airVent.getTier() + 1 );
+			temperatureCooldown += Configs.REACTOR_AIR_VENT_AMOUNT * airVent.getVentType().ordinal() * ( airVent.getTier() / 10F );
 		else
-			temperatureCooldown -= Configs.REACTOR_AIR_VENT_AMOUNT * ( airVent.getTier() + 1 );
+			temperatureCooldown -= Configs.REACTOR_AIR_VENT_AMOUNT * airVent.getVentType().ordinal() * ( airVent.getTier() / 10F );
+
+		if( runnable != null )
+			runnable.run();
 	}
 	
 	public float getTemperatureCooldown() {

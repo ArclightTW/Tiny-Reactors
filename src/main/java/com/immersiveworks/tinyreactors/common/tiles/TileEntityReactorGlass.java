@@ -1,7 +1,5 @@
 package com.immersiveworks.tinyreactors.common.tiles;
 
-import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
@@ -9,23 +7,23 @@ import net.minecraft.util.math.BlockPos;
 
 public class TileEntityReactorGlass extends TileEntityTiny implements IReactorTile {
 
-	private BlockPos structurePos;
-	private StorageReactor structure;
+	private BlockPos controllerPos;
+	private TileEntityReactorController controller;
 	
 	@Override
-	public void onStructureValidated( StorageReactor reactor ) {
-		structure = reactor == null ? null : reactor.isValid() ? reactor : null;
-		structurePos = structure != null ? structure.origin : null;
+	public void onStructureValidated( TileEntityReactorController controller ) {
+		this.controller = controller;
+		this.controllerPos = this.controller != null ? this.controller.getPos() : null;
 		syncClient();
 	}
 	
 	@Override
 	public void onLoad() {
-		structure = null;
-		if( structurePos != null ) {
-			TileEntity tile = world.getTileEntity( structurePos );
+		controller = null;
+		if( controllerPos != null ) {
+			TileEntity tile = world.getTileEntity( controllerPos );
 			if( tile != null && tile instanceof TileEntityReactorController )
-				structure = ( ( TileEntityReactorController )tile ).getStructure();
+				controller = ( TileEntityReactorController )tile;
 		}
 		
 		syncClient();
@@ -36,7 +34,7 @@ public class TileEntityReactorGlass extends TileEntityTiny implements IReactorTi
 		super.writeToNBT( compound );
 		
 		NBTTagCompound glass = new NBTTagCompound();
-		if( structurePos != null ) glass.setTag( "structure", NBTUtil.createPosTag( structurePos ) );
+		if( controllerPos != null ) glass.setTag( "controller", NBTUtil.createPosTag( controllerPos ) );
 		
 		compound.setTag( "glass", glass );		
 		return compound;
@@ -47,13 +45,13 @@ public class TileEntityReactorGlass extends TileEntityTiny implements IReactorTi
 		super.readFromNBT( compound );
 		NBTTagCompound glass = compound.getCompoundTag( "glass" );
 		
-		structurePos = glass.hasKey( "structure" ) ? NBTUtil.getPosFromTag( glass.getCompoundTag( "structure" ) ) : null;
+		controllerPos = glass.hasKey( "controller" ) ? NBTUtil.getPosFromTag( glass.getCompoundTag( "controller" ) ) : null;
 		if( world != null )
 			onLoad();
 	}
 	
-	public StorageReactor getStructure() {
-		return structure;
+	public TileEntityReactorController getController() {
+		return controller;
 	}
 	
 }
