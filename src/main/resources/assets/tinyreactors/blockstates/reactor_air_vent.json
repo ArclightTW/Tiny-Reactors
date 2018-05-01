@@ -1,28 +1,58 @@
 {
-	"forge_marker"					: 1,
-	
-	"defaults"						: {
-		"model"						: "tinyreactors:reactor_air_vent"
-	},
-	
-	"variants"						: {
-		"normal"					: [{ }],
-		"inventory"					: [{ }],
+	"multipart"				: [
+		{
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_frame"
+			}
+		},
 		
-		"operational"				: {
-			"true"					: {
-				"textures"			: {
-					"top"			: "tinyreactors:blocks/reactor_air_vent_open",
-					"top_inside"	: "tinyreactors:blocks/reactor_air_vent_open"
-				}
-			},
-			
-			"false"					: {
-				"textures"			: {
-					"top"			: "tinyreactors:blocks/reactor_air_vent",
-					"top_inside"	: "tinyreactors:blocks/reactor_air_vent"
-				}
+		{
+			"when"			: { "vent" : "empty" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_empty"
+			}
+		},
+		
+		{
+			"when"			: { "vent" : "wood|stone|iron|gold|diamond", "operational" : "false" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_closed"
+			}
+		},
+		
+		{
+			"when"			: { "vent" : "wood", "operational" : "true" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_wood"
+			}
+		},
+		
+		{
+			"when"			: { "vent" : "stone", "operational" : "true" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_stone"
+			}
+		},
+		
+		{
+			"when"			: { "vent" : "iron", "operational" : "true" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_iron"
+			}
+		},
+		
+		{
+			"when"			: { "vent" : "gold", "operational" : "true" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_gold"
+			}
+		},
+		
+		{
+			"when"			: { "vent" : "diamond", "operational" : "true" },
+			"apply"			: {
+				"model"		: "tinyreactors:reactor_air_vent_fan_diamond"
 			}
 		}
-	}
+	]
 }

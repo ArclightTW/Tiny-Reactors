@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
+import com.immersiveworks.tinyreactors.common.properties.EnumAirVent;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
 
 import net.minecraft.block.material.Material;
@@ -19,25 +20,28 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+// TODO: Make texture look likes it's spinning, not spazzing
 public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent> implements IEnergyNetworkBlockRenderer {
 
 	private static final PropertyBool OPERATIONAL = PropertyBool.create( "operational" );
 	
 	public BlockReactorAirVent() {
 		super( Material.IRON, TileEntityReactorAirVent.class );
-		setDefaultState( blockState.getBaseState().withProperty( OPERATIONAL, false ) );
+		setDefaultState( blockState.getBaseState().withProperty( OPERATIONAL, false ).withProperty( EnumAirVent.PROPERTY, EnumAirVent.EMPTY ) );
 	}
 	
 	@Override
 	public IProperty<?>[] getListedProperties() {
 		return new IProperty<?>[] {
-			OPERATIONAL
+			OPERATIONAL,
+			EnumAirVent.PROPERTY
 		};
 	}
 	
 	@Override
 	public IBlockState getActualState( IBlockState state, IBlockAccess world, BlockPos pos ) {
-		return state.withProperty( OPERATIONAL, getTileEntity( world, pos ).isOperational() );
+		TileEntityReactorAirVent airVent = getTileEntity( world, pos );
+		return state.withProperty( OPERATIONAL, airVent.isOperational() ).withProperty( EnumAirVent.PROPERTY, airVent.getVentType() );
 	}
 	
 	@Override
@@ -67,9 +71,20 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 	}
 	
 	@Override
+	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack ) {
+		getTileEntity( world, pos ).incrementTier();
+		return true;
+	}
+	
+	@Override
 	public String[] getWrenchOverlayInfo( World world, BlockPos pos, IBlockState state ) {
+		TileEntityReactorAirVent airVent = getTileEntity( world, pos );
+		if( airVent.getVentType() == EnumAirVent.EMPTY )
+			return new String[] { "Missing Vent Component" };
+		
 		return new String[] {
-				String.format( "Operational: %s", getTileEntity( world, pos ).isOperational() )
+				String.format( "Component: %s", airVent.getVentType() ),
+				String.format( "Operational: %s", airVent.isOperational() )
 		};
 	}
 	

@@ -251,10 +251,13 @@ public class StorageReactor extends StorageMultiblock {
 		if( !Configs.REACTOR_TEMPERATURE || !Configs.REACTOR_AIR_VENT )
 			return;
 		
+		if( airVent.getOldTier() != airVent.getTier() && airVent.isOperational() )
+			temperatureCooldown -= Configs.REACTOR_AIR_VENT_AMOUNT * ( airVent.getOldTier() + 1 );
+		
 		if( airVent.isOperational() )
-			temperatureCooldown += Configs.REACTOR_AIR_VENT_AMOUNT;
+			temperatureCooldown += Configs.REACTOR_AIR_VENT_AMOUNT * ( airVent.getTier() + 1 );
 		else
-			temperatureCooldown -= Configs.REACTOR_AIR_VENT_AMOUNT;
+			temperatureCooldown -= Configs.REACTOR_AIR_VENT_AMOUNT * ( airVent.getTier() + 1 );
 	}
 	
 	public float getTemperatureCooldown() {

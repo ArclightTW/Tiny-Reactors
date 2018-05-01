@@ -15,6 +15,12 @@ tile.tinyreactors:reactor_glass.name=Reactor Glass
 
 item.tinyreactors:tiny_wrench.name=Tiny Wrench
 
+item.tinyreactors:ventilation_fan_wood.name=Ventilation Fan (Wood)
+item.tinyreactors:ventilation_fan_stone.name=Ventilation Fan (Stone)
+item.tinyreactors:ventilation_fan_iron.name=Ventilation Fan (Iron)
+item.tinyreactors:ventilation_fan_gold.name=Ventilation Fan (Gold)
+item.tinyreactors:ventilation_fan_diamond.name=Ventilation Fan (Diamond)
+
 # Misc
 
 itemGroup.tinyreactors=Tiny Reactors

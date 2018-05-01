@@ -13,7 +13,6 @@
 			"to"		: [ 16, 16, 16 ],
 			
 			"faces"		: {
-				"up"	: { "texture" : "#top" },
 				"down"	: { "texture" : "#bottom" },
 				
 				"north"	: { "texture" : "#side" },
@@ -35,22 +34,13 @@
 				"west"	: { "texture" : "#side" }
 			}
 		},
-		
-		{
-			"from"		: [ 0, 15, 0 ],
-			"to"		: [ 16, 15, 16 ],
-			
-			"faces"		: {
-				"down"	: { "texture" : "#top_inside" }
-			}
-		},
-		
+				
 		{
 			"from"		: [ 0, 1, 0 ],
 			"to"		: [ 16, 1, 16 ],
 			
 			"faces"		: {
-				"up"	: { "texture" : "#top" }
+				"up"	: { "texture" : "#bottom" }
 			}
 		}
 	]

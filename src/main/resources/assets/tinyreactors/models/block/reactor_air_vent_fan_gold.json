@@ -1,0 +1,27 @@
+{
+	"parent"			: "block/block",
+	
+	"textures"			: {
+		"top"			: "tinyreactors:blocks/reactor_air_vent_gold"
+	},
+	
+	"elements"			: [
+		{
+			"from"		: [  0,  0,  0 ],
+			"to"		: [ 16, 16, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#top" }
+			}
+		},
+		
+		{
+			"from"		: [ 0, 15, 0 ],
+			"to"		: [ 16, 15, 16 ],
+			
+			"faces"		: {
+				"down"	: { "texture" : "#top" }
+			}
+		}
+	]
+}
