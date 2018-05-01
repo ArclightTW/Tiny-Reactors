@@ -6,6 +6,9 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
+import com.immersiveworks.tinyreactors.common.blocks.BlockEnergyConduit;
+import com.immersiveworks.tinyreactors.common.blocks.BlockReactorCasing;
+import com.immersiveworks.tinyreactors.common.blocks.BlockReactorHeatSink;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +34,7 @@ public class EnergyNetwork extends WorldSavedData {
 		super( id );
 
 		loadedComponents = Lists.newLinkedList();
-		components = Maps.newHashMap();
+		components = Maps.newConcurrentMap();
 		
 		for( Priority priority : Priority.VALUES )
 			components.put( priority, Maps.newHashMap() );
@@ -75,14 +78,18 @@ public class EnergyNetwork extends WorldSavedData {
 	public void addComponent( World world, BlockPos pos, IEnergyNetworkBlock component ) { addComponent( world, pos, component, true ); }
 	
 	public void addComponent( World world, BlockPos pos, IEnergyNetworkBlock component, boolean refresh ) {
-		Map<BlockPos, IEnergyNetworkBlock> existing;
-		if( components.containsKey( component.getEnergyNetworkPriority() ) )
-			existing = components.get( component.getEnergyNetworkPriority() );
-		else
-			existing = Maps.newHashMap();
-		
-		existing.put( pos, component );
-		components.put( component.getEnergyNetworkPriority(), existing );
+		if( !( component instanceof BlockReactorHeatSink ) || !( component instanceof BlockReactorCasing ) || !( component instanceof BlockEnergyConduit ) ) {
+			Map<BlockPos, IEnergyNetworkBlock> existing;
+			if( components.containsKey( component.getEnergyNetworkPriority() ) )
+				existing = components.get( component.getEnergyNetworkPriority() );
+			else
+				existing = Maps.newHashMap();
+			
+			existing.put( pos, component );
+			components.put( component.getEnergyNetworkPriority(), existing );
+			
+			markDirty();
+		}
 		
 		if( refresh )
 			refreshAll( world, null );
@@ -115,11 +122,11 @@ public class EnergyNetwork extends WorldSavedData {
 			loaded = true;
 		}
 		
-		for( Map.Entry<Priority, Map<BlockPos, IEnergyNetworkBlock>> priority : components.entrySet() )
-			for( Map.Entry<BlockPos, IEnergyNetworkBlock> component : priority.getValue().entrySet() )
-				component.getValue().onEnergyNetworkRefreshed( world, component.getKey(), removed );
-		
-		markDirty();
+		new Thread( () -> {
+			for( Map.Entry<Priority, Map<BlockPos, IEnergyNetworkBlock>> priority : components.entrySet() )
+				for( Map.Entry<BlockPos, IEnergyNetworkBlock> component : priority.getValue().entrySet() )
+					component.getValue().onEnergyNetworkRefreshed( world, component.getKey(), removed );
+		} ).start();
 	}
 	
 	public enum Priority {

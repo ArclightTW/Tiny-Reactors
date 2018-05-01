@@ -80,14 +80,16 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 			return new String[] { "Operational: true" };
 		
 		float change = structure.getTemperatureGain() - structure.getTemperatureCooldown();
-		String changeString = String.format( "Change: %s%,.2f C", change > 0 ? TextFormatting.RED + "+" : TextFormatting.GREEN, change );
+		String changeString = String.format( "%s%,.2f C/t%s", change > 0 ? TextFormatting.RED + "+" : TextFormatting.GREEN, change, TextFormatting.WHITE );
 		if( change > -0.001F && change < 0.001F )
-			changeString = "Change: 0.00 C";
+			changeString = "0.00 C/t";
+		
+		String energyString = String.format( "Energy: %,d RF/t", structure.getEnergyGain() );
 		
 		return new String[] {
 				"Operational: true",
-				String.format( "Temperature: %,.0f C / %,.0f C", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature() ),
-				changeString
+				String.format( "Temperature: %,.0f C / %,.0f C (%s)", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature(), changeString ),
+				energyString
 		};
 	}
 	

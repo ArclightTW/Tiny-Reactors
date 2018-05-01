@@ -21,7 +21,6 @@ public class TESREnergyCell extends TileEntitySpecialRenderer<TileEntityEnergyCe
 		
 		for( EnumFacing facing : EnumFacing.VALUES ) {
 			String display = cell.canInput( facing ) ? "Input" : "Output";
-//			System.out.println( facing + ": " + cell.canInput(facing) );
 			
 			GlStateManager.pushMatrix();
 

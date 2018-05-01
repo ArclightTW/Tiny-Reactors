@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -100,6 +101,9 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 	
 	@Override
 	public boolean onBlockActivated( World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing facing, float hitX, float hitY, float hitZ ) {
+		if( !player.getHeldItem( EnumHand.MAIN_HAND ).isEmpty() )
+			return false;
+		
 		if( !world.isRemote ) {
 			getTileEntity( world, pos ).toggleOperational();
 			return true;

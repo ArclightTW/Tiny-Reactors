@@ -244,6 +244,7 @@ public class StorageReactor extends StorageMultiblock {
 
 		BlockPos pos = airBlocks.remove( 0 );
 		world.setBlockState( pos, block.getStateFromMeta( itemstack.getItemDamage() ) );
+		validateStructure( world, origin, null );
 	}
 	
 	public ITemperatureStorage getTemperature() {
@@ -272,7 +273,7 @@ public class StorageReactor extends StorageMultiblock {
 	}
 	
 	public int getEnergyGain() {
-		return energyGain;
+		return ( int )( energyGain * getEnergyMultiplier() );
 	}
 	
 	private void performTemperature( World world ) {
@@ -390,7 +391,7 @@ public class StorageReactor extends StorageMultiblock {
 			}
 		}
 		
-		energy.receiveEnergy( ( int )( energyGain * getEnergyMultiplier() ), false );
+		energy.receiveEnergy( getEnergyGain(), false );
 	}
 	
 	public float getEnergyMultiplier() {

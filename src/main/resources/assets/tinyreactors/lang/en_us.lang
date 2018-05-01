@@ -11,6 +11,8 @@ tile.tinyreactors:reactor_air_vent.name=Reactor Air Vent
 tile.tinyreactors:reactor_casing.name=Reactor Casing
 tile.tinyreactors:reactor_glass.name=Reactor Glass
 
+tile.tinyreactors:reactor_planner.name=Reactor Planner (WIP)
+
 # Items
 
 item.tinyreactors:tiny_wrench.name=Tiny Wrench

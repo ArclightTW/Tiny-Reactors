@@ -15,8 +15,11 @@ public class TileEntityEnergyCell extends TileEntityTinyEnergy {
 		super( 10000000, 10, 2000 );
 
 		registerCapability( "energy", CapabilityEnergy.ENERGY, ( facing ) -> {
-			energy.setCanReceive( facing, canInput( facing ) );
-			energy.setCanExtract( facing, !canInput( facing ) );
+			if( facing != null ) {
+				energy.setCanReceive( facing, canInput( facing ) );
+				energy.setCanExtract( facing, !canInput( facing ) );
+			}
+			
 			return energy;
 		} );
 		
