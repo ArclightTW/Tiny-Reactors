@@ -1,9 +1,9 @@
 {
 	"type"							: "forge:ore_shaped",
-	"group"							: "tinyreactors:energy_cell",
+	"group"							: "tinyreactors:tiny_wrench",
 	
 	"result"						: {
-		"item"						: "tinyreactors:energy_cell",
+		"item"						: "tinyreactors:tiny_wrench",
 		"count"						: 1,
 		"data"						: 0
 	},
