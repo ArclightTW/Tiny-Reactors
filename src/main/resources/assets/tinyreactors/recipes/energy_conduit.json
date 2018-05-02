@@ -9,15 +9,20 @@
 	},
 	
 	"pattern"						: [
-		" I ",
+		"GIG",
 		"IRI",
-		" I "
+		"GIG"
 	],
 	
 	"key"							: {
 		"I"							: [{
 			"type"					: "forge:ore_dict",
 			"ore"					: "ingotIron"
+		}],
+		
+		"G"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "blockGlass"
 		}],
 		
 		"R"							: [{
