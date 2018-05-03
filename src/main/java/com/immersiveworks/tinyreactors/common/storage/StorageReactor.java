@@ -136,13 +136,20 @@ public class StorageReactor extends StorageMultiblock {
 	
 	@Override
 	public void onValidationFinalized( World world ) {
-		for( int i = 0; i < structure.size(); i++ ) {
-			try {
-				TileEntity tile = world.getTileEntity( structure.get( i ) );
-				if(  tile instanceof IReactorTile )
-					( ( IReactorTile )tile ).onStructureValidated( controller );
+		if( world != null ) {
+			if( structure.size() > 0 ) {
+				for( int i = 0; i < structure.size(); i++ ) {
+					TileEntity tile = world.getTileEntity( structure.get( i ) );
+					if(  tile instanceof IReactorTile )
+						( ( IReactorTile )tile ).onStructureValidated( isValid ? controller : null );
+				}
 			}
-			catch( Exception e ) {
+			else if( possibleStructure.size() > 0 ) {
+				for( int i = 0; i < possibleStructure.size(); i++ ) {
+					TileEntity tile = world.getTileEntity( possibleStructure.get( i ) );
+					if(  tile instanceof IReactorTile )
+						( ( IReactorTile )tile ).onStructureValidated( null );
+				}
 			}
 		}
 		
