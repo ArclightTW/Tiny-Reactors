@@ -38,15 +38,12 @@ public class BlockReactorGlass extends BlockTinyTile<TileEntityReactorGlass> {
 	
 	@Override
 	public void onEnergyNetworkRefreshed( World world, BlockPos pos, BlockPos removed ) {
-		if( removed == null )
-			return;
-		
 		TileEntityReactorGlass glass = getTileEntity( world, pos );
-		if( glass.getController() == null )
+		if( glass == null || glass.getController() == null )
 			return;
 		
 		BlockPos p = glass.getController().getPos();
-		if( removed.getX() == p.getX() && removed.getY() == p.getY() && removed.getZ() == p.getZ() )
+		if( removed != null && removed.getX() == p.getX() && removed.getY() == p.getY() && removed.getZ() == p.getZ() )
 			glass.onStructureValidated( null );
 	}
 	

@@ -65,7 +65,11 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 	
 	@Override
 	public void onEnergyNetworkRefreshed( World world, BlockPos pos, BlockPos removed ) {
-		getTileEntity( world, pos ).getStructure().validateStructure( world, pos, removed );
+		TileEntityReactorController controller = getTileEntity( world, pos );
+		if( controller == null )
+			return;
+		
+		controller.getStructure().validateStructure( world, pos, removed );
 	}
 	
 	@Override
