@@ -9,13 +9,16 @@ import com.immersiveworks.tinyreactors.api.energy.EnergyStorageNBT;
 import com.immersiveworks.tinyreactors.api.energy.IEnergyStorageNBT;
 import com.immersiveworks.tinyreactors.api.temperature.ITemperatureStorage;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorAirVent;
+import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
+import com.immersiveworks.tinyreactors.common.processes.ProcessReactorExplosionChained;
 import com.immersiveworks.tinyreactors.common.temperature.TemperatureStorageCritical;
 import com.immersiveworks.tinyreactors.common.tiles.IReactorTile;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorTransferPort;
+import com.immersiveworks.tinyreactors.common.util.Processes;
 import com.immersiveworks.tinyreactors.common.util.Reactants;
 
 import net.minecraft.block.Block;
@@ -31,6 +34,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class StorageReactor extends StorageMultiblock {
+	
+	public static final int BASE_TEMPERATURE = 1000;
 	
 	private TileEntityReactorController controller;
 	
@@ -49,7 +54,7 @@ public class StorageReactor extends StorageMultiblock {
 	public StorageReactor( TileEntityReactorController controller ) {
 		this.controller = controller;
 		
-		temperature = new TemperatureStorageCritical( 1000, false, true );
+		temperature = new TemperatureStorageCritical( BASE_TEMPERATURE, false, true );
 		energy = new EnergyStorageNBT( 1000000 );
 		
 		transferPorts = Lists.newLinkedList();
@@ -287,32 +292,40 @@ public class StorageReactor extends StorageMultiblock {
 		if( Configs.REACTOR_TEMPERATURE ) {
 			temperature.receiveHeat( temperatureGain - temperatureCooldown, false );
 			
-			// TODO: Test meltdown modes
 			if( Configs.REACTOR_MELTDOWN && temperature.isCritical() ) {
 				switch( Configs.REACTOR_MELTDOWN_MODE ) {
 				case 0:	// Explosive
 					world.createExplosion( null, origin.getX(), origin.getY(), origin.getZ(), 25, true );
+					EnergyNetwork.get( world ).refreshAll( world, null );
 					return;
 				case 1:	// Implosive
 					world.createExplosion( null, start.getX() + ( end.getX() - start.getX() ) / 2, start.getY() + ( end.getY() - start.getY() ) / 2, start.getZ() + ( end.getZ() - start.getZ() ), 15, true );
+					EnergyNetwork.get( world ).refreshAll( world, null );
 					return;
 				case 2:	// Chained
-					for( int i = 0; i < structure.size(); i++ ) {
-						BlockPos pos = structure.get( i );
-						
-						Block block = world.getBlockState( pos ).getBlock();
-						if( block == Blocks.REACTOR_CASING || block == Blocks.REACTOR_GLASS )
-							continue;
-						
-						world.createExplosion( null, pos.getX(), pos.getY(), pos.getZ(), 10, true );
-					}
-					
+					Processes.addProcess( new ProcessReactorExplosionChained( world, structure ) );
 					return;
 				case 3:	// Consumption
 					for( int x = start.getX() + 1; x <= end.getX() - 1; x++ )
 						for( int z = start.getZ() + 1; z <= end.getZ() - 1; z++ )
-							for( int y = start.getY() + 1; y <= end.getY() - 1; y ++ )
+							for( int y = end.getY() + 1; y <= start.getY() - 1; y++ ) {
+								BlockPos pos = new BlockPos( x, y, z );
+								IBlockState state = world.getBlockState( pos );
+								
+								airBlocks.remove( pos );
+								airBlocks.add( pos );
+								
+								if( state.getBlock() != net.minecraft.init.Blocks.AIR ) {
+									temperatureGain -= Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_REACTANT_TEMPERATURE_GAIN : 0;
+									temperatureGain += Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_AIR_TEMPERATURE_GAIN : 0;
+									energyGain -= Reactants.getReactantRate( state );
+								}
+								
 								world.setBlockToAir( new BlockPos( x, y, z ) );
+							}
+					
+					if( runnable != null )
+						runnable.run();
 					
 					return;
 				case 4:	// Drainage
@@ -404,6 +417,10 @@ public class StorageReactor extends StorageMultiblock {
 	public float getEnergyMultiplier() {
 		float peak = temperature.getPeakEfficiencyTemperature();
 		float diff = temperature.getCurrentTemperature() > peak ? temperature.getCurrentTemperature() - peak : peak - temperature.getCurrentTemperature();
+		
+		if( temperature.getCurrentTemperature() <= 0 || temperature.getCurrentTemperature() >= temperature.getMaximumTemperature() )
+			return 1;
+		
 		return 1 + ( Configs.REACTOR_ENERGY_GENERATION_MULTIPLIER - 1 ) * ( ( peak - diff ) / peak );
 	}
 	
