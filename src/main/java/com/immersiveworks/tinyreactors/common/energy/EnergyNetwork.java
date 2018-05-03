@@ -9,6 +9,8 @@ import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.blocks.BlockEnergyConduit;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorCasing;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorHeatSink;
+import com.immersiveworks.tinyreactors.common.processes.ProcessEnergyNetworkRefresh;
+import com.immersiveworks.tinyreactors.common.util.Processes;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -122,11 +124,7 @@ public class EnergyNetwork extends WorldSavedData {
 			loaded = true;
 		}
 		
-		new Thread( () -> {
-			for( Map.Entry<Priority, Map<BlockPos, IEnergyNetworkBlock>> priority : components.entrySet() )
-				for( Map.Entry<BlockPos, IEnergyNetworkBlock> component : priority.getValue().entrySet() )
-					component.getValue().onEnergyNetworkRefreshed( world, component.getKey(), removed );
-		} ).start();
+		Processes.addProcess( new ProcessEnergyNetworkRefresh( world, removed, components.values() ) );
 	}
 	
 	public enum Priority {
