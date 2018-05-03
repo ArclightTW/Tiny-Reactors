@@ -8,6 +8,7 @@ import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.properties.EnumAirVent;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -29,6 +30,11 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 	
 	public BlockReactorAirVent() {
 		super( Material.IRON, TileEntityReactorAirVent.class );
+		setSoundType( SoundType.METAL );
+		
+		setHardness( 5F );
+		setResistance( 15F );
+		
 		setDefaultState( blockState.getBaseState().withProperty( OPERATIONAL, false ).withProperty( EnumAirVent.PROPERTY, EnumAirVent.EMPTY ) );
 	}
 	
@@ -58,7 +64,12 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 	
 	@Override
 	public boolean isFullCube( IBlockState state ) {
-		return false;
+		return true;
+	}
+	
+	@Override
+	public boolean isFireSource( World world, BlockPos pos, EnumFacing side ) {
+		return side == EnumFacing.UP;
 	}
 	
 	@Override
@@ -83,6 +94,17 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 	}
 	
 	@Override
+	public void onEnergyNetworkRefreshed( World world, BlockPos pos, BlockPos removed ) {
+		TileEntityReactorAirVent airVent = getTileEntity( world, pos );
+		if( airVent == null || airVent.getController() == null )
+			return;
+		
+		BlockPos p = airVent.getController().getPos();
+		if( removed != null && removed.getX() == p.getX() && removed.getY() == p.getY() && removed.getZ() == p.getZ() )
+			airVent.onStructureValidated( null );
+	}
+	
+	@Override
 	public String[] getWrenchOverlayInfo( World world, BlockPos pos, IBlockState state ) {
 		if( !Configs.REACTOR_TEMPERATURE || !Configs.REACTOR_AIR_VENT )
 			return new String[] { TextFormatting.RED + "No operational usage" };
@@ -91,11 +113,19 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 		if( airVent.getVentType() == EnumAirVent.EMPTY )
 			return new String[] { "Missing Vent Component" };
 		
+		float melting = airVent.getVentType().getMeltingPoint( null );
+		if( airVent.getController() != null )
+			melting = airVent.getVentType().getMeltingPoint( airVent.getController().getStructure().getTemperature() );
+		
+		String meltingPoint = String.format( "%s Melting Point: %,.0f C", airVent.getController() != null ? "Active" : "Base", melting );
+		if( airVent.getBurnTimer() > 0 )
+			meltingPoint = String.format( "%sOverheated (%,d ticks)", TextFormatting.RED, airVent.getBurnTimer() );
+		
 		return new String[] {
 				String.format( "Component: %s", airVent.getVentType() ),
 				String.format( "Operational: %s", airVent.isOperational() ),
-				String.format( "Rate: %,.2f C / %,.1f C", ( airVent.getTier() / 10F ) * airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT, airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT )
-// TODO: Melting Point				String.format( "Melting Point: %,.0f C", airVent.getVentType().getMeltingPoint() )
+				String.format( "Rate: %,.2f C / %,.1f C", ( airVent.getTier() / 10F ) * airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT, airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT ),
+				meltingPoint
 		};
 	}
 	

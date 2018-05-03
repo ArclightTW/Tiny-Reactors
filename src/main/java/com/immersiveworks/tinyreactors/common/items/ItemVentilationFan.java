@@ -27,7 +27,7 @@ public class ItemVentilationFan extends ItemTiny {
 	
 	@Override
 	public void addInformation( ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag ) {
-// TODO: Melting Point		tooltip.add( String.format( "Melting Point: %,.0f C", EnumAirVent.FANS[ stack.getItemDamage() ].getMeltingPoint() ) );
+		tooltip.add( String.format( "Base Melting Point: %,.0f C", EnumAirVent.FANS[ stack.getItemDamage() ].getMeltingPoint( null ) ) );
 	}
 
 	@Override

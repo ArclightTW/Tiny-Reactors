@@ -1,5 +1,8 @@
 package com.immersiveworks.tinyreactors.common.properties;
 
+import com.immersiveworks.tinyreactors.api.temperature.ITemperatureStorage;
+import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
+
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.util.IStringSerializable;
 
@@ -34,8 +37,11 @@ public enum EnumAirVent implements IStringSerializable {
 		return values()[ ordinal() + 1 ];
 	}
 	
-	public float getMeltingPoint() {
-		return meltingPoint;
+	public float getMeltingPoint( ITemperatureStorage temperature ) {
+		if( temperature == null )
+			return meltingPoint;
+		
+		return meltingPoint + ( ( temperature.getMaximumTemperature() - StorageReactor.BASE_TEMPERATURE ) / ( 6 - ordinal() ) );
 	}
 	
 	public static PropertyEnum<EnumAirVent> PROPERTY = PropertyEnum.create( "vent", EnumAirVent.class );

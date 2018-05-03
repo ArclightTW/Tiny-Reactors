@@ -25,11 +25,24 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		operational = false;
 		
 		registerPulsar( () -> {
-			if( controller == null )
+			if( controller == null ) {
+				burnTimer = -1;
+				
+				if( world.getBlockState( pos.up() ).getBlock() == Blocks.FIRE )
+					world.setBlockToAir( pos.up() );
+				
 				return;
+			}
 			
-			if( burnTimer == -1 && type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() >= type.getMeltingPoint() )
-				burnTimer = 400;
+			if( operational && burnTimer == -1 && type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() >= type.getMeltingPoint( controller.getStructure().getTemperature() ) )
+				ignite();
+			
+			if( type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() < type.getMeltingPoint( controller.getStructure().getTemperature() ) ) {
+				burnTimer = -1;
+				
+				if( world.getBlockState( pos.up() ).getBlock() == Blocks.FIRE )
+					world.setBlockToAir( pos.up() );
+			}
 			
 			if( burnTimer == -1 )
 				return;
@@ -38,7 +51,9 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 			if( burnTimer > 0 )
 				return;
 			
-			// TODO: burn out Vent
+			setVentType( EnumAirVent.EMPTY );
+			if( world.getBlockState( pos.up() ).getBlock() == Blocks.FIRE )
+				world.setBlockToAir( pos.up() );
 		} );
 	}
 	
@@ -156,6 +171,10 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	
 	public boolean isOperational() {
 		return operational;
+	}
+	
+	public int getBurnTimer() {
+		return burnTimer;
 	}
 	
 	public TileEntityReactorController getController() {
