@@ -15,29 +15,47 @@ public class Processes {
 	private static List<IProcess> processes = Lists.newLinkedList();
 	private static List<IProcess> newProcesses = Lists.newLinkedList();
 	
+	public static void addProcess( IProcess process ) {
+		newProcesses.add( process );
+	}
+	
 	public static void tick() {
+		runInternal( false );
+	}
+	
+	public static void clearHandler() {
+		runInternal( true );
+		
+		processes.clear();
+		newProcesses.clear();
+	}
+	
+	private static void runInternal( boolean serverClosed ) {
 		Iterator<IProcess> i = processes.iterator();
 		while( i.hasNext() ) {
 			IProcess process = i.next();
-			if( process.isDead() )
+			if( process.isDead() ) {
+				process.onDeath();
 				i.remove();
-			else
-				process.update();
+			}
+			else {
+				if( !serverClosed ) {
+					process.update();
+					continue;
+				}
+				
+				if( !process.shouldCompleteOnServerClose() )
+					continue;
+				
+				while( !process.isDead() )
+					process.update();
+			}
 		}
 		
 		if( !newProcesses.isEmpty() ) {
 			processes.addAll( newProcesses );
 			newProcesses.clear();
 		}
-	}
-	
-	public static void addProcess( IProcess process ) {
-		newProcesses.add( process );
-	}
-	
-	public static void clearHandler() {
-		processes.clear();
-		newProcesses.clear();
 	}
 	
 }
