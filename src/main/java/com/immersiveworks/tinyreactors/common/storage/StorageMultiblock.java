@@ -21,6 +21,8 @@ public abstract class StorageMultiblock {
 	public BlockPos origin;
 	
 	protected List<BlockPos> structure;
+	protected List<BlockPos> oldStructure;
+	protected List<BlockPos> possibleStructure;
 	
 	protected BlockPos start;
 	protected BlockPos end;
@@ -30,6 +32,9 @@ public abstract class StorageMultiblock {
 	
 	public StorageMultiblock() {
 		structure = Lists.newLinkedList();
+		oldStructure = Lists.newLinkedList();
+		possibleStructure = Lists.newLinkedList();
+		
 		start = end = BlockPos.ORIGIN;
 	}
 	
@@ -38,16 +43,19 @@ public abstract class StorageMultiblock {
 	}
 	
 	public void validateStructure( World world, BlockPos origin, BlockPos removed ) {
-		for( int i = 0; i < structure.size(); i++ ) {
+		oldStructure.addAll( structure );
+		possibleStructure.clear();
+		structure.clear();
+		
+		for( int i = 0; i < oldStructure.size(); i++ ) {
 			try {
-				TileEntity tile = world.getTileEntity( structure.get( i ) );
+				TileEntity tile = world.getTileEntity( oldStructure.get( i ) );
 				if(  tile instanceof IReactorTile )
 					( ( IReactorTile )tile ).onStructureValidated( null );
 			}
 			catch( Exception e ) {
 			}
 		}
-		structure.clear();
 		
 		this.origin = origin;
 		
@@ -207,7 +215,7 @@ public abstract class StorageMultiblock {
 							}
 						}
 						
-						structure.add( p );
+						possibleStructure.add( p );
 						onExternalBlockDetected( world, p, b );
 					}
 					else if( y == yBot ) {
@@ -230,7 +238,7 @@ public abstract class StorageMultiblock {
 							}
 						}
 						
-						structure.add( p );
+						possibleStructure.add( p );
 						onExternalBlockDetected( world, p, b );
 					}
 					else {
@@ -240,7 +248,7 @@ public abstract class StorageMultiblock {
 								return;
 							}
 							
-							structure.add( p );
+							possibleStructure.add( p );
 							onExternalBlockDetected( world, p, b );
 						}
 						else if( x == xStart || x == xEnd || z == zStart || z == zEnd ) {
@@ -249,7 +257,7 @@ public abstract class StorageMultiblock {
 								return;
 							}
 							
-							structure.add( p );
+							possibleStructure.add( p );
 							onExternalBlockDetected( world, p, b );
 						}
 						else {
@@ -275,6 +283,8 @@ public abstract class StorageMultiblock {
 		start = new BlockPos( xStart, yTop, zStart );
 		end = new BlockPos( xEnd, yBot, zEnd );
 		
+		structure.addAll( possibleStructure );
+		possibleStructure.clear();
 		setValid( world, true );
 	}
 	

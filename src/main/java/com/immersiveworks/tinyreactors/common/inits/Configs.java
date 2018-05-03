@@ -22,6 +22,11 @@ public class Configs {
 	public static boolean WRENCH_ON_HELMETS = true;
 	public static String WRENCH_ON_HELMETS_LABEL = "Whether the Tiny Wrench can be added to any Helmet.";
 	
+	// Performance Settings
+	
+	public static int NETWORK_REFRESH_BLOCK_COUNT = 10;
+	public static String NETWORK_REFRESH_BLOCK_COUNT_LABEL = "The number of blocks to update per tick when the Energy Network refreshes.";
+	
 	// Energy Settings
 	
 	public static boolean REACTOR_ENERGY = true;
@@ -107,6 +112,12 @@ public class Configs {
 		config.addCustomCategoryComment( category, "General Settings for Tiny Reactors" );
 		
 		WRENCH_ON_HELMETS = config.getBoolean( "Wrench on Helmets", category, WRENCH_ON_HELMETS, WRENCH_ON_HELMETS_LABEL );
+		
+		category = "Performance";
+		config.addCustomCategoryComment( category, "Performance Settings for Tiny Reactors" );
+		
+		NETWORK_REFRESH_BLOCK_COUNT = config.getInt( "Network Refresh Block Count", category, NETWORK_REFRESH_BLOCK_COUNT, -1, 100, NETWORK_REFRESH_BLOCK_COUNT_LABEL );
+		if( NETWORK_REFRESH_BLOCK_COUNT == 0 ) NETWORK_REFRESH_BLOCK_COUNT = 1;
 		
 		category = "Energy";
 		config.addCustomCategoryComment( category, "Settings related to Energy controls (requires REACTOR_ENERGY to be true)" );
