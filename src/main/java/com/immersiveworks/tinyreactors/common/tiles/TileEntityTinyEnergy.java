@@ -44,11 +44,6 @@ public class TileEntityTinyEnergy extends TileEntityTiny {
 		energy.readFromNBT( compound );
 	}
 	
-	public void onBlockBreak() {
-		for( int i = 0; i < pulsars.size(); i++ )
-			pulsars.get( i ).run();
-	}
-	
 	public IEnergyStorage getInternalEnergy() {
 		return energy;
 	}
