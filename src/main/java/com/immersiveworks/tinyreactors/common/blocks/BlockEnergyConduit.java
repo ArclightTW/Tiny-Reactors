@@ -70,10 +70,6 @@ public class BlockEnergyConduit extends BlockTinyTile<TileEntityEnergyConduit> {
 	}
 	
 	@Override
-	public void onEnergyNetworkRefreshed( World world, BlockPos pos, BlockPos removed ) {
-	}
-	
-	@Override
 	@SuppressWarnings( "deprecation" )
 	public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos ) {
 		IBlockState actual = source.getBlockState( pos );

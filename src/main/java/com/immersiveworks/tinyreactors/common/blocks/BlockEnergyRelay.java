@@ -93,13 +93,12 @@ public class BlockEnergyRelay extends BlockTinyTile<TileEntityEnergyRelay> imple
 	
 	@Override
 	public void onEnergyNetworkRefreshed( World world, BlockPos pos, BlockPos removed ) {
-		if( !world.isRemote ) {
-			TileEntityEnergyRelay relay = getTileEntity( world, pos );
-			if( pos == removed )
-				relay.onBlockBreak();
-			
+		TileEntityEnergyRelay relay = getTileEntity( world, pos );
+		if( relay == null )
+			return;
+		
+		if( !world.isRemote )
 			relay.removeDestination( removed );
-		}
 	}
 	
 	@Override

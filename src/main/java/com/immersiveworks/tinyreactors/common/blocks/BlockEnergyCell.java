@@ -87,12 +87,6 @@ public class BlockEnergyCell extends BlockTinyTile<TileEntityEnergyCell> impleme
 	}
 	
 	@Override
-	public void onEnergyNetworkRefreshed( World world, BlockPos pos, BlockPos removed ) {
-		if( !world.isRemote && pos == removed )
-			getTileEntity( world, pos ).onBlockBreak();
-	}
-	
-	@Override
 	public AxisAlignedBB getBoundingBox( IBlockState state, IBlockAccess source, BlockPos pos ) {
 		return new AxisAlignedBB( 0F, 0F, 0F, 1F, 1F, 1F );
 	}
