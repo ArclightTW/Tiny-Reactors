@@ -125,7 +125,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	public void ignite() {
 		burnTimer = 400;
 		
-		if( world.getBlockState( pos.up() ) == Blocks.AIR )
+		if( world.getBlockState( pos.up() ).getBlock() == Blocks.AIR )
 			world.setBlockState( pos.up(), Blocks.FIRE.getDefaultState() );
 	}
 	
