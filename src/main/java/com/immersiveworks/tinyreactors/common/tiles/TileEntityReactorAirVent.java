@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class TileEntityReactorAirVent extends TileEntityTiny implements IReactorTile {
 
+	private State state;
 	private EnumAirVent type;
 	private int tier;
 	
@@ -22,6 +23,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	private int burnTimer = -1;
 	
 	public TileEntityReactorAirVent() {
+		state = State.START;
 		type = EnumAirVent.EMPTY;
 		tier = 0;
 		
@@ -33,6 +35,11 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 			if( obstructed != this.obstructed ) {
 				this.obstructed = obstructed;
 				syncClient();
+				
+				if( this.obstructed )
+					setState( State.OBSTRUCTED );
+				else
+					setState( State.UNOBSTRUCTED );
 				
 				if( controller != null )
 					controller.getStructure().changeTemperatureCooldown( this );
@@ -60,10 +67,13 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 			if( burnTimer == -1 )
 				return;
 			
+			setState( State.OVERHEATING );
+			
 			burnTimer--;
 			if( burnTimer > 0 )
 				return;
 			
+			setState( State.OVERHEATED );
 			setVentType( EnumAirVent.EMPTY );
 			if( world.getBlockState( pos.up() ).getBlock() == Blocks.FIRE )
 				world.setBlockToAir( pos.up() );
@@ -94,6 +104,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		super.writeToNBT( compound );
 		
 		NBTTagCompound airVent = new NBTTagCompound();
+		airVent.setInteger( "state", state.ordinal() );
 		airVent.setInteger( "type", type.ordinal() );
 		airVent.setInteger( "tier", tier );
 		airVent.setBoolean( "obstructed", obstructed );
@@ -111,6 +122,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		super.readFromNBT( compound );
 		NBTTagCompound airVent = compound.getCompoundTag( "airVent" );
 		
+		state = State.values()[ airVent.getInteger( "state" ) ];
 		type = EnumAirVent.values()[ airVent.getInteger( "type" ) ];
 		tier = airVent.getInteger( "tier" );
 		obstructed = airVent.getBoolean( "obstructed" );
@@ -124,6 +136,8 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	
 	public void ignite() {
 		burnTimer = 400;
+		
+		setState( State.OVERHEATING );
 		
 		if( world.getBlockState( pos.up() ).getBlock() == Blocks.AIR )
 			world.setBlockState( pos.up(), Blocks.FIRE.getDefaultState() );
@@ -200,6 +214,35 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	
 	public TileEntityReactorController getController() {
 		return controller;
+	}
+	
+	private void setState( State state ) {
+		if( this.state == state )
+			return;
+		
+		this.state = state;
+		if( controller != null )
+			controller.logMessage( this.state.getDisplay() );
+	}
+	
+	private enum State {
+		
+		START( "" ),
+		UNOBSTRUCTED( "Air Vent Obstruction Cleared" ),
+		OBSTRUCTED( "Air Vent Obstructed" ),
+		OVERHEATING( "Air Vent Overheating" ),
+		OVERHEATED( "Air Vent Overheated" );
+		
+		private String display;
+		
+		private State( String display ) {
+			this.display = display;
+		}
+		
+		public String getDisplay() {
+			return display;
+		}
+		
 	}
 	
 }

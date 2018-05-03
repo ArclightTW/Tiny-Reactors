@@ -13,6 +13,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
@@ -21,7 +23,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-// TODO: Render text on screen (like a log)
 public class BlockReactorController extends BlockTinyTile<TileEntityReactorController> implements IEnergyNetworkBlockRenderer {
 
 	public BlockReactorController() {
@@ -81,22 +82,42 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 	}
 	
 	@Override
+	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack ) {
+		TileEntityReactorController controller = getTileEntity( world, pos );
+		
+		if( !world.isRemote && player.isSneaking() ) {
+			controller.setActive( !controller.isActive() );
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public String[] getWrenchOverlayInfo( World world, BlockPos pos, IBlockState state ) {
 		TileEntityReactorController controller = getTileEntity( world, pos );
 		StorageReactor structure = controller.getStructure();
 		
 		if( !structure.isValid() )
-			return new String[] { "Operational: false" };
+			return new String[] { "Operational: Invalid Structure" };
 		
 		if( !Configs.REACTOR_TEMPERATURE )
 			return new String[] {
-					"Operational: true",
+					String.format( "Status: %s", controller.isActive() ? "Operational" : "Non-Operational" ),
 					String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
 				};
 		
 		ITemperatureStorage temperature = structure.getTemperature();
 		
-		float change = structure.getTemperatureGain() - structure.getTemperatureCooldown();
+		float change;
+		if( controller.isActive() )
+			change = structure.getTemperatureGain() - structure.getTemperatureCooldown();
+		else {
+			change = structure.getTemperatureGain() + structure.getTemperatureCooldown();
+			if( change > 0 )
+				change *= -1;
+		}
+		
 		String changeString = String.format( "%s%,.2f C/t%s", change > 0 ? TextFormatting.RED + "+" : TextFormatting.GREEN, change, TextFormatting.WHITE );
 		if( change > -0.001F && change < 0.001F )
 			changeString = "0.00 C/t";
@@ -111,12 +132,12 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 		if( temperature.getCurrentTemperature() >= temperature.getCriticalTemperature() )
 			tempColor = TextFormatting.RED;
 			
-		String tempString = String.format( "Temperature:%s %,.0f C %s/ %,.0f C (%s)", tempColor, temperature.getCurrentTemperature(), TextFormatting.WHITE, temperature.getMaximumTemperature(), changeString );
+		String tempString = String.format( "Heat:%s %,.0f C %s/ %,.0f C (%s)", tempColor, temperature.getCurrentTemperature(), TextFormatting.WHITE, temperature.getMaximumTemperature(), changeString );
 		if( temperature.getCurrentTemperature() > temperature.getMaximumTemperature() )
 			tempString = String.format( "%sOverheated", TextFormatting.RED );
 		
 		return new String[] {
-				"Operational: true",
+				String.format( "Status: %s", controller.isActive() ? "Operational" : "Non-Operational" ),
 				tempString,
 				String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
 		};

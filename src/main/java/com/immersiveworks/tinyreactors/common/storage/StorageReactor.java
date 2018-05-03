@@ -289,66 +289,78 @@ public class StorageReactor extends StorageMultiblock {
 	}
 	
 	private void performTemperature( World world ) {
-		if( Configs.REACTOR_TEMPERATURE ) {
+		if( !Configs.REACTOR_TEMPERATURE )
+			return;
+		
+		if( controller.isActive() )
 			temperature.receiveHeat( temperatureGain - temperatureCooldown, false );
-			
-			if( Configs.REACTOR_MELTDOWN && temperature.isCritical() ) {
-				switch( Configs.REACTOR_MELTDOWN_MODE ) {
-				case 0:	// Explosive
-					world.createExplosion( null, origin.getX(), origin.getY(), origin.getZ(), 25, true );
-					EnergyNetwork.get( world ).refreshAll( world, null );
-					return;
-				case 1:	// Implosive
-					world.createExplosion( null, start.getX() + ( end.getX() - start.getX() ) / 2, start.getY() + ( end.getY() - start.getY() ) / 2, start.getZ() + ( end.getZ() - start.getZ() ), 15, true );
-					EnergyNetwork.get( world ).refreshAll( world, null );
-					return;
-				case 2:	// Chained
-					Processes.addProcess( new ProcessReactorExplosionChained( world, structure ) );
-					return;
-				case 3:	// Consumption
-					for( int x = start.getX() + 1; x <= end.getX() - 1; x++ )
-						for( int z = start.getZ() + 1; z <= end.getZ() - 1; z++ )
-							for( int y = end.getY() + 1; y <= start.getY() - 1; y++ ) {
-								BlockPos pos = new BlockPos( x, y, z );
-								IBlockState state = world.getBlockState( pos );
-								
-								airBlocks.remove( pos );
-								airBlocks.add( pos );
-								
-								if( state.getBlock() != net.minecraft.init.Blocks.AIR ) {
-									temperatureGain -= Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_REACTANT_TEMPERATURE_GAIN : 0;
-									temperatureGain += Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_AIR_TEMPERATURE_GAIN : 0;
-									energyGain -= Reactants.getReactantRate( state );
-								}
-								
-								world.setBlockToAir( new BlockPos( x, y, z ) );
-							}
-					
-					if( runnable != null )
-						runnable.run();
-					
-					return;
-				case 4:	// Drainage
-					List<IEnergyStorage> energies = Lists.newLinkedList();
-					for( BlockPos pos : transferPorts ) {
-						TileEntity tile = world.getTileEntity( pos );
-						if( tile == null || !( tile instanceof TileEntityReactorTransferPort ) )
-							continue;
-						energies.add( ( ( TileEntityReactorTransferPort )tile ).getInternalEnergy() );
-					}
-					
-					if( energies.size() == 0 )
-						return;
-					
-					for( IEnergyStorage energy : energies )
-						energy.extractEnergy( energy.getMaxEnergyStored(), false );
-					
-					return;
-				case 5:	// No Effect
-					break;
-				}
-			}
+		else {
+			float cooling = temperatureGain + temperatureCooldown;
+			if( cooling < 0 )
+				cooling *= -1;
+			temperature.extractHeat( cooling, false );
 		}
+		
+		if( !Configs.REACTOR_MELTDOWN || !temperature.isCritical() )
+			return;
+
+		switch( Configs.REACTOR_MELTDOWN_MODE ) {
+		case 0:	// Explosive
+			world.createExplosion( null, origin.getX(), origin.getY(), origin.getZ(), 25, true );
+			EnergyNetwork.get( world ).refreshAll( world, null );
+			break;
+		case 1:	// Implosive
+			world.createExplosion( null, start.getX() + ( end.getX() - start.getX() ) / 2, start.getY() + ( end.getY() - start.getY() ) / 2, start.getZ() + ( end.getZ() - start.getZ() ), 15, true );
+			EnergyNetwork.get( world ).refreshAll( world, null );
+			break;
+		case 2:	// Chained
+			Processes.addProcess( new ProcessReactorExplosionChained( world, structure ) );
+			break;
+		case 3:	// Consumption
+			for( int x = start.getX() + 1; x <= end.getX() - 1; x++ )
+				for( int z = start.getZ() + 1; z <= end.getZ() - 1; z++ )
+					for( int y = end.getY() + 1; y <= start.getY() - 1; y++ ) {
+						BlockPos pos = new BlockPos( x, y, z );
+						IBlockState state = world.getBlockState( pos );
+						
+						airBlocks.remove( pos );
+						airBlocks.add( pos );
+						
+						if( state.getBlock() != net.minecraft.init.Blocks.AIR ) {
+							temperatureGain -= Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_REACTANT_TEMPERATURE_GAIN : 0;
+							temperatureGain += Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_AIR_TEMPERATURE_GAIN : 0;
+							energyGain -= Reactants.getReactantRate( state );
+						}
+						
+						world.setBlockToAir( new BlockPos( x, y, z ) );
+					}
+			
+			controller.setActive( false );
+			break;
+		case 4:	// Drainage
+			List<IEnergyStorage> energies = Lists.newLinkedList();
+			for( BlockPos pos : transferPorts ) {
+				TileEntity tile = world.getTileEntity( pos );
+				if( tile == null || !( tile instanceof TileEntityReactorTransferPort ) )
+					continue;
+				energies.add( ( ( TileEntityReactorTransferPort )tile ).getInternalEnergy() );
+			}
+			
+			if( energies.size() == 0 )
+				return;
+			
+			for( IEnergyStorage energy : energies )
+				energy.extractEnergy( energy.getMaxEnergyStored(), false );
+			
+			controller.setActive( false );
+			break;
+		case 5:	// No Effect
+			controller.setActive( false );
+			break;
+		}
+		
+		if( runnable != null )
+			runnable.run();
 	}
 	
 	private void performEnergy( World world ) {
@@ -411,7 +423,8 @@ public class StorageReactor extends StorageMultiblock {
 			}
 		}
 		
-		energy.receiveEnergy( getEnergyGain(), false );
+		if( controller.isActive() )
+			energy.receiveEnergy( getEnergyGain(), false );
 	}
 	
 	public float getEnergyMultiplier() {

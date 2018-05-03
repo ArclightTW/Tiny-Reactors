@@ -3,10 +3,12 @@ package com.immersiveworks.tinyreactors.client.proxy;
 import com.immersiveworks.tinyreactors.client.fx.FXEnergyOrb;
 import com.immersiveworks.tinyreactors.client.fx.FXTypes;
 import com.immersiveworks.tinyreactors.client.render.TESREnergyCell;
+import com.immersiveworks.tinyreactors.client.render.TESRReactorController;
 import com.immersiveworks.tinyreactors.client.render.TESRReactorPlanner;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.proxy.IProxy;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityEnergyCell;
+import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPlanner;
 
 import net.minecraft.client.Minecraft;
@@ -24,6 +26,7 @@ public class ClientProxy implements IProxy {
 		B3DLoader.INSTANCE.addDomain( TinyReactors.ID );
 		OBJLoader.INSTANCE.addDomain( TinyReactors.ID );
 		
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorController.class, new TESRReactorController() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityEnergyCell.class, new TESREnergyCell() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorPlanner.class, new TESRReactorPlanner() );
 	}
