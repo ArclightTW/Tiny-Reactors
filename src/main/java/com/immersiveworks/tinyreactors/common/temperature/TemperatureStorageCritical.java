@@ -18,12 +18,16 @@ public class TemperatureStorageCritical extends TemperatureStorage {
 	}
 	
 	@Override
+	public float getCriticalTemperature() {
+		return getMaximumTemperature() * ( Configs.REACTOR_TEMPERATURE_CRITICAL_PERCENTAGE / 100F );
+	}
+	
+	@Override
 	public boolean isCritical() {
-		float criticalTemperature = getMaximumTemperature() * ( Configs.REACTOR_TEMPERATURE_CRITICAL_PERCENTAGE / 100F );
-		if( getCurrentTemperature() < criticalTemperature )
+		if( getCurrentTemperature() < getCriticalTemperature() )
 			return false;
 		
-		return random.nextInt( ( int )( getMaximumTemperature() - criticalTemperature ) ) >= ( int )( getMaximumTemperature() - criticalTemperature ) - ( int )( getCurrentTemperature() - criticalTemperature );
+		return random.nextInt( ( int )( getMaximumTemperature() - getCriticalTemperature() ) ) >= ( int )( getMaximumTemperature() - getCriticalTemperature() ) - ( int )( getCurrentTemperature() - getCriticalTemperature() );
 	}
 	
 	@Override

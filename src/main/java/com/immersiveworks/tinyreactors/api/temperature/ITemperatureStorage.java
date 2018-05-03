@@ -74,12 +74,16 @@ public interface ITemperatureStorage {
 	default void readFromNBT( NBTTagCompound compound ) {
 	}
 	
+	default float getCriticalTemperature() {
+		return getMaximumTemperature();
+	}
+	
 	/**
 	 * 
 	 * @return
 	 */
 	default boolean isCritical() {
-		return getCurrentTemperature() == getMaximumTemperature();
+		return getCurrentTemperature() == getCriticalTemperature();
 	}
 	
 	default float getPeakEfficiencyTemperature() {

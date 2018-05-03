@@ -124,7 +124,7 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 		return new String[] {
 				String.format( "Component: %s", airVent.getVentType() ),
 				String.format( "Status: %s", airVent.isObstructed() ? "Obstructed" : airVent.isOperational() ? "Operational" : "Non-operational" ),
-				String.format( "Rate: %,.2f C / %,.1f C", ( airVent.getTier() / 10F ) * airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT, airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT ),
+				String.format( "Rate: %,.2f C (Max: %,.1f C)", ( airVent.getTier() / 10F ) * airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT, airVent.getVentType().ordinal() * Configs.REACTOR_AIR_VENT_AMOUNT ),
 				meltingPoint
 		};
 	}

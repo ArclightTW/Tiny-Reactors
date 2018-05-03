@@ -1,5 +1,6 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.temperature.ITemperatureStorage;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork.Priority;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
@@ -88,15 +89,30 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 			return new String[] { "Operational: false" };
 		
 		if( !Configs.REACTOR_TEMPERATURE )
-			return new String[] { "Operational: true" };
+			return new String[] {
+					"Operational: true",
+					String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
+				};
+		
+		ITemperatureStorage temperature = structure.getTemperature();
 		
 		float change = structure.getTemperatureGain() - structure.getTemperatureCooldown();
 		String changeString = String.format( "%s%,.2f C/t%s", change > 0 ? TextFormatting.RED + "+" : TextFormatting.GREEN, change, TextFormatting.WHITE );
 		if( change > -0.001F && change < 0.001F )
 			changeString = "0.00 C/t";
 		
-		String tempString = String.format( "Temperature: %,.0f C / %,.0f C (%s)", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature(), changeString );
-		if( structure.getTemperature().getCurrentTemperature() > structure.getTemperature().getMaximumTemperature() )
+		TextFormatting tempColor = TextFormatting.AQUA;
+		if( temperature.getCurrentTemperature() >= temperature.getMaximumTemperature() * 0.5F )
+			tempColor = TextFormatting.LIGHT_PURPLE;
+		if( temperature.getCurrentTemperature() >= temperature.getPeakEfficiencyTemperature() * 0.9F && temperature.getCurrentTemperature() <= temperature.getPeakEfficiencyTemperature() * 1.1F )
+			tempColor = TextFormatting.GREEN;
+		if( temperature.getCurrentTemperature() >= temperature.getCriticalTemperature() * 0.9F )
+			tempColor = TextFormatting.YELLOW;
+		if( temperature.getCurrentTemperature() >= temperature.getCriticalTemperature() )
+			tempColor = TextFormatting.RED;
+			
+		String tempString = String.format( "Temperature:%s %,.0f C %s/ %,.0f C (%s)", tempColor, temperature.getCurrentTemperature(), TextFormatting.WHITE, temperature.getMaximumTemperature(), changeString );
+		if( temperature.getCurrentTemperature() > temperature.getMaximumTemperature() )
 			tempString = String.format( "%sOverheated", TextFormatting.RED );
 		
 		return new String[] {
