@@ -12,6 +12,8 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 
 	private EnumAirVent type;
 	private int tier;
+	
+	private boolean obstructed;
 	private boolean operational;
 	
 	private BlockPos controllerPos;
@@ -22,9 +24,20 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	public TileEntityReactorAirVent() {
 		type = EnumAirVent.EMPTY;
 		tier = 0;
+		
+		obstructed = true;
 		operational = false;
 		
 		registerPulsar( () -> {
+			boolean obstructed = world.getBlockState( pos.up() ).getBlock() != Blocks.AIR && world.getBlockState( pos.up() ).getBlock() != Blocks.FIRE;
+			if( obstructed != this.obstructed ) {
+				this.obstructed = obstructed;
+				syncClient();
+				
+				if( controller != null )
+					controller.getStructure().changeTemperatureCooldown( this );
+			}
+			
 			if( controller == null ) {
 				burnTimer = -1;
 				
@@ -34,7 +47,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 				return;
 			}
 			
-			if( operational && burnTimer == -1 && type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() >= type.getMeltingPoint( controller.getStructure().getTemperature() ) )
+			if( isOperational() && burnTimer == -1 && type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() >= type.getMeltingPoint( controller.getStructure().getTemperature() ) )
 				ignite();
 			
 			if( type != EnumAirVent.EMPTY && controller.getStructure().getTemperature().getCurrentTemperature() < type.getMeltingPoint( controller.getStructure().getTemperature() ) ) {
@@ -83,6 +96,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		NBTTagCompound airVent = new NBTTagCompound();
 		airVent.setInteger( "type", type.ordinal() );
 		airVent.setInteger( "tier", tier );
+		airVent.setBoolean( "obstructed", obstructed );
 		airVent.setBoolean( "operational", operational );
 		airVent.setInteger( "burnTimer", burnTimer );
 		if( controllerPos != null )
@@ -99,6 +113,7 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 		
 		type = EnumAirVent.values()[ airVent.getInteger( "type" ) ];
 		tier = airVent.getInteger( "tier" );
+		obstructed = airVent.getBoolean( "obstructed" );
 		operational = airVent.getBoolean( "operational" );
 		burnTimer = airVent.getInteger( "burnTimer" );
 		controllerPos = airVent.hasKey( "controller" ) ? NBTUtil.getPosFromTag( airVent.getCompoundTag( "controller" ) ) : null;
@@ -109,7 +124,9 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	
 	public void ignite() {
 		burnTimer = 400;
-		world.setBlockState( pos.up(), Blocks.FIRE.getDefaultState() );
+		
+		if( world.getBlockState( pos.up() ) == Blocks.AIR )
+			world.setBlockState( pos.up(), Blocks.FIRE.getDefaultState() );
 	}
 	
 	public void setVentType( EnumAirVent type ) {
@@ -170,7 +187,11 @@ public class TileEntityReactorAirVent extends TileEntityTiny implements IReactor
 	}
 	
 	public boolean isOperational() {
-		return operational;
+		return operational && !obstructed;
+	}
+	
+	public boolean isObstructed() {
+		return obstructed;
 	}
 	
 	public int getBurnTimer() {
