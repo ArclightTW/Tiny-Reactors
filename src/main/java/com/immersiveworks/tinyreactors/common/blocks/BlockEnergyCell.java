@@ -24,11 +24,10 @@ public class BlockEnergyCell extends BlockTinyTile<TileEntityEnergyCell> impleme
 	
 	public BlockEnergyCell() {
 		super( Material.IRON, TileEntityEnergyCell.class );
+		setSoundType( SoundType.METAL );
 		
 		setHardness( 5F );
 		setResistance( 15F );
-		
-		setSoundType( SoundType.METAL );
 		
 		IBlockState state = blockState.getBaseState();
 		state = state.withProperty( CORE, true );

@@ -6,6 +6,7 @@ import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorHeatSink;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,6 +19,10 @@ public class BlockReactorHeatSink extends BlockTinyTile<TileEntityReactorHeatSin
 
 	public BlockReactorHeatSink() {
 		super( Material.IRON, TileEntityReactorHeatSink.class );
+		setSoundType( SoundType.METAL );
+		
+		setHardness( 5F );
+		setResistance( 15F );
 	}
 	
 	@Override

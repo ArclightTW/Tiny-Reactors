@@ -6,6 +6,7 @@ import com.immersiveworks.tinyreactors.common.properties.EnumTransferPort;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorTransferPort;
 
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -25,6 +26,10 @@ public class BlockReactorTransferPort extends BlockTinyTile<TileEntityReactorTra
 
 	public BlockReactorTransferPort() {
 		super( Material.IRON, TileEntityReactorTransferPort.class );
+		setSoundType( SoundType.METAL );
+		
+		setHardness( 5F );
+		setResistance( 15F );
 		
 		setDefaultState( blockState.getBaseState().withProperty( BlockDirectional.FACING, EnumFacing.NORTH ).withProperty( EnumTransferPort.PROPERTY, EnumTransferPort.ENERGY ) );
 	}

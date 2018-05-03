@@ -27,12 +27,11 @@ public class BlockEnergyRelay extends BlockTinyTile<TileEntityEnergyRelay> imple
 
 	public BlockEnergyRelay() {
 		super( Material.IRON, TileEntityEnergyRelay.class );
+		setSoundType( SoundType.METAL );
 		
 		setHardness( 5F );
 		setResistance( 15F );
-		
 		setLightLevel( 0.5F );
-		setSoundType( SoundType.METAL );
 		
 		setDefaultState( blockState.getBaseState().withProperty( BlockDirectional.FACING, EnumFacing.NORTH ) );
 	}

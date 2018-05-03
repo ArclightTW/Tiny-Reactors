@@ -45,7 +45,12 @@ public class BlockTinyTile<T extends TileEntity> extends BlockTiny {
 	
 	@SuppressWarnings( "unchecked" )
 	public T getTileEntity( IBlockAccess world, BlockPos pos ) {
-		return ( T )world.getTileEntity( pos );
+		try {
+			return ( T )world.getTileEntity( pos );
+		}
+		catch( ClassCastException e ) {
+			return null;
+		}
 	}
 	
 }

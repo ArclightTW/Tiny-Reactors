@@ -2,6 +2,7 @@ package com.immersiveworks.tinyreactors.common.blocks;
 
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorGlass;
 
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -16,6 +17,11 @@ public class BlockReactorGlass extends BlockTinyTile<TileEntityReactorGlass> {
 	
 	public BlockReactorGlass() {
 		super( Material.IRON, TileEntityReactorGlass.class );
+		setSoundType( SoundType.METAL );
+		
+		setHardness( 5F );
+		setResistance( 15F );
+		
 		setDefaultState( blockState.getBaseState().withProperty( STRUCTURE, false ) );
 	}
 	

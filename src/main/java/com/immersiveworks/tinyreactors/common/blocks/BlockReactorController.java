@@ -7,6 +7,7 @@ import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -19,10 +20,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+// TODO: Render text on screen (like a log)
 public class BlockReactorController extends BlockTinyTile<TileEntityReactorController> implements IEnergyNetworkBlockRenderer {
 
 	public BlockReactorController() {
 		super( Material.IRON, TileEntityReactorController.class );
+		setSoundType( SoundType.METAL );
+		
+		setHardness( 5F );
+		setResistance( 15F );
+		
 		setDefaultState( blockState.getBaseState().withProperty( BlockDirectional.FACING, EnumFacing.NORTH ) );
 	}
 	
@@ -88,12 +95,14 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 		if( change > -0.001F && change < 0.001F )
 			changeString = "0.00 C/t";
 		
-		String energyString = String.format( "Energy: %,d RF/t", structure.getEnergyGain() );
+		String tempString = String.format( "Temperature: %,.0f C / %,.0f C (%s)", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature(), changeString );
+		if( structure.getTemperature().getCurrentTemperature() > structure.getTemperature().getMaximumTemperature() )
+			tempString = String.format( "%sOverheated", TextFormatting.RED );
 		
 		return new String[] {
 				"Operational: true",
-				String.format( "Temperature: %,.0f C / %,.0f C (%s)", structure.getTemperature().getCurrentTemperature(), structure.getTemperature().getMaximumTemperature(), changeString ),
-				energyString
+				tempString,
+				String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
 		};
 	}
 	

@@ -23,11 +23,10 @@ public class BlockEnergyConduit extends BlockTinyTile<TileEntityEnergyConduit> {
 	
 	public BlockEnergyConduit() {
 		super( Material.IRON, TileEntityEnergyConduit.class );
-		
-		setHardness( 2F );
-		setResistance( 6F );
-		
 		setSoundType( SoundType.METAL );
+		
+		setHardness( 1F );
+		setResistance( 5F );
 		
 		IBlockState state = blockState.getBaseState();
 		state = state.withProperty( CORE, true );
