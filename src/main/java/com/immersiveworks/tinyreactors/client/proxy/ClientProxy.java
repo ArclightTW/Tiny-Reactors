@@ -5,11 +5,13 @@ import com.immersiveworks.tinyreactors.client.fx.FXTypes;
 import com.immersiveworks.tinyreactors.client.render.TESREnergyCell;
 import com.immersiveworks.tinyreactors.client.render.TESRReactorController;
 import com.immersiveworks.tinyreactors.client.render.TESRReactorPlanner;
+import com.immersiveworks.tinyreactors.client.render.TESRReactorSurgeProtector;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.proxy.IProxy;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityEnergyCell;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPlanner;
+import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorSurgeProtector;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -28,6 +30,8 @@ public class ClientProxy implements IProxy {
 		
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorController.class, new TESRReactorController() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityEnergyCell.class, new TESREnergyCell() );
+		
+		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorSurgeProtector.class, new TESRReactorSurgeProtector() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorPlanner.class, new TESRReactorPlanner() );
 	}
 	

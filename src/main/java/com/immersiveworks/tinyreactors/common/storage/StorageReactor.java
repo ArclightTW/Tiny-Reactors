@@ -50,6 +50,7 @@ public class StorageReactor extends StorageMultiblock {
 	private List<BlockPos> airBlocks;
 	
 	private int countController;
+	private int countSurge;
 	
 	public StorageReactor( TileEntityReactorController controller ) {
 		this.controller = controller;
@@ -82,6 +83,7 @@ public class StorageReactor extends StorageMultiblock {
 		reactor.setInteger( "energyGain", energyGain );
 		
 		reactor.setInteger( "countController", countController );
+		reactor.setInteger( "countSurge", countSurge );
 
 		NBTTagList airBlocks = new NBTTagList();
 		for( int i = 0; i < this.airBlocks.size(); i++ )
@@ -108,6 +110,7 @@ public class StorageReactor extends StorageMultiblock {
 		energyGain = reactor.getInteger( "energyGain" );
 		
 		countController = reactor.getInteger( "countController" );
+		countSurge = reactor.getInteger( "countSurge" );
 		
 		NBTTagList airBlocks = reactor.getTagList( "airBlocks", Constants.NBT.TAG_COMPOUND );
 		for( int i = 0; i < airBlocks.tagCount(); i++ )
@@ -127,6 +130,7 @@ public class StorageReactor extends StorageMultiblock {
 		energyGain = 0;
 		
 		countController = 0;
+		countSurge = 0;
 		
 		transferPorts.clear();
 		airBlocks.clear();
@@ -136,7 +140,7 @@ public class StorageReactor extends StorageMultiblock {
 	
 	@Override
 	public boolean onPostCalculation( World world ) {
-		return countController == 1 && transferPorts.size() > 0;
+		return countController == 1 && countSurge <= 1 && transferPorts.size() > 0;
 	}
 	
 	@Override
@@ -183,6 +187,9 @@ public class StorageReactor extends StorageMultiblock {
 		if( state.getBlock() == Blocks.REACTOR_CONTROLLER )
 			countController += 1;
 		
+		if( state.getBlock() == Blocks.REACTOR_SURGE_PROTECTOR )
+			countSurge += 1;
+		
 		if( state.getBlock() == Blocks.REACTOR_TRANSFER_PORT )
 			transferPorts.add( pos );
 		
@@ -228,12 +235,16 @@ public class StorageReactor extends StorageMultiblock {
 	
 	@Override
 	public boolean isValidCentralCorner( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING || state.getBlock() == Blocks.REACTOR_CONTROLLER || state.getBlock() == Blocks.REACTOR_TRANSFER_PORT;
+		return state.getBlock() == Blocks.REACTOR_CASING ||
+				state.getBlock() == Blocks.REACTOR_CONTROLLER || state.getBlock() == Blocks.REACTOR_TRANSFER_PORT ||
+				state.getBlock() == Blocks.REACTOR_SURGE_PROTECTOR;
 	}
 	
 	@Override
 	public boolean isValidCentralWall( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING || state.getBlock() == Blocks.REACTOR_GLASS || state.getBlock() == Blocks.REACTOR_CONTROLLER || state.getBlock() == Blocks.REACTOR_TRANSFER_PORT || state.getBlock() == Blocks.REACTOR_HEAT_SINK;
+		return state.getBlock() == Blocks.REACTOR_CASING || state.getBlock() == Blocks.REACTOR_GLASS ||
+				state.getBlock() == Blocks.REACTOR_CONTROLLER || state.getBlock() == Blocks.REACTOR_TRANSFER_PORT || state.getBlock() == Blocks.REACTOR_HEAT_SINK ||
+				state.getBlock() == Blocks.REACTOR_SURGE_PROTECTOR;
 	}
 	
 	@Override
@@ -335,7 +346,7 @@ public class StorageReactor extends StorageMultiblock {
 						world.setBlockToAir( new BlockPos( x, y, z ) );
 					}
 			
-			controller.setActive( false );
+			controller.setActive( false, true );
 			break;
 		case 4:	// Drainage
 			List<IEnergyStorage> energies = Lists.newLinkedList();
@@ -352,10 +363,10 @@ public class StorageReactor extends StorageMultiblock {
 			for( IEnergyStorage energy : energies )
 				energy.extractEnergy( energy.getMaxEnergyStored(), false );
 			
-			controller.setActive( false );
+			controller.setActive( false, true );
 			break;
 		case 5:	// No Effect
-			controller.setActive( false );
+			controller.setActive( false, true );
 			break;
 		}
 		

@@ -1,0 +1,40 @@
+{
+	"type"							: "forge:ore_shaped",
+	"group"							: "tinyreactors:reactor_controller",
+	
+	"result"						: {
+		"item"						: "tinyreactors:reactor_controller",
+		"count"						: 1,
+		"data"						: 0
+	},
+	
+	"pattern"						: [
+		"CCC",
+		"TDT",
+		"RcR"
+	],
+	
+	"key"							: {
+		"C"							: [{
+			"item"					: "tinyreactors:reactor_casing"
+		}],
+		
+		"T"							: [{
+			"item"					: "minecraft:redstone_torch"
+		}],
+		
+		"D"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "gemDiamond"
+		}],
+		
+		"c"							: [{
+			"item"					: "minecraft:comparator"
+		}],
+		
+		"R"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "dustRedstone"
+		}]
+	}
+}

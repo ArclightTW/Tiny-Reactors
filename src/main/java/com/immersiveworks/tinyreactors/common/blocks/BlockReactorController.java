@@ -86,7 +86,7 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 		TileEntityReactorController controller = getTileEntity( world, pos );
 		
 		if( !world.isRemote && player.isSneaking() ) {
-			controller.setActive( !controller.isActive() );
+			controller.setActive( !controller.isManuallyActive(), true );
 			return true;
 		}
 		
@@ -103,7 +103,7 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 		
 		if( !Configs.REACTOR_TEMPERATURE )
 			return new String[] {
-					String.format( "Status: %s", controller.isActive() ? "Operational" : "Non-Operational" ),
+					String.format( "Status: %s", controller.isManuallyActive() ? controller.isActive() ? "Operational" : "Auto-Cooling" : "Deactivated" ),
 					String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
 				};
 		
@@ -137,7 +137,7 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 			tempString = String.format( "%sOverheated", TextFormatting.RED );
 		
 		return new String[] {
-				String.format( "Status: %s", controller.isActive() ? "Operational" : "Non-Operational" ),
+				String.format( "Status: %s", controller.isManuallyActive() ? controller.isActive() ? "Operational" : "Auto-Cooling" : "Deactivated" ),
 				tempString,
 				String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
 		};

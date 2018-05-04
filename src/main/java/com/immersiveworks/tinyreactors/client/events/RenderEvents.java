@@ -54,7 +54,7 @@ public class RenderEvents {
 		if( state == null || !( state.getBlock() instanceof IEnergyNetworkBlockRenderer ) ) 
 			return;
 		
-		GuiTinyWrenchOverlay.instance.render( mc.world, result.getBlockPos(), state, ( IEnergyNetworkBlockRenderer )state.getBlock() );
+		GuiTinyWrenchOverlay.instance.render( mc.world, mc.player, result.getBlockPos(), state, ( IEnergyNetworkBlockRenderer )state.getBlock(), result.sideHit, result.hitVec );
 	}
 	
 }

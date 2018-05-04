@@ -40,8 +40,8 @@ public class BlockTiny extends Block implements IEnergyNetworkBlock, IWrenchable
 	}
 	
 	@Override
-	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack ) {
-		return false;
+	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack, float hitX, float hitY, float hitZ ) {
+		return onWrenched( world, pos, facing, player, itemstack );
 	}
 	
 	@Override
@@ -66,6 +66,13 @@ public class BlockTiny extends Block implements IEnergyNetworkBlock, IWrenchable
 	@Override
 	public EnumBlockRenderType getRenderType( IBlockState state ) {
 		return EnumBlockRenderType.MODEL;
+	}
+	
+	/**
+	 * A simple implementation of IWrenchable.onWrenched without the hit position
+	 */
+	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack ) {
+		return false;
 	}
 	
 	/**

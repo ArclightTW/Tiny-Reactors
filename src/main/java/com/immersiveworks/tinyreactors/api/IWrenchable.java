@@ -11,6 +11,6 @@ public interface IWrenchable {
 	/**
 	 * @return false to allow Vanilla handling, true to prevent further code running
 	 */
-	boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack );
+	boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack, float hitX, float hitY, float hitZ );
 	
 }

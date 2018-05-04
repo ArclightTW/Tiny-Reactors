@@ -38,6 +38,9 @@ public class TESRReactorController extends TileEntitySpecialRenderer<TileEntityR
 		int lineIndex = 0;
 		
 		for( int i = 0; i < display.length; i++ ) {
+			if( StringUtils.isBlank( display[ i ] ) )
+				continue;
+			
 			String[] lines = display[ i ].split( "\n" );
 			for( int j = 0; j < lines.length; j++ ) {
 				if( StringUtils.isBlank( lines[ j ] ) )

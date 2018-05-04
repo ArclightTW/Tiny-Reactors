@@ -56,7 +56,7 @@ public class ItemTinyWrench extends ItemTiny {
 		
 		IBlockState state = world.getBlockState( pos );
 		if( state.getBlock() instanceof IWrenchable )
-			if( ( ( IWrenchable )state.getBlock() ).onWrenched( world, pos, facing, player, itemstack ) ) 
+			if( ( ( IWrenchable )state.getBlock() ).onWrenched( world, pos, facing, player, itemstack, hitX, hitY, hitZ ) ) 
 				return EnumActionResult.SUCCESS;
 		
 		if( !world.isRemote )

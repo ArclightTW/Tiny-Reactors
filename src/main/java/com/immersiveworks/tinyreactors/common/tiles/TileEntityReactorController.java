@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.Constants;
 public class TileEntityReactorController extends TileEntityTiny implements IReactorTile {
 
 	private boolean isActive;
+	private boolean isManuallyActive;
 	
 	private List<String> consoleDisplay;
 	
@@ -46,6 +47,7 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 		structure.writeToNBT( compound );
 		
 		compound.setBoolean( "isActive", isActive );
+		compound.setBoolean( "isManuallyActive", isManuallyActive );
 		
 		NBTTagList list = new NBTTagList();
 		for( int i = 0; i < consoleDisplay.size(); i++ )
@@ -61,6 +63,7 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 		structure.readFromNBT( compound );
 		
 		isActive = compound.getBoolean( "isActive" );
+		isManuallyActive = compound.getBoolean( "isManuallyActive" );
 		
 		NBTTagList list = compound.getTagList( "consoleDisplay", Constants.NBT.TAG_STRING );
 		for( int i = 0; i < list.tagCount(); i++ )
@@ -80,11 +83,19 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 	}
 	
 	public boolean isActive() {
-		return isActive;
+		return isActive && isManuallyActive;
 	}
 	
-	public void setActive( boolean active ) {
+	public boolean isManuallyActive() {
+		return isManuallyActive;
+	}
+	
+	public void setActive( boolean active, boolean isManual ) {
 		this.isActive = active;
+		
+		if( isManual )
+			this.isManuallyActive = active;
+		
 		syncClient();
 	}
 	
