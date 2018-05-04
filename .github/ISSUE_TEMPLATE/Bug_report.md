@@ -1,5 +1,5 @@
 ---
-name: "[Mod Version] [Status] Issue Overview"
+name: Issue Template
 about: Use this template to report an issue to the developers
 
 ---
@@ -30,6 +30,7 @@ Before submitting an issue to the Tiny Reactors project, please ensure the follo
 
 __Notes For Submitting__  
 The following template should be used for naming the issue:  
+__[Mod Version] [Status] Issue Overview__  
 Mod Version: As above, this should be the version of the mod you are using  
 Status: Use one of these keywords; BUG, CRASH, PERFORMANCE  
 Issue Overview; As above, this should be a basic summary of the issue that has occurred.
