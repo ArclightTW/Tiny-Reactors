@@ -1,5 +1,7 @@
 package com.immersiveworks.tinyreactors.client.gui;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 
 import net.minecraft.block.state.IBlockState;
@@ -25,8 +27,18 @@ public class GuiTinyWrenchOverlay extends Gui {
 		ScaledResolution sr = new ScaledResolution( Minecraft.getMinecraft() );
 		int startY = sr.getScaledHeight() / 2 + Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT / 2 + 3;
 		
-		for( int i = 0; i < display.length; i++ )
-			Minecraft.getMinecraft().fontRenderer.drawString( display[ i ], sr.getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth( display[ i ] ) / 2, startY + ( i * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) ), 0xFFFFFF );
+		int lineIndex = 0;
+		
+		for( int i = 0; i < display.length; i++ ) {
+			String[] lines = display[ i ].split( "\n" );
+			for( int j = 0; j < lines.length; j++ ) {
+				if( StringUtils.isBlank( lines[ j ] ) )
+					continue;
+				
+				Minecraft.getMinecraft().fontRenderer.drawString( lines[ j ], sr.getScaledWidth() / 2 - Minecraft.getMinecraft().fontRenderer.getStringWidth( lines[ j ] ) / 2, startY + ( lineIndex * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) ), 0xFFFFFF );
+				lineIndex++;
+			}
+		}
 		
 		GlStateManager.popAttrib();
 	}

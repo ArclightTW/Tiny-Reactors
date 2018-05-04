@@ -28,12 +28,13 @@ public class ItemVentilationFan extends ItemTiny {
 	@Override
 	public void addInformation( ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag ) {
 		tooltip.add( String.format( "Base Melting Point: %,.0f C", EnumAirVent.FANS[ stack.getItemDamage() ].getMeltingPoint( null ) ) );
+		tooltip.add( String.format( "Reactor Scale Factor: %,.0f%%", EnumAirVent.FANS[ stack.getItemDamage() ].getReactorScaleFactor() * 100F ) );
 	}
 
 	@Override
 	public EnumActionResult onItemUseFirst( EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand ) {
 		ItemStack itemstack = player.getHeldItem( hand );
-		if( itemstack.isEmpty() || itemstack.getItem() != Items.VENTILATION_FAN )
+		if( itemstack.getItem() != Items.VENTILATION_FAN )
 			return EnumActionResult.PASS;
 		
 		TileEntity tile = world.getTileEntity( pos );

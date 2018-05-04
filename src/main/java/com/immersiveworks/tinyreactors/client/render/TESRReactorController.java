@@ -1,5 +1,7 @@
 package com.immersiveworks.tinyreactors.client.render;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 
@@ -33,15 +35,25 @@ public class TESRReactorController extends TileEntitySpecialRenderer<TileEntityR
 		if( state.getBlock() instanceof IEnergyNetworkBlockRenderer )
 			display = ( ( IEnergyNetworkBlockRenderer )state.getBlock() ).getWrenchOverlayInfo( controller.getWorld(), controller.getPos(), state );
 		
-		for( int i = 0; i < display.length; i++ )
-			getFontRenderer().drawString( display[ i ], 0, i * 10, 0xFFFFFF );
+		int lineIndex = 0;
 		
-		getFontRenderer().drawString( "------------------------------", 0, display.length * 10, 0xFFFFFF );
+		for( int i = 0; i < display.length; i++ ) {
+			String[] lines = display[ i ].split( "\n" );
+			for( int j = 0; j < lines.length; j++ ) {
+				if( StringUtils.isBlank( lines[ j ] ) )
+					continue;
+				
+				getFontRenderer().drawString( lines[ j ], 0, lineIndex * 10, 0xFFFFFF );
+				lineIndex++;
+			}
+		}
 		
-		int max = Math.min( 18 - display.length - 1, controller.getConsoleDisplay().size() );
+		getFontRenderer().drawString( "------------------------------", 0, lineIndex * 10, 0xFFFFFF );
+		
+		int max = Math.min( 18 - lineIndex - 1, controller.getConsoleDisplay().size() );
 		
 		for( int i = 0; i < max; i++ )
-			getFontRenderer().drawString( controller.getConsoleDisplay().get( controller.getConsoleDisplay().size() - 1 - i ), 0, ( display.length + max - i ) * 10, 0xFFFFFF );
+			getFontRenderer().drawString( controller.getConsoleDisplay().get( controller.getConsoleDisplay().size() - 1 - i ), 0, ( lineIndex + max - i ) * 10, 0xFFFFFF );
 		
 		GlStateManager.enableLighting();
 		GlStateManager.depthMask( true );

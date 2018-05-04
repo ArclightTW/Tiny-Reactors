@@ -37,11 +37,15 @@ public enum EnumAirVent implements IStringSerializable {
 		return values()[ ordinal() + 1 ];
 	}
 	
+	public float getReactorScaleFactor() {
+		return ordinal() * 0.2F;
+	}
+	
 	public float getMeltingPoint( ITemperatureStorage temperature ) {
 		if( temperature == null )
 			return meltingPoint;
 		
-		return meltingPoint + ( ( temperature.getMaximumTemperature() - StorageReactor.BASE_TEMPERATURE ) / ( 6 - ordinal() ) );
+		return meltingPoint + ( ( temperature.getMaximumTemperature() - StorageReactor.BASE_TEMPERATURE ) * getReactorScaleFactor() );
 	}
 	
 	public static PropertyEnum<EnumAirVent> PROPERTY = PropertyEnum.create( "vent", EnumAirVent.class );
