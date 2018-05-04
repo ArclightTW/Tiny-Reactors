@@ -9,6 +9,8 @@ __Feature Overview:__
   
 __Feature Mechanics:__  
 (an in-depth guide as to how you propose the feature would work)
+
+---
   
 __Notes For Submitting__  
 The following template should be used for naming the issue:  
