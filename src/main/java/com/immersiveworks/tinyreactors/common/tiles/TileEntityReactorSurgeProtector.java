@@ -12,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.energy.CapabilityEnergy;
 
-// TODO: Mode for configuring min/max thresholds
 public class TileEntityReactorSurgeProtector extends TileEntityTiny implements IReactorTile {
 
 	private IEnergyStorageNBT energy;

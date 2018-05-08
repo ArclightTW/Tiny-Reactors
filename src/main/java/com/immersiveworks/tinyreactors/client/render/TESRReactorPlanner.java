@@ -22,7 +22,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
-// TODO: Punch to toggle color overlays
 public class TESRReactorPlanner extends TileEntitySpecialRenderer<TileEntityReactorPlanner> {
 
 	private int counterScaleDown, counterScaleUp;
