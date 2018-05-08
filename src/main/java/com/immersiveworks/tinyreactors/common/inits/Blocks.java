@@ -8,6 +8,7 @@ import com.immersiveworks.tinyreactors.common.blocks.BlockReactorCasing;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorController;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorGlass;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorHeatSink;
+import com.immersiveworks.tinyreactors.common.blocks.BlockReactorPlanner;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorSurgeProtector;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorTransferPort;
 
@@ -28,7 +29,8 @@ public class Blocks {
 	public static Block REACTOR_GLASS = new BlockReactorGlass();
 	
 	public static Block REACTOR_SURGE_PROTECTOR = new BlockReactorSurgeProtector();
+//	public static Block REACTOR_PREIGNITER = new BlockReactorPreigniter();
 	
-//	public static Block REACTOR_PLANNER = new BlockReactorPlanner();
+	public static Block REACTOR_PLANNER = new BlockReactorPlanner();
 	
 }

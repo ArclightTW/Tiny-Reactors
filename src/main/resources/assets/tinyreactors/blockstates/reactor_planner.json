@@ -7,6 +7,15 @@
 	
 	"variants"						: {
 		"normal"					: [{ }],
-		"inventory"					: [{ }]
+		"inventory"					: [{ }],
+		
+		"facing"					: {
+			"up"					: { },
+			"down"					: { },
+			"north"					: { },
+			"south"					: { "y" : 180 },
+			"east"					: { "y" : 90 },
+			"west"					: { "y" : -90 }
+		}
 	}
 }

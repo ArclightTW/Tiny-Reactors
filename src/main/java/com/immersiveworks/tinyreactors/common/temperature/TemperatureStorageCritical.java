@@ -27,7 +27,11 @@ public class TemperatureStorageCritical extends TemperatureStorage {
 		if( getCurrentTemperature() < getCriticalTemperature() )
 			return false;
 		
-		return random.nextInt( ( int )( getMaximumTemperature() - getCriticalTemperature() ) ) >= ( int )( getMaximumTemperature() - getCriticalTemperature() ) - ( int )( getCurrentTemperature() - getCriticalTemperature() );
+		int rand = ( int )( getMaximumTemperature() - getCriticalTemperature() );
+		if( rand <= 0 )
+			return false;
+		
+		return random.nextInt( rand ) >= ( int )( getMaximumTemperature() - getCriticalTemperature() ) - ( int )( getCurrentTemperature() - getCriticalTemperature() );
 	}
 	
 	@Override

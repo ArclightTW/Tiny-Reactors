@@ -20,6 +20,7 @@ import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorTransferPort;
 import com.immersiveworks.tinyreactors.common.util.Processes;
 import com.immersiveworks.tinyreactors.common.util.Reactants;
+import com.immersiveworks.tinyreactors.common.util.Reactor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -49,6 +50,7 @@ public class StorageReactor extends StorageMultiblock {
 	private List<BlockPos> transferPorts;
 	private List<BlockPos> airBlocks;
 	
+	private boolean validReactants;
 	private int countController;
 	private int countSurge;
 	
@@ -82,6 +84,7 @@ public class StorageReactor extends StorageMultiblock {
 		reactor.setFloat( "temperatureCooldown", temperatureCooldown );
 		reactor.setInteger( "energyGain", energyGain );
 		
+		reactor.setBoolean( "validReactants", validReactants );
 		reactor.setInteger( "countController", countController );
 		reactor.setInteger( "countSurge", countSurge );
 
@@ -109,6 +112,7 @@ public class StorageReactor extends StorageMultiblock {
 		temperatureCooldown = reactor.getFloat( "temperatureCooldown" );
 		energyGain = reactor.getInteger( "energyGain" );
 		
+		validReactants = reactor.getBoolean( "validReactants" );
 		countController = reactor.getInteger( "countController" );
 		countSurge = reactor.getInteger( "countSurge" );
 		
@@ -129,6 +133,7 @@ public class StorageReactor extends StorageMultiblock {
 
 		energyGain = 0;
 		
+		validReactants = true;
 		countController = 0;
 		countSurge = 0;
 		
@@ -140,7 +145,7 @@ public class StorageReactor extends StorageMultiblock {
 	
 	@Override
 	public boolean onPostCalculation( World world ) {
-		return countController == 1 && countSurge <= 1 && transferPorts.size() > 0;
+		return countController == 1 && countSurge <= 1 && transferPorts.size() > 0 && validReactants;
 	}
 	
 	@Override
@@ -178,8 +183,13 @@ public class StorageReactor extends StorageMultiblock {
 			return;
 		}
 		
-		temperatureGain += Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_REACTANT_TEMPERATURE_GAIN : 0;
-		energyGain += Reactants.getReactantRate( state );
+		if( Reactants.isValidReactant( state ) ) {
+			temperatureGain += Configs.REACTOR_TEMPERATURE ? Configs.REACTOR_REACTANT_TEMPERATURE_GAIN : 0;
+			energyGain += Reactants.getReactantRate( state );
+			return;
+		}
+		
+		validReactants = false;
 	}
 	
 	@Override
@@ -205,46 +215,42 @@ public class StorageReactor extends StorageMultiblock {
 	
 	@Override
 	public boolean isValidRoofCorner( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING;
+		return Reactor.contained( state, Reactor.ROOF_CORNERS );
 	}
 	
 	@Override
 	public boolean isValidRoofWall( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING;
+		return Reactor.contained( state, Reactor.ROOF_WALLS );
 	}
 	
 	@Override
 	public boolean isValidRoofInterior( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING || state.getBlock() == Blocks.REACTOR_AIR_VENT;
+		return Reactor.contained( state, Reactor.ROOF_INTERIORS );
 	}
 	
 	@Override
 	public boolean isValidBaseCorner( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING;
+		return Reactor.contained( state, Reactor.BASE_CORNERS );
 	}
 	
 	@Override
 	public boolean isValidBaseWall( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING;
+		return Reactor.contained( state, Reactor.BASE_WALLS );
 	}
 	
 	@Override
 	public boolean isValidBaseInterior( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING;
+		return Reactor.contained( state, Reactor.BASE_INTERIORS );
 	}
 	
 	@Override
 	public boolean isValidCentralCorner( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING ||
-				state.getBlock() == Blocks.REACTOR_CONTROLLER || state.getBlock() == Blocks.REACTOR_TRANSFER_PORT ||
-				state.getBlock() == Blocks.REACTOR_SURGE_PROTECTOR;
+		return Reactor.contained( state, Reactor.CENTRAL_CORNERS );
 	}
 	
 	@Override
 	public boolean isValidCentralWall( IBlockState state ) {
-		return state.getBlock() == Blocks.REACTOR_CASING || state.getBlock() == Blocks.REACTOR_GLASS ||
-				state.getBlock() == Blocks.REACTOR_CONTROLLER || state.getBlock() == Blocks.REACTOR_TRANSFER_PORT || state.getBlock() == Blocks.REACTOR_HEAT_SINK ||
-				state.getBlock() == Blocks.REACTOR_SURGE_PROTECTOR;
+		return Reactor.contained( state, Reactor.CENTRAL_WALLS );
 	}
 	
 	@Override

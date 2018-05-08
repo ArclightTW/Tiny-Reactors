@@ -1,52 +1,165 @@
 package com.immersiveworks.tinyreactors.client.render;
 
-import java.awt.Color;
+import java.util.List;
+import java.util.Map;
 
-import com.immersiveworks.tinyreactors.common.inits.Blocks;
+import org.lwjgl.opengl.GL11;
+
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPlanner;
+import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPlanner.EnumColorOverlay;
+import com.immersiveworks.tinyreactors.common.util.Reactor;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
+// TODO: Punch to toggle color overlays
 public class TESRReactorPlanner extends TileEntitySpecialRenderer<TileEntityReactorPlanner> {
 
+	private int prevMinX, prevMinY, prevMinZ;
+	private int prevMaxX, prevMaxY, prevMaxZ;
+	
+	private int counterScaleDown, counterScaleUp;
+	private int blockCounter, tickCounter;
+	
+	public TESRReactorPlanner() {
+		counterScaleDown = counterScaleUp = -1;
+	}
+	
 	@Override
 	public void render( TileEntityReactorPlanner planner, double srcX, double srcY, double srcZ, float partialTicks, int destroyStage, float alpha ) {
+		tickCounter++;
+		if( tickCounter > 100 ) {
+			tickCounter = 0;
+			blockCounter++;
+			if( blockCounter > 1000 )
+				blockCounter = 0;
+		}
+		
+		GlStateManager.pushAttrib();
 		GlStateManager.pushMatrix();
+		GlStateManager.disableCull();
+		GlStateManager.translate( srcX + 0.5, srcY + 0.5, srcZ + 0.5 );
+		
+		int li = planner.getWorld().getCombinedLight( planner.getPos(), 15728640 );
+		OpenGlHelper.setLightmapTextureCoords( OpenGlHelper.lightmapTexUnit, ( float )li % 65536, ( float ) li / 65536 );
+		
+		GlStateManager.disableLighting();
+		GlStateManager.blendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		GlStateManager.enableBlend();
-        GlStateManager.blendFunc( SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_COLOR );
 		
-		BlockPos pos = planner.getPos();
+		GlStateManager.color( 1F, 1F, 1F, 0.5F );
+		GlStateManager.shadeModel( Minecraft.isAmbientOcclusionEnabled() ? GL11.GL_SMOOTH : GL11.GL_FLAT );
 		
-		for( int x = -1; x <= 1; x++ )
-			for( int z = -1; z <= 1; z++ )
-				for( int y = 0; y < 3; y++ ) {
-					if( x == 0 && z == 0 && y == 1 )
-						continue;
-					
-					Block block = Blocks.REACTOR_CASING;
-					
-					if( x == 0 && z == -1 && y == 0 )
-						block = Blocks.REACTOR_CONTROLLER;
-					
-					renderGhostBlock( block, pos.add( x, y, z ), partialTicks );
+		float scale = 0.35F;
+		
+		if( prevMinX != planner.getMinX() || prevMinY != planner.getMinY() || prevMinZ != planner.getMinZ() || prevMaxX != planner.getMaxX() || prevMaxY != planner.getMaxY() || prevMaxZ != planner.getMaxZ() ) {
+			if( counterScaleDown == -1 && counterScaleUp == -1 )
+				counterScaleDown = 20;
+			
+			if( counterScaleUp == -1 && counterScaleDown > -1 ) {
+				counterScaleDown--;
+				if( counterScaleDown > -1 )
+					scale = 0.35F * ( counterScaleDown / 20F );
+				else {
+					scale = 0.01F;
+					counterScaleDown = -1;
+					counterScaleUp = 0;
 				}
+			}
+			
+			if( counterScaleDown == -1 && counterScaleUp >= 0 ) {
+				counterScaleUp++;
+				if( counterScaleUp < 20 )
+					scale = 0.35F * ( counterScaleUp / 20F );
+				else {
+					scale = 0.35F;
+					counterScaleDown = -1;
+					counterScaleUp = -1;
+					
+					prevMinX = planner.getMinX();
+					prevMinY = planner.getMinY();
+					prevMinZ = planner.getMinZ();
+					prevMaxX = planner.getMaxX();
+					prevMaxY = planner.getMaxY();
+					prevMaxZ = planner.getMaxZ();
+				}
+			}
+		}
 		
+		if( planner.getColorOverlay() != EnumColorOverlay.OFF ) {
+			for( int x = planner.getMinX(); x <= planner.getMaxX(); x++ ) {
+				for( int z = planner.getMinZ(); z <= planner.getMaxZ(); z++ ) {
+					for( int y = planner.getMinY(); y <= planner.getMaxY(); y++ ) {
+						IBlockState state = Minecraft.getMinecraft().world.getBlockState( planner.getPos().add( x, y, z ) );
+						if( x <= planner.getMinX() || x >= planner.getMaxX() || y <= planner.getMinY() || y >= planner.getMaxY() || z <= planner.getMinZ() || z >= planner.getMaxZ() )
+							continue;
+						
+						if( state.getBlock() == net.minecraft.init.Blocks.AIR )
+							continue;
+						
+						GlStateManager.pushMatrix();
+						GlStateManager.translate( x, y, z );
+						
+						GlStateManager.color( 244 / 255F, 170 / 255F, 66 / 255F, 0.75F );
+						
+						GlStateManager.disableTexture2D();
+						renderShadedBlock( state, 0.5F );
+						GlStateManager.enableTexture2D();
+						
+						GlStateManager.color( 1F, 1F, 1F, 0.5F );
+						GlStateManager.popMatrix();
+					}
+				}
+			}
+		}
+		
+		for( Map.Entry<BlockPos, List<IBlockState>> p : planner.getBlocks().entrySet() ) {
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(
+					( planner.getPos().getX() - p.getKey().getX() ) * -1.0F,
+					( planner.getPos().getY() - p.getKey().getY() ) * -1.0F,
+					( planner.getPos().getZ() - p.getKey().getZ() ) * -1.0F
+					);
+			
+			IBlockState current = Minecraft.getMinecraft().world.getBlockState( p.getKey() );
+			if( !Reactor.contained( current, p.getValue() ) ) {
+				renderShadedBlock( p.getValue().get( blockCounter % p.getValue().size() ), scale );
+				
+				if( planner.getColorOverlay() != EnumColorOverlay.OFF && current.getBlock() != Blocks.AIR ) {
+					GlStateManager.color( 244 / 255F, 170 / 255F, 66 / 255F, 0.75F );
+					
+					GlStateManager.disableTexture2D();
+					renderShadedBlock( current, 0.5F );
+					GlStateManager.enableTexture2D();
+				}
+			}
+			else if( planner.getColorOverlay() == EnumColorOverlay.ALL ) {
+				GlStateManager.color( 110 / 255F, 244 / 255F, 66 / 255F, 0.75F );
+				
+				GlStateManager.disableTexture2D();
+				renderShadedBlock( current, 0.5F );
+				GlStateManager.enableTexture2D();
+			}
+			
+			GlStateManager.color( 1F, 1F, 1F, 0.5F );
+			GlStateManager.popMatrix();
+		}
+		
+		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
+		GlStateManager.enableCull();
         GlStateManager.popMatrix();
+        GlStateManager.popAttrib();
 	}
 	
 	@Override
@@ -54,66 +167,57 @@ public class TESRReactorPlanner extends TileEntitySpecialRenderer<TileEntityReac
 		return true;
 	}
 	
-	private void renderGhostBlock( Block block, BlockPos position, float partialTicks ) {
-		renderGhostBlock( block.getDefaultState(), position, partialTicks );
-	}
-
-	private void renderGhostBlock( IBlockState state, BlockPos position, float partialTicks ) {
-		renderGhostBlock( state, position, Color.WHITE, true, partialTicks );
-	}
-	
-	private void renderGhostBlock( IBlockState state, BlockPos position, Color color, boolean noDepth, float partialTicks ) {
-		renderGhostModel( Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState( state ), position, color, noDepth, partialTicks );
-	}
-	
-	private void renderGhostModel( IBakedModel model, BlockPos position, Color color, boolean noDepth, float partialTicks ) {
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc( SourceFactor.ONE, DestFactor.ONE_MINUS_DST_COLOR );
+	private void renderShadedBlock( IBlockState state, float size ) {
+		Tessellator tess = Tessellator.getInstance();
+		BufferBuilder bb = tess.getBuffer();
 		
-		BufferBuilder vb;
-		if( noDepth ) {
-			GlStateManager.depthFunc( 519 );
+		for( BakedQuad quad : Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState( state ).getQuads( state, null, 0L ) ) {
+			Minecraft.getMinecraft().getTextureManager().bindTexture( new ResourceLocation( quad.getSprite().getIconName().replace( "tinyreactors:", "tinyreactors:textures/" ) + ".png" ) );
+			bb.begin( GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX );
 			
-			GlStateManager.pushMatrix();
-			Tessellator tessellator = Tessellator.getInstance();
-			vb = tessellator.getBuffer();
+			switch( quad.getFace() ) {
+			case NORTH:
+				bb.pos( -size - 0.001, -size - 0.001, -size - 0.001 ).tex( 1, 1 ).endVertex();
+				bb.pos( -size - 0.001,  size + 0.001, -size - 0.001 ).tex( 1, 0 ).endVertex();
+				bb.pos(  size + 0.001,  size + 0.001, -size - 0.001 ).tex( 0, 0 ).endVertex();
+				bb.pos(  size + 0.001, -size, - 0.001 -size - 0.001 ).tex( 0, 1 ).endVertex();
+				break;
+			case SOUTH:
+				bb.pos( -size - 0.001, -size - 0.001,  size + 0.001 ).tex( 0, 1 ).endVertex();
+				bb.pos(  size + 0.001, -size - 0.001,  size + 0.001 ).tex( 1, 1 ).endVertex();
+				bb.pos(  size + 0.001,  size + 0.001,  size + 0.001 ).tex( 1, 0 ).endVertex();
+				bb.pos( -size - 0.001,  size + 0.001,  size + 0.001 ).tex( 0, 0 ).endVertex();
+				break;
+				
+			case EAST:
+				bb.pos(  size + 0.001, -size - 0.001, -size - 0.001 ).tex( 1, 1 ).endVertex();
+				bb.pos(  size + 0.001,  size + 0.001, -size - 0.001 ).tex( 1, 0 ).endVertex();
+		        bb.pos(  size + 0.001,  size + 0.001,  size + 0.001 ).tex( 0, 0 ).endVertex();
+		        bb.pos(  size + 0.001, -size - 0.001,  size + 0.001 ).tex( 0, 1 ).endVertex();
+				break;
+			case WEST:
+				bb.pos( -size - 0.001, -size - 0.001, -size - 0.001 ).tex( 0, 1 ).endVertex();
+				bb.pos( -size - 0.001, -size - 0.001,  size + 0.001 ).tex( 1, 1 ).endVertex();
+				bb.pos( -size - 0.001,  size + 0.001,  size + 0.001 ).tex( 1, 0 ).endVertex();
+				bb.pos( -size - 0.001,  size + 0.001, -size - 0.001 ).tex( 0, 0 ).endVertex();
+				break;
+				
+			case UP:
+				bb.pos( -size - 0.001,  size + 0.001, -size - 0.001 ).tex( 0, 0 ).endVertex();
+		        bb.pos( -size - 0.001,  size + 0.001,  size + 0.001 ).tex( 0, 1 ).endVertex();
+		        bb.pos(  size + 0.001,  size + 0.001,  size + 0.001 ).tex( 1, 1 ).endVertex();
+		        bb.pos(  size + 0.001,  size + 0.001, -size - 0.001 ).tex( 1, 0 ).endVertex();
+				break;
+			case DOWN:
+				bb.pos( -size - 0.001, -size - 0.001, -size - 0.001 ).tex( 1, 1 ).endVertex();
+		        bb.pos(  size + 0.001, -size - 0.001, -size - 0.001 ).tex( 0, 1 ).endVertex();
+		        bb.pos(  size + 0.001, -size - 0.001,  size + 0.001 ).tex( 0, 0 ).endVertex();
+		        bb.pos( -size - 0.001, -size - 0.001,  size + 0.001 ).tex( 1, 0 ).endVertex();
+				break;
+			}
 			
-			EntityPlayer player = Minecraft.getMinecraft().player;
-	        double d0 = ( player.lastTickPosX + ( player.posX - player.lastTickPosX ) * ( double )partialTicks );
-	        double d1 = ( player.lastTickPosY + ( player.posY - player.lastTickPosY ) * ( double )partialTicks ) + 500;
-	        double d2 = ( player.lastTickPosZ + ( player.posZ - player.lastTickPosZ ) * ( double )partialTicks );
-	        vb.setTranslation( -d0, -d1, -d2 );
+			tess.draw();
 		}
-		else {
-			GlStateManager.pushMatrix();
-			Tessellator tessellator = Tessellator.getInstance();
-			vb = tessellator.getBuffer();
-			
-			EntityPlayer player = Minecraft.getMinecraft().player;
-	        double d0 = ( player.lastTickPosX + ( player.posX - player.lastTickPosX ) * ( double )partialTicks );
-	        double d1 = ( player.lastTickPosY + ( player.posY - player.lastTickPosY ) * ( double )partialTicks );
-	        double d2 = ( player.lastTickPosZ + ( player.posZ - player.lastTickPosZ ) * ( double )partialTicks );
-	        vb.setTranslation( -d0, -d1, -d2 );
-		}
-		
-		vb.begin( 7, DefaultVertexFormats.BLOCK );
-		
-		World world = Minecraft.getMinecraft().world;
-		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		
-		brd.getBlockModelRenderer().renderModel( world, model, Minecraft.getMinecraft().world.getBlockState( position ), position.add( 0, noDepth ? 500 : 0, 0 ), vb, false );
-		
-		for( int i = 0; i < vb.getVertexCount(); i++ )
-			vb.putColorMultiplier( color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, i );
-		
-		vb.color( 1, 1, 1, 0.1F );
-		
-		Tessellator.getInstance().draw();
-        Tessellator.getInstance().getBuffer().setTranslation( 0, 0, 0 );
-        GlStateManager.popMatrix();
-		
-		GlStateManager.depthFunc( 515 );
-		GlStateManager.disableBlend();
 	}
 	
 }

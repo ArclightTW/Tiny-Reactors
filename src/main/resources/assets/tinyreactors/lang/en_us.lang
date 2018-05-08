@@ -12,8 +12,9 @@ tile.tinyreactors:reactor_casing.name=Reactor Casing
 tile.tinyreactors:reactor_glass.name=Reactor Glass
 
 tile.tinyreactors:reactor_surge_protector.name=Reactor Surge Protector
+tile.tinyreactors:reactor_preigniter.name=Reactor Preigniter
 
-tile.tinyreactors:reactor_planner.name=Reactor Planner (WIP)
+tile.tinyreactors:reactor_planner.name=Reactor Planner
 
 # Items
 
