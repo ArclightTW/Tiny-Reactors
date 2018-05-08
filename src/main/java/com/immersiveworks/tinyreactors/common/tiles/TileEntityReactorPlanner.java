@@ -24,12 +24,11 @@ public class TileEntityReactorPlanner extends TileEntityTiny {
 
 	private EnumColorOverlay overlay;
 	
-	private int minX = -1;
-	private int minY = -1;
-	private int minZ = -1;
-	private int maxX = 1;
-	private int maxY = 1;
-	private int maxZ = 1;
+	private int prevMinX, prevMinY, prevMinZ;
+	private int prevMaxX, prevMaxY, prevMaxZ;
+	
+	private int minX = -1, minY = -1, minZ = -1;
+	private int maxX =  1, maxY =  1, maxZ =  1;
 	
 	private Map<BlockPos, List<IBlockState>> blocks;
 	
@@ -49,6 +48,12 @@ public class TileEntityReactorPlanner extends TileEntityTiny {
 		
 		NBTTagCompound planner = new NBTTagCompound();
 		planner.setInteger( "overlay", overlay.ordinal() );
+		planner.setInteger( "prevMinX", prevMinX );
+		planner.setInteger( "prevMinY", prevMinY );
+		planner.setInteger( "prevMinZ", prevMinZ );
+		planner.setInteger( "prevMaxX", prevMaxX );
+		planner.setInteger( "prevMaxY", prevMaxY );
+		planner.setInteger( "prevMaxZ", prevMaxZ );
 		planner.setInteger( "minX", minX );
 		planner.setInteger( "minY", minY );
 		planner.setInteger( "minZ", minZ );
@@ -84,6 +89,12 @@ public class TileEntityReactorPlanner extends TileEntityTiny {
 		super.readFromNBT( compound );
 		NBTTagCompound planner = compound.getCompoundTag( "planner" );
 		overlay = EnumColorOverlay.values()[ planner.getInteger( "overlay" ) ];
+		prevMinX = planner.getInteger( "prevMinX" );
+		prevMinY = planner.getInteger( "prevMinY" );
+		prevMinZ = planner.getInteger( "prevMinZ" );
+		prevMaxX = planner.getInteger( "prevMaxX" );
+		prevMaxY = planner.getInteger( "prevMaxY" );
+		prevMaxZ = planner.getInteger( "prevMaxZ" );
 		minX = planner.getInteger( "minX" );
 		minY = planner.getInteger( "minY" );
 		minZ = planner.getInteger( "minZ" );
@@ -163,6 +174,19 @@ public class TileEntityReactorPlanner extends TileEntityTiny {
 	public EnumColorOverlay getColorOverlay() {
 		return overlay;
 	}
+	
+	public void setPrevMinX( int x ) { prevMinX = x; }
+	public int getPrevMinX() { return prevMinX; }
+	public void setPrevMinY( int y ) { prevMinY = y; }
+	public int getPrevMinY() { return prevMinY; }
+	public void setPrevMinZ( int z ) { prevMinZ = z; }
+	public int getPrevMinZ() { return prevMinZ; }
+	public void setPrevMaxX( int x ) { prevMaxX = x; }
+	public int getPrevMaxX() { return prevMaxX; }
+	public void setPrevMaxY( int y ) { prevMaxY = y; }
+	public int getPrevMaxY() { return prevMaxY; }
+	public void setPrevMaxZ( int z ) { prevMaxZ = z; }
+	public int getPrevMaxZ() { return prevMaxZ; }
 	
 	public int getMinX() { return minX; }
 	public int getMinY() { return minY; }

@@ -25,9 +25,6 @@ import net.minecraft.util.math.BlockPos;
 // TODO: Punch to toggle color overlays
 public class TESRReactorPlanner extends TileEntitySpecialRenderer<TileEntityReactorPlanner> {
 
-	private int prevMinX, prevMinY, prevMinZ;
-	private int prevMaxX, prevMaxY, prevMaxZ;
-	
 	private int counterScaleDown, counterScaleUp;
 	private int blockCounter, tickCounter;
 	
@@ -62,7 +59,7 @@ public class TESRReactorPlanner extends TileEntitySpecialRenderer<TileEntityReac
 		
 		float scale = 0.35F;
 		
-		if( prevMinX != planner.getMinX() || prevMinY != planner.getMinY() || prevMinZ != planner.getMinZ() || prevMaxX != planner.getMaxX() || prevMaxY != planner.getMaxY() || prevMaxZ != planner.getMaxZ() ) {
+		if( planner.getPrevMinX() != planner.getMinX() || planner.getPrevMinY() != planner.getMinY() || planner.getPrevMinZ() != planner.getMinZ() || planner.getPrevMaxX() != planner.getMaxX() || planner.getPrevMaxY() != planner.getMaxY() || planner.getPrevMaxZ() != planner.getMaxZ() ) {
 			if( counterScaleDown == -1 && counterScaleUp == -1 )
 				counterScaleDown = 20;
 			
@@ -86,12 +83,12 @@ public class TESRReactorPlanner extends TileEntitySpecialRenderer<TileEntityReac
 					counterScaleDown = -1;
 					counterScaleUp = -1;
 					
-					prevMinX = planner.getMinX();
-					prevMinY = planner.getMinY();
-					prevMinZ = planner.getMinZ();
-					prevMaxX = planner.getMaxX();
-					prevMaxY = planner.getMaxY();
-					prevMaxZ = planner.getMaxZ();
+					planner.setPrevMinX( planner.getMinX() );
+					planner.setPrevMinY( planner.getMinY() );
+					planner.setPrevMinZ( planner.getMinZ() );
+					planner.setPrevMaxX( planner.getMaxX() );
+					planner.setPrevMaxY( planner.getMaxY() );
+					planner.setPrevMaxZ( planner.getMaxZ() );
 				}
 			}
 		}
