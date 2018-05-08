@@ -2,7 +2,7 @@ package com.immersiveworks.tinyreactors.common.processes;
 
 import java.util.List;
 
-import com.immersiveworks.tinyreactors.api.IProcess;
+import com.immersiveworks.tinyreactors.api.processes.IProcess;
 import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 

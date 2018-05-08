@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.immersiveworks.tinyreactors.api.IProcess;
+import com.immersiveworks.tinyreactors.api.processes.IProcess;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 
 import net.minecraftforge.fml.common.Mod;

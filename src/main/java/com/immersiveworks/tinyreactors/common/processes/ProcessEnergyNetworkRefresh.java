@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.immersiveworks.tinyreactors.api.IProcess;
+import com.immersiveworks.tinyreactors.api.processes.IProcess;
 import com.immersiveworks.tinyreactors.common.energy.IEnergyNetworkBlock;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 

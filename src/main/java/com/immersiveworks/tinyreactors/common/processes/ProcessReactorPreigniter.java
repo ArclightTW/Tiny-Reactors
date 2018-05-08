@@ -1,6 +1,6 @@
 package com.immersiveworks.tinyreactors.common.processes;
 
-import com.immersiveworks.tinyreactors.api.IProcess;
+import com.immersiveworks.tinyreactors.api.processes.IProcess;
 import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPreigniter;
 
@@ -14,6 +14,7 @@ public class ProcessReactorPreigniter implements IProcess {
 	
 	private int burnTime;
 	
+	public ProcessReactorPreigniter() { }
 	public ProcessReactorPreigniter( TileEntityReactorPreigniter preigniter, StorageReactor structure ) {
 		this.preigniter = preigniter;
 		this.structure = structure;

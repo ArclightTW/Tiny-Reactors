@@ -1,4 +1,4 @@
-package com.immersiveworks.tinyreactors.api;
+package com.immersiveworks.tinyreactors.api.processes;
 
 public interface IProcess {
 
