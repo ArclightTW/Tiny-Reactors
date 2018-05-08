@@ -13,10 +13,12 @@ import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.processes.ProcessReactorExplosionChained;
+import com.immersiveworks.tinyreactors.common.processes.ProcessReactorPreigniter;
 import com.immersiveworks.tinyreactors.common.temperature.TemperatureStorageCritical;
 import com.immersiveworks.tinyreactors.common.tiles.IReactorTile;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorAirVent;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
+import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPreigniter;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorTransferPort;
 import com.immersiveworks.tinyreactors.common.util.Processes;
 import com.immersiveworks.tinyreactors.common.util.Reactants;
@@ -40,13 +42,14 @@ public class StorageReactor extends StorageMultiblock {
 	
 	private TileEntityReactorController controller;
 	
-	private ITemperatureStorage temperature;
+	private TemperatureStorageCritical temperature;
 	private float temperatureGain;
 	private float temperatureCooldown;
 	
 	private IEnergyStorageNBT energy;
 	private int energyGain;
 	
+	private List<BlockPos> preigniters;
 	private List<BlockPos> transferPorts;
 	private List<BlockPos> airBlocks;
 	
@@ -60,8 +63,15 @@ public class StorageReactor extends StorageMultiblock {
 		temperature = new TemperatureStorageCritical( BASE_TEMPERATURE, false, true );
 		energy = new EnergyStorageNBT( 1000000 );
 		
+		preigniters = Lists.newLinkedList();
 		transferPorts = Lists.newLinkedList();
 		airBlocks = Lists.newLinkedList();
+	}
+	
+	@Override
+	public void setValidationListener( Runnable runnable ) {
+		super.setValidationListener( runnable );
+		temperature.setListener( runnable );
 	}
 	
 	@Override
@@ -93,6 +103,11 @@ public class StorageReactor extends StorageMultiblock {
 			airBlocks.appendTag( NBTUtil.createPosTag( this.airBlocks.get( i ) ) );
 		reactor.setTag( "airBlocks", airBlocks );
 		
+		NBTTagList preigniters = new NBTTagList();
+		for( int i = 0; i < this.preigniters.size(); i++ )
+			preigniters.appendTag( NBTUtil.createPosTag( this.preigniters.get( i ) ) );
+		reactor.setTag( "preigniters", preigniters );
+		
 		NBTTagList transferPorts = new NBTTagList();
 		for( int i = 0; i < this.transferPorts.size(); i++ )
 			transferPorts.appendTag( NBTUtil.createPosTag( this.transferPorts.get( i ) ) );
@@ -120,6 +135,10 @@ public class StorageReactor extends StorageMultiblock {
 		for( int i = 0; i < airBlocks.tagCount(); i++ )
 			this.airBlocks.add( NBTUtil.getPosFromTag( airBlocks.getCompoundTagAt( i ) ) );
 
+		NBTTagList preigniters = reactor.getTagList( "preigniters", Constants.NBT.TAG_COMPOUND );
+		for( int i = 0; i < preigniters.tagCount(); i++ )
+			this.preigniters.add( NBTUtil.getPosFromTag( preigniters.getCompoundTagAt( i ) ) );
+		
 		NBTTagList transferPorts = reactor.getTagList( "transferPorts", Constants.NBT.TAG_COMPOUND );
 		for( int i = 0; i < transferPorts.tagCount(); i++ )
 			this.transferPorts.add( NBTUtil.getPosFromTag( transferPorts.getCompoundTagAt( i ) ) );
@@ -137,6 +156,7 @@ public class StorageReactor extends StorageMultiblock {
 		countController = 0;
 		countSurge = 0;
 		
+		preigniters.clear();
 		transferPorts.clear();
 		airBlocks.clear();
 		
@@ -200,6 +220,9 @@ public class StorageReactor extends StorageMultiblock {
 		if( state.getBlock() == Blocks.REACTOR_SURGE_PROTECTOR )
 			countSurge += 1;
 		
+		if( state.getBlock() == Blocks.REACTOR_PREIGNITER )
+			preigniters.add( pos );
+		
 		if( state.getBlock() == Blocks.REACTOR_TRANSFER_PORT )
 			transferPorts.add( pos );
 		
@@ -258,10 +281,6 @@ public class StorageReactor extends StorageMultiblock {
 		return Reactants.isValidReactant( state );
 	}
 	
-	public boolean hasAvailableSpace() {
-		return airBlocks.size() > 0;
-	}
-	
 	@SuppressWarnings( "deprecation" )
 	public void insertBlock( World world, ItemStack itemstack ) {
 		if( !hasAvailableSpace() )
@@ -274,6 +293,20 @@ public class StorageReactor extends StorageMultiblock {
 		BlockPos pos = airBlocks.remove( 0 );
 		world.setBlockState( pos, block.getStateFromMeta( itemstack.getItemDamage() ) );
 		validateStructure( world, origin, null );
+	}
+	
+	public void startPreigniters( World world ) {
+		for( int i = 0; i < preigniters.size(); i++ ) {
+			TileEntity tile = world.getTileEntity( preigniters.get( i ) );
+			if( tile == null || !( tile instanceof TileEntityReactorPreigniter ) )
+				continue;
+			
+			Processes.addProcess( new ProcessReactorPreigniter( ( TileEntityReactorPreigniter )tile, this ) );
+		}
+	}
+	
+	public boolean hasAvailableSpace() {
+		return airBlocks.size() > 0;
 	}
 	
 	public ITemperatureStorage getTemperature() {
@@ -303,6 +336,16 @@ public class StorageReactor extends StorageMultiblock {
 	
 	public int getEnergyGain() {
 		return ( int )( energyGain * getEnergyMultiplier() );
+	}
+	
+	public float getEnergyMultiplier() {
+		float peak = temperature.getPeakEfficiencyTemperature();
+		float diff = temperature.getCurrentTemperature() > peak ? temperature.getCurrentTemperature() - peak : peak - temperature.getCurrentTemperature();
+		
+		if( temperature.getCurrentTemperature() <= 0 || temperature.getCurrentTemperature() >= temperature.getMaximumTemperature() )
+			return 1;
+		
+		return 1 + ( Configs.REACTOR_ENERGY_GENERATION_MULTIPLIER - 1 ) * ( ( peak - diff ) / peak );
 	}
 	
 	private void performTemperature( World world ) {
@@ -442,16 +485,6 @@ public class StorageReactor extends StorageMultiblock {
 		
 		if( controller.isActive() )
 			energy.receiveEnergy( getEnergyGain(), false );
-	}
-	
-	public float getEnergyMultiplier() {
-		float peak = temperature.getPeakEfficiencyTemperature();
-		float diff = temperature.getCurrentTemperature() > peak ? temperature.getCurrentTemperature() - peak : peak - temperature.getCurrentTemperature();
-		
-		if( temperature.getCurrentTemperature() <= 0 || temperature.getCurrentTemperature() >= temperature.getMaximumTemperature() )
-			return 1;
-		
-		return 1 + ( Configs.REACTOR_ENERGY_GENERATION_MULTIPLIER - 1 ) * ( ( peak - diff ) / peak );
 	}
 	
 }

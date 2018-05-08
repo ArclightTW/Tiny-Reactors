@@ -1,0 +1,35 @@
+{
+	"type"							: "forge:ore_shaped",
+	"group"							: "tinyreactors:reactor_preigniter",
+	
+	"result"						: {
+		"item"						: "tinyreactors:reactor_preigniter",
+		"count"						: 1,
+		"data"						: 0
+	},
+	
+	"pattern"						: [
+		"III",
+		"CRC",
+		"FCF"
+	],
+	
+	"key"							: {
+		"I"							: [{
+			"item"					: "minecraft:iron_bars"
+		}],
+	
+		"C"							: [{
+			"item"					: "tinyreactors:reactor_casing"
+		}],
+		
+		"R"							: [{
+			"type"					: "forge:ore_dict",
+			"ore"					: "dustRedstone"
+		}],
+		
+		"F"							: [{
+			"item"					: "minecraft:furnace"
+		}]
+	}
+}

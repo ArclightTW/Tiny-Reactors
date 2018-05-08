@@ -31,8 +31,8 @@ public class Reactor {
 	};
 	
 	public static Block[] BASE_INTERIORS = {
-			Blocks.REACTOR_CASING
-			// TODO: Blocks.REACTOR_PREIGNITER
+			Blocks.REACTOR_CASING,
+			Blocks.REACTOR_PREIGNITER
 	};
 	
 	public static Block[] CENTRAL_CORNERS = {

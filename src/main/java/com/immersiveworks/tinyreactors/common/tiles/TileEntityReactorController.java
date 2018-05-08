@@ -96,6 +96,9 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 		if( isManual )
 			this.isManuallyActive = active;
 		
+		if( isActive() )
+			structure.startPreigniters( world );
+		
 		syncClient();
 	}
 	
