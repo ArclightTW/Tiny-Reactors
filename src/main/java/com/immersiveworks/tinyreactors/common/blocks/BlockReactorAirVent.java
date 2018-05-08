@@ -113,16 +113,18 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 		if( airVent.getVentType() == EnumAirVent.EMPTY )
 			return new String[] { "Missing Vent Component" };
 		
+		String meltingPoint = "";
 		float melting = airVent.getVentType().getMeltingPoint( null );
-		if( airVent.getController() != null )
+		if( airVent.getController() != null ) {
 			melting = airVent.getVentType().getMeltingPoint( airVent.getController().getStructure().getTemperature() );
-		
-		String meltingPoint = String.format( "%s Melting Point: %,.0f C", airVent.getController() != null ? "Active" : "Base", melting );
-		if( airVent.getController().getStructure().getTemperature().getCurrentTemperature() > airVent.getVentType().getMeltingPoint( airVent.getController().getStructure().getTemperature() ) )
-			meltingPoint += String.format( "\n%s(Will overheat if opened)", TextFormatting.YELLOW );
+			
+			meltingPoint = String.format( "%s Melting Point: %,.0f C", airVent.getController() != null ? "Active" : "Base", melting );
+			if( airVent.getController().getStructure().getTemperature().getCurrentTemperature() > airVent.getVentType().getMeltingPoint( airVent.getController().getStructure().getTemperature() ) )
+				meltingPoint += String.format( "\n%s(Will overheat if opened)", TextFormatting.YELLOW );
 		
 		if( airVent.getBurnTimer() > 0 )
 			meltingPoint = String.format( "%sOverheated by %,.0f C (%,d ticks)", TextFormatting.RED, airVent.getController().getStructure().getTemperature().getCurrentTemperature() - melting, airVent.getBurnTimer() );
+		}
 		
 		return new String[] {
 				String.format( "Component: %s", airVent.getVentType() ),
