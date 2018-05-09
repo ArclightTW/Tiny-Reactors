@@ -1,5 +1,6 @@
 package com.immersiveworks.tinyreactors.common.tiles;
 
+import com.immersiveworks.tinyreactors.api.item.IInternalInventory;
 import com.immersiveworks.tinyreactors.api.item.IItemHandlerNBT;
 import com.immersiveworks.tinyreactors.api.item.ItemHandlerNBT;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
@@ -18,7 +19,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implements IReactorTile {
+public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implements IReactorTile, IInternalInventory {
 
 	public int powerDemand;
 	
@@ -169,6 +170,16 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 			onLoad();
 	}
 	
+	@Override
+	public boolean isAccessible() {
+		return mode == EnumTransferPort.ITEM;
+	}
+	
+	@Override
+	public IItemHandlerNBT getInternalItem() {
+		return item;
+	}
+	
 	public ItemStack insertReactant( ItemStack itemstack ) {
 		if( mode != EnumTransferPort.ITEM || !Reactants.isValidReactant( itemstack ) )
 			return itemstack;
@@ -220,10 +231,6 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 	
 	public EnumTransferPort getTransferMode() {
 		return mode;
-	}
-	
-	public IItemHandlerNBT getInternalItem() {
-		return item;
 	}
 	
 	public String getStatus() {
