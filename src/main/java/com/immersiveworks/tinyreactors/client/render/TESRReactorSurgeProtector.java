@@ -14,7 +14,16 @@ public class TESRReactorSurgeProtector extends TileEntitySpecialRenderer<TileEnt
 		GlStateManager.pushMatrix();
 		GlStateManager.translate( x + 0.5, y + 0.5, z + 0.5 );
 		
-		EnumFacing facing = surge.getWorld().getBlockState( surge.getPos() ).getValue( BlockDirectional.FACING );
+		EnumFacing facing = null;
+		
+		try {
+			facing = surge.getWorld().getBlockState( surge.getPos() ).getValue( BlockDirectional.FACING );
+		}
+		catch( Exception e ) {
+		}
+		
+		if( facing == null )
+			return;
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.depthMask( false );
