@@ -26,6 +26,9 @@ public class ProcessReactorPreigniter implements IProcess {
 			for( int i = 0; i < preigniter.getInternalItem().getSlots(); i++ )
 				if( preigniter.getInternalItem().getStackInSlot( i ).isEmpty() ) {
 					burnTime = TileEntityFurnace.getItemBurnTime( preigniter.getInternalItem().getStackInSlot( i ) ) / 40;
+					if( burnTime > 0 )
+						preigniter.getInternalItem().extractItem( i, 1, false );
+					
 					break;
 				}
 		}

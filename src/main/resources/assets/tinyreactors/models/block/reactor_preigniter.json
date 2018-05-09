@@ -22,6 +22,27 @@
 				"east"	: { "texture" : "#side" },
 				"west"	: { "texture" : "#side" }
 			}
+		},
+		
+		{
+			"from"		: [ 16, 16, 16 ],
+			"to"		: [  0,  0,  0 ],
+			
+			"faces"		: {
+				"north"	: { "texture" : "#side" },
+				"south"	: { "texture" : "#side" },
+				"east"	: { "texture" : "#side" },
+				"west"	: { "texture" : "#side" }
+			}
+		},
+				
+		{
+			"from"		: [ 0, 1, 0 ],
+			"to"		: [ 16, 1, 16 ],
+			
+			"faces"		: {
+				"up"	: { "texture" : "#side" }
+			}
 		}
 	]
 }

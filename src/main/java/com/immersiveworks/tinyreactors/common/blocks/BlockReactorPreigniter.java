@@ -1,5 +1,6 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPreigniter;
 
@@ -14,7 +15,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockReactorPreigniter extends BlockTinyTile<TileEntityReactorPreigniter> {
+public class BlockReactorPreigniter extends BlockTinyTile<TileEntityReactorPreigniter> implements IEnergyNetworkBlockRenderer {
 
 	public BlockReactorPreigniter() {
 		super( Material.IRON, TileEntityReactorPreigniter.class );
@@ -22,6 +23,16 @@ public class BlockReactorPreigniter extends BlockTinyTile<TileEntityReactorPreig
 		
 		setHardness( 5F );
 		setResistance( 15F );
+	}
+	
+	@Override
+	public boolean isOpaqueCube( IBlockState state ) {
+		return false;
+	}
+	
+	@Override
+	public boolean isFullCube( IBlockState state ) {
+		return true;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package com.immersiveworks.tinyreactors.common.tiles;
 
+import com.immersiveworks.tinyreactors.api.item.IInternalInventory;
 import com.immersiveworks.tinyreactors.api.item.IItemHandlerNBT;
 import com.immersiveworks.tinyreactors.api.item.ItemHandlerNBT;
 
@@ -8,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileEntityReactorPreigniter extends TileEntityTiny {
+public class TileEntityReactorPreigniter extends TileEntityTiny implements IInternalInventory {
 	
 	private IItemHandlerNBT item;
 	
@@ -29,6 +30,16 @@ public class TileEntityReactorPreigniter extends TileEntityTiny {
 	public void readFromNBT( NBTTagCompound compound ) {
 		super.readFromNBT( compound );
 		item.readFromNBT( compound );
+	}
+	
+	@Override
+	public boolean isAccessible() {
+		return true;
+	}
+	
+	@Override
+	public IItemHandlerNBT getInternalItem() {
+		return item;
 	}
 	
 	public ItemStack insertCombustible( ItemStack itemstack ) {
@@ -73,10 +84,6 @@ public class TileEntityReactorPreigniter extends TileEntityTiny {
 		}
 		
 		return ItemStack.EMPTY;
-	}
-	
-	public IItemHandlerNBT getInternalItem() {
-		return item;
 	}
 	
 }
