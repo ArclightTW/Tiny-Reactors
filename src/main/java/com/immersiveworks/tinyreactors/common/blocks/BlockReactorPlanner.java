@@ -17,6 +17,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class BlockReactorPlanner extends BlockTinyTile<TileEntityReactorPlanner> implements IEnergyNetworkBlockRenderer {
@@ -80,9 +81,12 @@ public class BlockReactorPlanner extends BlockTinyTile<TileEntityReactorPlanner>
 	@Override
 	public String[] getWrenchOverlayInfo( World world, EntityPlayer player, BlockPos pos, IBlockState state, EnumFacing facing, float hitX, float hitY, float hitZ ) {
 		TileEntityReactorPlanner planner = getTileEntity( world, pos );
+		boolean invalid = planner.getMaxX() - planner.getMinX() + 1 < 3 || planner.getMaxY() - planner.getMinY() + 1 < 3 || planner.getMaxZ() - planner.getMinZ() + 1 < 3;
+		
 		return new String[] {
 				String.format( "Click to %s", player.isSneaking() ? "shrink" : "expand" ),
-				String.format( "Size: %,d x %,d x %,d", planner.getMaxX() - planner.getMinX() + 1, planner.getMaxY() - planner.getMinY() + 1, planner.getMaxZ() - planner.getMinZ() + 1 )
+				String.format( "Size: %,d x %,d x %,d", planner.getMaxX() - planner.getMinX() + 1, planner.getMaxY() - planner.getMinY() + 1, planner.getMaxZ() - planner.getMinZ() + 1 ),
+				String.format( "%s%s", TextFormatting.RED, invalid ? "Invalid Reactor Size" : "" )
 				};
 	}
 	

@@ -27,14 +27,21 @@ public class TileEntityReactorPlanner extends TileEntityTiny {
 	private int prevMinX, prevMinY, prevMinZ;
 	private int prevMaxX, prevMaxY, prevMaxZ;
 	
-	private int minX = -1, minY = -1, minZ = -1;
-	private int maxX =  1, maxY =  1, maxZ =  1;
+	private int minX = -1, minY =  0, minZ = -1;
+	private int maxX =  1, maxY =  2, maxZ =  1;
 	
 	private Map<BlockPos, List<IBlockState>> blocks;
 	
 	public TileEntityReactorPlanner() {
 		blocks = Maps.newHashMap();
 		overlay = EnumColorOverlay.ALL;
+		
+		prevMinX = minX;
+		prevMinY = minY;
+		prevMinZ = minZ;
+		prevMaxX = maxX;
+		prevMaxY = maxY;
+		prevMaxZ = maxZ;
 	}
 	
 	@Override
@@ -132,35 +139,47 @@ public class TileEntityReactorPlanner extends TileEntityTiny {
 		switch( facing ) {
 		case NORTH:
 			minZ += shrink ? 1 : -1;
-			if( minZ > -1 )
-				minZ = -1;
+			if( minZ > 0 )
+				minZ = 0;
+			if( maxZ - minZ + 1 < 3 )
+				minZ--;
 			break;
 		case SOUTH:
 			maxZ += shrink ? -1 : 1;
-			if( maxZ < 1 )
-				maxZ = 1;
+			if( maxZ < 0 )
+				maxZ = 0;
+			if( maxZ - minZ + 1 < 3 )
+				maxZ++;
 			break;
 			
 		case EAST:
 			maxX += shrink ? -1 : 1;
-			if( maxX < 1 )
-				maxX = 1;
+			if( maxX < 0)
+				maxX = 0;
+			if( maxX - minX + 1 < 3 )
+				maxX++;
 			break;
 		case WEST:
 			minX += shrink ? 1 : -1;
-			if( minX > -1 )
-				minX = -1;
+			if( minX > 0 )
+				minX = 0;
+			if( maxX - minX + 1 < 3 )
+				minX--;
 			break;
 			
 		case UP:
 			maxY += shrink ? -1 : 1;
-			if( maxY < 1 )
-				maxY = 1;
+			if( maxY < 0 )
+				maxY = 0;
+			if( maxY - minY + 1 < 3 )
+				maxY++;
 			break;
 		case DOWN:
 			minY += shrink ? 1 : -1;
-			if( minY > -1 )
-				minY = -1;
+			if( minY > 0 )
+				minY = 0;
+			if( maxY - minY + 1 < 3 )
+				minY--;
 			break;
 		}
 		
