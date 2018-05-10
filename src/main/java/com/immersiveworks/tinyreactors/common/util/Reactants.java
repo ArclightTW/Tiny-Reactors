@@ -64,7 +64,8 @@ public class Reactants {
 			else
 				r = new Reactant( reactant );
 			
-			r.addRate( Integer.parseInt( metadata ), Integer.parseInt( rate ) );			
+			r.addRate( Integer.parseInt( metadata ), Integer.parseInt( rate ) );		
+			System.out.println( r.name + "[ " + metadata + "] = " + rate );
 			reactants.put( reactant, r );
 		}
 	}
@@ -109,8 +110,12 @@ public class Reactants {
 		}
 		
 		private int getRate( int metadata ) {
-			if( !rates.containsKey( metadata ) )
+			if( !rates.containsKey( metadata ) ) {
+				if( rates.containsKey( -1 ) )
+					return rates.get( -1 );
+				
 				return 0;
+			}
 			
 			return rates.get( metadata );
 		}
