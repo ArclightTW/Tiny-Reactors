@@ -22,7 +22,7 @@ public class TileEntityEnergyRelay extends TileEntityTinyEnergy {
 	private List<BlockPos> destinations;
 	
 	public TileEntityEnergyRelay() {
-		super( 100000, 20, 200 );
+		super( 100000, 20, 100000 );
 		
 		destinations = Lists.newLinkedList();
 		

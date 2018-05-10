@@ -33,7 +33,7 @@ public class TileEntityReactorTransferPort extends TileEntityTinyEnergy implemen
 	private TileEntityReactorController controller;
 		
 	public TileEntityReactorTransferPort() {
-		super( 1000000, 1, 1024 );
+		super( 1000000, 1, 1000000 );
 		registerCapability( "energy", CapabilityEnergy.ENERGY, ( facing ) -> {
 			return world.getBlockState( pos ).getValue( BlockDirectional.FACING ) == facing && mode == EnumTransferPort.ENERGY ? energy : null;
 		} );
