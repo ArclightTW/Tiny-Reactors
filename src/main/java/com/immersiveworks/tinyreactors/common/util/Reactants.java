@@ -109,8 +109,12 @@ public class Reactants {
 		}
 		
 		private int getRate( int metadata ) {
-			if( !rates.containsKey( metadata ) )
+			if( !rates.containsKey( metadata ) ) {
+				if( rates.containsKey( -1 ) )
+					return rates.get( -1 );
+				
 				return 0;
+			}
 			
 			return rates.get( metadata );
 		}
