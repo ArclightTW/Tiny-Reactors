@@ -10,8 +10,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod( modid = TinyReactors.ID, name = TinyReactors.NAME, version = TinyReactors.VERSION, acceptedMinecraftVersions = TinyReactors.MINECRAFT, dependencies = TinyReactors.DEPENDENCIES, guiFactory = TinyReactors.GUI_FACTORY, modLanguage = "java" )
 public class TinyReactors {
@@ -29,6 +31,11 @@ public class TinyReactors {
 		proxy.onPreInit();
 		
 		CapabilityTemperature.register();
+	}
+	
+	@Mod.EventHandler
+	public void onInit( FMLInitializationEvent event ) {
+		NetworkRegistry.INSTANCE.registerGuiHandler( instance, proxy );
 	}
 	
 	@Mod.EventHandler

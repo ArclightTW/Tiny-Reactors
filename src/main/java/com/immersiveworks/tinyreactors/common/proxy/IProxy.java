@@ -2,7 +2,9 @@ package com.immersiveworks.tinyreactors.common.proxy;
 
 import com.immersiveworks.tinyreactors.client.fx.FXTypes;
 
-public interface IProxy {
+import net.minecraftforge.fml.common.network.IGuiHandler;
+
+public interface IProxy extends IGuiHandler {
 
 	void onPreInit();
 	

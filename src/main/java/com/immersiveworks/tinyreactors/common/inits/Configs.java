@@ -2,6 +2,8 @@ package com.immersiveworks.tinyreactors.common.inits;
 
 import java.io.File;
 
+import com.immersiveworks.tinyreactors.client.gui.GuiTinyWrenchOverlay;
+import com.immersiveworks.tinyreactors.client.gui.GuiTinyWrenchOverlay.GridAlignment;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.util.Reactants;
 
@@ -94,6 +96,15 @@ public class Configs {
 	public static int TRANSFER_LIQUID_ENERGY_USAGE = 1;
 	public static String TRANSFER_LIUQUID_ENERGY_USAGE_LABEL = "The amount of RF/tick a Reactor Transfer Port consumes in LIQUID MODE.";
 	
+	// UI Settings
+	
+	public static int WRENCH_OVERLAY_SCALE = 0;
+	public static String WRENCH_OVERLAY_SCALE_LABEL = "The scale factor of the Tiny Wrench overlay.";
+	
+	private static String WRENCH_OVERLAY_ANCHOR = "CENTER_MIDDLE";
+	
+	public static String WRENCH_OVERLAY_DO_NOT_USE_LABEL = "DO NOT EDIT THIS VALUE IN THE CONFIG FILE OR MOD OPTIONS; USE THE TINY WRENCH OVERLAY CONFIGURATION SCREEN.";
+	
 	@SubscribeEvent
 	public static void onConfigChanged( ConfigChangedEvent.OnConfigChangedEvent event ) {
 		if( event.getModID().equals( TinyReactors.ID ) )
@@ -160,7 +171,15 @@ public class Configs {
 		TRANSFER_ITEM_USAGE_DELAY = config.getInt( "Item Usage Delay", category, TRANSFER_ITEM_USAGE_DELAY, 0, Integer.MAX_VALUE, TRANSFER_ITEM_USAGE_DELAY_LABEL );
 		TRANSFER_LIQUID_ENERGY_USAGE = config.getInt( "Liquid Energy Usage", category, TRANSFER_LIQUID_ENERGY_USAGE, 0, Integer.MAX_VALUE, TRANSFER_LIUQUID_ENERGY_USAGE_LABEL );
 		
+		category = "UI";
+		config.addCustomCategoryComment( category, "Do not change these settings via the Configuration file or Mod-Options screen, use the Tiny Wrench Overlay Configuration screen." );
+		
+//		WRENCH_OVERLAY_SCALE = config.getInt( "Wrench Overlay Scale", category, WRENCH_OVERLAY_SCALE, 0, 2, WRENCH_OVERLAY_SCALE_LABEL );
+		WRENCH_OVERLAY_ANCHOR = config.getString( "Wrench Overlay Anchor", category, WRENCH_OVERLAY_ANCHOR, WRENCH_OVERLAY_DO_NOT_USE_LABEL );
+		
 		Reactants.populate();
+		
+		GuiTinyWrenchOverlay.setAnchor( GridAlignment.valueOf( WRENCH_OVERLAY_ANCHOR ) );
 		
 		if( config.hasChanged() ) {
 			config.save();

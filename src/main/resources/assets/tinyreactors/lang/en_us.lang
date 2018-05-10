@@ -29,3 +29,8 @@ item.tinyreactors:ventilation_fan_diamond.name=Ventilation Fan (Diamond)
 # Misc
 
 itemGroup.tinyreactors=Tiny Reactors
+
+# Keys
+
+key.tinyreactors.category=Tiny Reactors
+key.tinyreactors.overlayGui=Tiny Wrench Overlay Config

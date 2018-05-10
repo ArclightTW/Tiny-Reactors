@@ -1,7 +1,9 @@
 package com.immersiveworks.tinyreactors.client.proxy;
 
+import com.immersiveworks.tinyreactors.client.events.KeyEvents;
 import com.immersiveworks.tinyreactors.client.fx.FXEnergyOrb;
 import com.immersiveworks.tinyreactors.client.fx.FXTypes;
+import com.immersiveworks.tinyreactors.client.gui.GuiTinyWrenchOverlayOptions;
 import com.immersiveworks.tinyreactors.client.render.TESREnergyCell;
 import com.immersiveworks.tinyreactors.client.render.TESRReactorController;
 import com.immersiveworks.tinyreactors.client.render.TESRReactorPlanner;
@@ -15,6 +17,8 @@ import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorSurgeProtec
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -33,6 +37,8 @@ public class ClientProxy implements IProxy {
 		
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorSurgeProtector.class, new TESRReactorSurgeProtector() );
 		ClientRegistry.bindTileEntitySpecialRenderer( TileEntityReactorPlanner.class, new TESRReactorPlanner() );
+		
+		ClientRegistry.registerKeyBinding( KeyEvents.overlayGui );
 	}
 	
 	@Override
@@ -49,6 +55,21 @@ public class ClientProxy implements IProxy {
 		
 		if( particle != null )
 			Minecraft.getMinecraft().effectRenderer.addEffect( particle );
+	}
+	
+	@Override
+	public Object getServerGuiElement( int ID, EntityPlayer player, World world, int x, int y, int z ) {
+		return null;
+	}
+	
+	@Override
+	public Object getClientGuiElement( int ID, EntityPlayer player, World world, int x, int y, int z ) {
+		switch( ID ) {
+		case 0:
+			return new GuiTinyWrenchOverlayOptions();
+		default:
+			return null;
+		}
 	}
 	
 	private boolean doParticle() {
