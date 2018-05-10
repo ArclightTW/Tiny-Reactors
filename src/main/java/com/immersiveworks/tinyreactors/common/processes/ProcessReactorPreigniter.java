@@ -6,7 +6,6 @@ import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPreigniter;
 
 import net.minecraft.tileentity.TileEntityFurnace;
 
-// TODO: Process isn't saved, new one created on world load
 public class ProcessReactorPreigniter implements IProcess {
 
 	private StorageReactor structure;
@@ -17,6 +16,8 @@ public class ProcessReactorPreigniter implements IProcess {
 	public ProcessReactorPreigniter() { }
 	public ProcessReactorPreigniter( TileEntityReactorPreigniter preigniter, StorageReactor structure ) {
 		this.preigniter = preigniter;
+		this.burnTime = preigniter.getBurnTime();
+		
 		this.structure = structure;
 	}
 	
@@ -24,10 +25,12 @@ public class ProcessReactorPreigniter implements IProcess {
 	public void update() {
 		if( burnTime == 0 ) {
 			for( int i = 0; i < preigniter.getInternalItem().getSlots(); i++ )
-				if( preigniter.getInternalItem().getStackInSlot( i ).isEmpty() ) {
+				if( !preigniter.getInternalItem().getStackInSlot( i ).isEmpty() ) {
 					burnTime = TileEntityFurnace.getItemBurnTime( preigniter.getInternalItem().getStackInSlot( i ) ) / 40;
-					if( burnTime > 0 )
+					if( burnTime > 0 ) {
 						preigniter.getInternalItem().extractItem( i, 1, false );
+						preigniter.syncClient();
+					}
 					
 					break;
 				}
@@ -50,6 +53,14 @@ public class ProcessReactorPreigniter implements IProcess {
 				return false;
 		
 		return true;
+	}
+	
+	@Override
+	public void onDeath( boolean serverClosed ) {
+		if( serverClosed )
+			preigniter.setBurnTime( burnTime );
+		else
+			preigniter.setBurnTime( 0 );
 	}
 	
 }

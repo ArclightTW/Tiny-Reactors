@@ -12,6 +12,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 public class TileEntityReactorPreigniter extends TileEntityTiny implements IInternalInventory {
 	
 	private IItemHandlerNBT item;
+	private int burnTime;
 	
 	public TileEntityReactorPreigniter() {
 		item = new ItemHandlerNBT( 9 );
@@ -23,6 +24,8 @@ public class TileEntityReactorPreigniter extends TileEntityTiny implements IInte
 		super.writeToNBT( compound );
 		item.writeToNBT( compound );
 		
+		compound.setInteger( "burnTime", burnTime );
+		
 		return compound;
 	}
 	
@@ -30,6 +33,8 @@ public class TileEntityReactorPreigniter extends TileEntityTiny implements IInte
 	public void readFromNBT( NBTTagCompound compound ) {
 		super.readFromNBT( compound );
 		item.readFromNBT( compound );
+		
+		burnTime = compound.getInteger( "burnTime" );
 	}
 	
 	@Override
@@ -84,6 +89,14 @@ public class TileEntityReactorPreigniter extends TileEntityTiny implements IInte
 		}
 		
 		return ItemStack.EMPTY;
+	}
+	
+	public void setBurnTime( int burnTime ) {
+		this.burnTime = burnTime;
+	}
+	
+	public int getBurnTime() {
+		return burnTime;
 	}
 	
 }

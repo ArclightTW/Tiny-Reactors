@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.Constants;
 
 public class TileEntityReactorController extends TileEntityTiny implements IReactorTile {
 
+	private boolean prevIsActive;
 	private boolean isActive;
 	private boolean isManuallyActive;
 	
@@ -32,6 +33,15 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 	public void onLoad() {
 		registerPulsar( 1, () -> {
 			structure.tick( world );
+		} );
+		
+		registerPulsar( 1, () -> {
+			if( prevIsActive == isManuallyActive )
+				return;
+			
+			prevIsActive = isManuallyActive;
+			if( isActive() )
+				structure.startPreigniters( world );
 		} );
 		
 		structure.validateStructure( world, pos, null );
@@ -92,13 +102,7 @@ public class TileEntityReactorController extends TileEntityTiny implements IReac
 	
 	public void setActive( boolean active, boolean isManual ) {
 		this.isActive = active;
-		
-		if( isManual )
-			this.isManuallyActive = active;
-		
-		if( isActive() )
-			structure.startPreigniters( world );
-		
+		this.isManuallyActive = isManual ? active : isManuallyActive;
 		syncClient();
 	}
 	
