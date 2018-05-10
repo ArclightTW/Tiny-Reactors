@@ -12,7 +12,7 @@ public class TileEntityEnergyCell extends TileEntityTinyEnergy {
 	private boolean[] inputs;
 	
 	public TileEntityEnergyCell() {
-		super( 10000000, 10, 2000 );
+		super( 10000000, 10, 10000000 );
 
 		registerCapability( "energy", CapabilityEnergy.ENERGY, ( facing ) -> {
 			if( facing != null ) {
