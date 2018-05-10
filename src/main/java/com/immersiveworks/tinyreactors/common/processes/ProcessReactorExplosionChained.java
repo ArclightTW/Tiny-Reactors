@@ -39,7 +39,7 @@ public class ProcessReactorExplosionChained implements IProcess {
 	}
 	
 	@Override
-	public void onDeath() {
+	public void onDeath( boolean serverClosed ) {
 		EnergyNetwork.get( world ).refreshAll( world, null );
 	}
 

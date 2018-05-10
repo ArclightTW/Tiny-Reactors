@@ -9,7 +9,7 @@ public interface IProcess {
 		return false;
 	}
 	
-	public default void onDeath() {
+	public default void onDeath( boolean serverClosed ) {
 	}
 	
 }

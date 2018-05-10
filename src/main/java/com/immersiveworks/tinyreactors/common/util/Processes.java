@@ -35,7 +35,7 @@ public class Processes {
 		while( i.hasNext() ) {
 			IProcess process = i.next();
 			if( process.isDead() ) {
-				process.onDeath();
+				process.onDeath( false );
 				i.remove();
 			}
 			else {
@@ -49,6 +49,8 @@ public class Processes {
 				
 				while( !process.isDead() )
 					process.update();
+				
+				process.onDeath( true );
 			}
 		}
 		
