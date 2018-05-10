@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class Reactants {
 
-	private static Map<ResourceLocation, Reactant> reactants = Maps.newHashMap();
+	private static Map<String, Reactant> reactants = Maps.newHashMap();
 	
 	public static void populate() {
 		reactants.clear();
@@ -57,18 +57,24 @@ public class Reactants {
 				continue;
 			}
 			
-			Reactant r = new Reactant( reactant, Integer.parseInt( metadata ), Integer.parseInt( rate ) );
-			reactants.put( r.name, r );
+			Reactant r = null;
+			
+			if( reactants.containsKey( reactant ) )
+				r = reactants.get( reactant );
+			else
+				r = new Reactant( reactant );
+			
+			r.addRate( Integer.parseInt( metadata ), Integer.parseInt( rate ) );			
+			reactants.put( reactant, r );
 		}
 	}
 	
 	public static int getReactantRate( IBlockState state ) {
 		ResourceLocation name = state.getBlock().getRegistryName();
-		if( !reactants.containsKey( name ) )
+		if( !reactants.containsKey( name.toString() ) )
 			return 0;
 		
-		Reactant reactant = reactants.get( name );
-		return reactant.metadata == -1 || reactant.metadata == state.getBlock().getMetaFromState( state ) ? reactant.energy : 0;
+		return reactants.get( name.toString() ).getRate( state.getBlock().getMetaFromState( state ) );
 	}
 	
 	@SuppressWarnings( "deprecation" )
@@ -91,13 +97,36 @@ public class Reactants {
 	private static class Reactant {
 		
 		private ResourceLocation name;
-		private int metadata;
-		private int energy;
+		private Map<Integer, Integer> rates;
 		
-		private Reactant( String name, int metadata, int energy ) {
+		private Reactant( String name ) {
 			this.name = new ResourceLocation( name );
-			this.metadata = metadata;
-			this.energy = energy;
+			rates = Maps.newHashMap();
+		}
+		
+		private void addRate( int metadata, int energy ) {
+			rates.put( metadata, energy );
+		}
+		
+		private int getRate( int metadata ) {
+			if( !rates.containsKey( metadata ) )
+				return 0;
+			
+			return rates.get( metadata );
+		}
+		
+		@Override
+		public boolean equals( Object obj ) {
+			if( !( obj instanceof Reactant ) )
+				return false;
+			
+			Reactant other = ( Reactant )obj;
+			return name.equals( other.name );
+		}
+		
+		@Override
+		public int hashCode() {
+			return HashHelper.generateHashCode( name );
 		}
 		
 	}
