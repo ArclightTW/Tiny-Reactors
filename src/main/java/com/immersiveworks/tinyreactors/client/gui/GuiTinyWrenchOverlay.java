@@ -33,6 +33,9 @@ public class GuiTinyWrenchOverlay extends Gui {
 	
 	public static GuiTinyWrenchOverlay instance = new GuiTinyWrenchOverlay();
 	
+	private GuiTinyWrenchOverlay() {
+	}
+	
 	private static GridAlignment anchor;
 	
 	public void render( World world, EntityPlayer player, BlockPos pos, IBlockState state, IEnergyNetworkBlockRenderer block, TileEntity tile, EnumFacing facing, Vec3d hit ) {

@@ -1,5 +1,6 @@
 package com.immersiveworks.tinyreactors.common.events;
 
+import com.immersiveworks.tinyreactors.api.manual.IManualEntryBlock;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Entities;
@@ -26,6 +27,9 @@ public class RegistryEvents {
 	public static void onRegisterBlock( RegistryEvent.Register<Block> event ) {
 		Registries.BLOCKS.registerAll( Blocks.class, ( block, name ) -> {
 			event.getRegistry().register( block.setUnlocalizedName( name ).setRegistryName( name ) );
+			
+			if( block instanceof IManualEntryBlock )
+				( ( IManualEntryBlock )block ).registerSection();
 			
 			if( block.hasTileEntity( null ) )
 				GameRegistry.registerTileEntity( block.createTileEntity( null, null ).getClass(), name );

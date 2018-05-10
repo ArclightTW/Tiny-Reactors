@@ -1,5 +1,6 @@
 package com.immersiveworks.tinyreactors.common.inits;
 
+import com.immersiveworks.tinyreactors.common.items.ItemTinyManual;
 import com.immersiveworks.tinyreactors.common.items.ItemTinyWrench;
 import com.immersiveworks.tinyreactors.common.items.ItemVentilationFan;
 
@@ -9,5 +10,7 @@ public class Items {
 
 	public static Item TINY_WRENCH = new ItemTinyWrench();
 	public static Item VENTILATION_FAN = new ItemVentilationFan();
+	
+	public static Item TINY_MANUAL = new ItemTinyManual();
 	
 }
