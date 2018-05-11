@@ -2,8 +2,6 @@ package com.immersiveworks.tinyreactors.client.gui;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.Lists;
 import com.immersiveworks.tinyreactors.api.item.IInternalInventory;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
@@ -15,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -57,71 +54,23 @@ public class GuiTinyWrenchOverlay extends Gui {
 		ScaledResolution sr = new ScaledResolution( Minecraft.getMinecraft() );
 		
 		GlStateManager.pushMatrix();
-
+		
 		// Start Tooltip
 		GlStateManager.pushMatrix();
 		
-		int anchorX = anchor.alignment == Alignment.LEFT ? 0 : anchor.alignment == Alignment.CENTER ? sr.getScaledWidth() / 2 : sr.getScaledWidth();
-		int anchorY =
-				anchor == GridAlignment.LEFT_TOP || anchor == GridAlignment.CENTER_TOP || anchor == GridAlignment.RIGHT_TOP ? 0 :
-					anchor == GridAlignment.LEFT_MIDDLE || anchor == GridAlignment.CENTER_MIDDLE || anchor == GridAlignment.RIGHT_MIDDLE ? sr.getScaledHeight() / 2 :
-						sr.getScaledHeight();
+		String combined = "";
+		for( int i = 0; i < display.length; i++ )
+			combined += display[ i ] + "\n";
 		
-//		float scaleFactor = Configs.WRENCH_OVERLAY_SCALE == 0 ? 0.5F : Configs.WRENCH_OVERLAY_SCALE == 1 ? 1 : 2;
-//		float translateFactor = Configs.WRENCH_OVERLAY_SCALE == 0 ? 0.5F : Configs.WRENCH_OVERLAY_SCALE == 1 ? 0 : -0.25F;
-		int startY = anchorY + Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT / 2 + 11;		
-		
-		int lineIndex = 0;
-		int lineCount = 0;
-		
-		for( int i = 0; i < display.length; i++ ) {
-			if( StringUtils.isBlank( display[ i ] ) )
-				continue;
-			
-			String[] lines = display[ i ].split( "\n" );
-			for( int j = 0; j < lines.length; j++ ) {
-				if( StringUtils.isBlank( lines[ j ] ) )
-					continue;
-				
-				lineCount++;
-			}
-		}
-		
-		int offsetY = anchorY == sr.getScaledHeight() ? lineCount * Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 45 : 0;
-		
-		for( int i = 0; i < display.length; i++ ) {
-			if( StringUtils.isBlank( display[ i ] ) )
-				continue;
-			
-			String[] lines = display[ i ].split( "\n" );
-			for( int j = 0; j < lines.length; j++ ) {
-				if( StringUtils.isBlank( lines[ j ] ) )
-					continue;
-				
-				int offsetX = 0;
-				
-				switch( anchor.alignment ) {
-				case LEFT:
-					offsetX = 0;
-					break;
-				case CENTER:
-					offsetX = Minecraft.getMinecraft().fontRenderer.getStringWidth( lines[ j ] ) / 2;
-					break;
-				case RIGHT:
-					offsetX = Minecraft.getMinecraft().fontRenderer.getStringWidth( lines[ j ] );
-					break;
-				}
-				
-//				GlStateManager.scale( scaleFactor, scaleFactor, scaleFactor );
-//				GlStateManager.translate( sr.getScaledWidth_double() * translateFactor, sr.getScaledHeight_double() * translateFactor, 0F );
-				
-				Minecraft.getMinecraft().fontRenderer.drawString( lines[ j ], anchorX - offsetX, startY - offsetY + ( lineIndex * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) ), 0xFFFFFF );
-				lineIndex++;
-				
-//				GlStateManager.translate( -sr.getScaledWidth_double() * translateFactor, -sr.getScaledHeight_double() * translateFactor, 0 );
-//				GlStateManager.scale( 1F / scaleFactor, 1F / scaleFactor, 1F / scaleFactor );
-			}
-		}
+		RenderUtils.drawString(
+				combined,
+				anchor.alignment,
+				anchor.isBottom(),
+				anchor.alignment == Alignment.LEFT ? 4 : anchor.alignment == Alignment.CENTER ? sr.getScaledWidth() / 2 : sr.getScaledWidth() - 4,
+				anchor.isTop() ? 25 : anchor.isBottom() ? sr.getScaledHeight() - 43 : sr.getScaledHeight() / 2 + 10,
+				0xFFFFFF,
+				Configs.WRENCH_OVERLAY_SCALE_FACTOR
+				);
 		
 		GlStateManager.popMatrix();
 		// End Tooltip
@@ -129,49 +78,26 @@ public class GuiTinyWrenchOverlay extends Gui {
 		// Start Inventory
 		GlStateManager.pushMatrix();
 		
-		RenderHelper.disableStandardItemLighting();
-		RenderHelper.enableGUIStandardItemLighting();
-		
-		int slotCount = 0;
+		int inventoryCount = 0;
 		for( int i = 0; i < inventory.length; i++ )
 			if( !inventory[ i ].isEmpty() )
-				slotCount++;
+				inventoryCount++;
 		
-		int offsetX = 0;
-		float adjustmentX = 0;
-		switch( anchor.alignment ) {
-		case LEFT:
-			offsetX = 0;
-			adjustmentX = 0;
-			break;
-		case CENTER:
-			offsetX = sr.getScaledWidth() / 2;
-			adjustmentX = 18 * ( slotCount / 2F );
-			break;
-		case RIGHT:
-			offsetX = sr.getScaledWidth();
-			adjustmentX = 18 * slotCount;
-			break;
-		}
+		int startX = anchor.alignment == Alignment.LEFT ? 4 : anchor.alignment == Alignment.CENTER ? sr.getScaledWidth() / 2 - ( int )( ( inventoryCount / 2F ) * 18 ) : sr.getScaledWidth() - 4 - ( inventoryCount * 18 );
+		int startY = anchor.isTop() ? 4 : anchor.isBottom() ? sr.getScaledHeight() - 43 : sr.getScaledHeight() / 2 - 25;
 		
-		if( anchorY == sr.getScaledHeight() )
-			offsetY = sr.getScaledHeight() - ( lineCount * 18 ) - 29;
-		else if( anchorY == sr.getScaledHeight() / 2 )
-			offsetY = sr.getScaledHeight() / 2 - 29;
-		else
-			offsetY = lineCount * 18;
-		
+		int slotCount = 0;
 		for( int i = 0; i < inventory.length; i++ ) {
-			ItemStack itemstack = inventory[ i ];
-			if( !itemstack.isEmpty() ) {
-				zLevel = 200F;
-				RenderUtils.drawItemStack( itemstack, ( int )( offsetX - adjustmentX + ( i * 18 ) ), offsetY );
-				zLevel = 0F;
-			}
+			if( inventory[ i ].isEmpty() )
+				continue;
+			
+			RenderUtils.drawItemStack(
+					inventory[ i ],
+					startX + ( slotCount * 18 ),
+					startY
+					);
+			slotCount++;
 		}
-		
-		GlStateManager.enableLighting();
-		RenderHelper.enableStandardItemLighting();
 		
 		GlStateManager.popMatrix();
 		// End Inventory
@@ -182,7 +108,7 @@ public class GuiTinyWrenchOverlay extends Gui {
 	public static void setAnchor( GridAlignment anchor ) {
 		GuiTinyWrenchOverlay.anchor = anchor;
 		
-		Configs.config.get( "UI", "Wrench Overlay Anchor", 0 ).set( anchor.name() );
+		Configs.config.get( "DO_NOT_CHANGE", "Wrench Overlay Anchor", 0 ).set( anchor.name() );
 		Configs.config.save();
 	}
 	
@@ -205,6 +131,14 @@ public class GuiTinyWrenchOverlay extends Gui {
 		
 		private GridAlignment( Alignment alignment ) {
 			this.alignment = alignment;
+		}
+		
+		public boolean isTop() {
+			return this == LEFT_TOP || this == CENTER_TOP || this == RIGHT_TOP;
+		}
+		
+		public boolean isBottom() {
+			return this == LEFT_BOTTOM || this == CENTER_BOTTOM || this == RIGHT_BOTTOM;
 		}
 	}
 	

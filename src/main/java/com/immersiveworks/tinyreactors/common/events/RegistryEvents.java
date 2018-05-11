@@ -28,9 +28,6 @@ public class RegistryEvents {
 		Registries.BLOCKS.registerAll( Blocks.class, ( block, name ) -> {
 			event.getRegistry().register( block.setUnlocalizedName( name ).setRegistryName( name ) );
 			
-			if( block instanceof IManualEntryBlock )
-				( ( IManualEntryBlock )block ).registerSection();
-			
 			if( block.hasTileEntity( null ) )
 				GameRegistry.registerTileEntity( block.createTileEntity( null, null ).getClass(), name );
 		} );
@@ -40,6 +37,9 @@ public class RegistryEvents {
 	public static void onRegisterItem( RegistryEvent.Register<Item> event ) {
 		Registries.BLOCKS.registerAll( Blocks.class, ( block, name ) -> {
 			event.getRegistry().register( new ItemBlock( block ).setRegistryName( name ) );
+			
+			if( block instanceof IManualEntryBlock )
+				( ( IManualEntryBlock )block ).registerSection();
 		} );
 		
 		Registries.ITEMS.registerAll( Items.class, ( item, name ) -> {

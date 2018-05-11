@@ -3,6 +3,7 @@ package com.immersiveworks.tinyreactors.common.util;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import com.immersiveworks.tinyreactors.common.helpers.HashHelper;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 
 import net.minecraft.block.Block;

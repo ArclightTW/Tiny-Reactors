@@ -1,4 +1,6 @@
-# Blocks
+##################
+# Blocks         #
+##################
 
 tile.tinyreactors:energy_relay.name=Energy Relay
 tile.tinyreactors:energy_conduit.name=Energy Conduit
@@ -16,7 +18,9 @@ tile.tinyreactors:reactor_preigniter.name=Reactor Preigniter
 
 tile.tinyreactors:reactor_planner.name=Reactor Planner
 
-# Items
+##################
+# Items          #
+##################
 
 item.tinyreactors:tiny_wrench.name=Tiny Wrench
 
@@ -26,11 +30,40 @@ item.tinyreactors:ventilation_fan_iron.name=Ventilation Fan (Iron)
 item.tinyreactors:ventilation_fan_gold.name=Ventilation Fan (Gold)
 item.tinyreactors:ventilation_fan_diamond.name=Ventilation Fan (Diamond)
 
-# Misc
+item.tinyreactors:tiny_manual.name=Tiny Manual
+
+##################
+# Misc           #
+##################
 
 itemGroup.tinyreactors=Tiny Reactors
 
-# Keys
+##################
+# Keys           #
+##################
 
 key.tinyreactors.category=Tiny Reactors
 key.tinyreactors.overlayGui=Tiny Wrench Overlay Config
+
+##################
+# Manual Entries
+# These will be parsed at runtime and the Tiny Manual will separate overflowed lines so don't worry about formatting or space! =]
+##################
+
+tiny_manual:section.overview=Overview
+tiny_manual:header.introduction=Introduction
+tiny_manual:page.introduction=Welcome to the Tiny Manual, your one-stop guide to everything you need to know about Tiny Reactors! Use the quick-access bookmarks to quickly jump to the required topic or click on the block you want to investigate with the Manual to open directly to it.
+
+tiny_manual:page.reactor_controller=The Reactor Controller is the heart of the Reactor structure.  Only §lone§r is permitted per structure and it handles the operating of the entire structure.  The Reactor structure can be activated and deactivated by shift-right-clicking with the Tiny Wrench.  The Reactor Surge Protector is also capable of enabling/disabling the Reactor structure automatically (more information can be found on the relevant page).
+
+##################
+# Misc Manual Translations
+##################
+
+tiny_manual:header.details=Detailed Info
+
+tiny_manual:page.required=This block is required for a Reactor structure to be validated.
+tiny_manual:page.optional=This block is not required for a Reactor structure to be validated.
+
+tiny_manual:block_type_required=Block Type: Required
+tiny_manual:block_type_optional=Block Type: Optional

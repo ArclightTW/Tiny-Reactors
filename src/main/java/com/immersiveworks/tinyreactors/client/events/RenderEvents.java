@@ -4,7 +4,7 @@ import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer
 import com.immersiveworks.tinyreactors.client.gui.GuiTinyWrenchOverlay;
 import com.immersiveworks.tinyreactors.client.util.ParticleRenderDispatcher;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
-import com.immersiveworks.tinyreactors.common.util.PlayerHelper;
+import com.immersiveworks.tinyreactors.common.helpers.PlayerHelper;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

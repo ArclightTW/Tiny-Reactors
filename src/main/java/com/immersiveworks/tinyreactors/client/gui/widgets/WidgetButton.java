@@ -38,7 +38,7 @@ public class WidgetButton extends Widget {
 	}
 	
 	@Override
-	public void draw( int mouseX, int mouseY, float partialTicks ) {
+	public void drawBackground( int mouseX, int mouseY, float partialTicks ) {
 		boolean hovered = isMouseInBounds( mouseX, mouseY );
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture( hovered ? textureHovered : textureDefault );

@@ -12,11 +12,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.TextTable.Alignment;
 
 public class RenderUtils {
@@ -24,21 +25,43 @@ public class RenderUtils {
 	private static RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
 	
 	public static void drawItemStack( ItemStack itemstack, int x, int y ) {
-		drawItemStack( itemstack, x, y, String.format( "%,d", itemstack.getCount() ) );
+		drawItemStack( itemstack, x, y, 1F );
+	}
+	
+	public static void drawItemStack( ItemStack itemstack, int x, int y, float scale ) {
+		drawItemStack( itemstack, x, y, itemstack.getCount() <= 1 ? "" : String.format( "%,d", itemstack.getCount() ), scale );
 	}
 	
 	public static void drawItemStack( ItemStack itemstack, int x, int y, String text ) {
+		drawItemStack( itemstack, x, y, text, 1F );
+	}
+	
+	public static void drawItemStack( ItemStack itemstack, int x, int y, String text, float scale ) {
+		GlStateManager.pushMatrix();
+		
+		RenderHelper.disableStandardItemLighting();
+		RenderHelper.enableGUIStandardItemLighting();
+		
+		GlStateManager.scale( scale, scale, scale );
 		GlStateManager.translate( 0, 0, 32 );
+		
 		itemRender.zLevel = 200F;
 		
 		FontRenderer font = itemstack.getItem().getFontRenderer( itemstack );
 		if( font == null )
 			font = Minecraft.getMinecraft().fontRenderer;
 		
-		itemRender.renderItemAndEffectIntoGUI( itemstack, x, y );
-		itemRender.renderItemOverlayIntoGUI( font, itemstack, x, y, text );
+		itemRender.renderItemAndEffectIntoGUI( itemstack, ( int )( x / scale ), ( int )( y / scale ) );
+		itemRender.renderItemOverlayIntoGUI( font, itemstack, ( int )( x / scale ), ( int )( y / scale ), text );
 		
 		itemRender.zLevel = 0F;
+		
+		GlStateManager.scale( 1F / scale, 1F / scale, 1F / scale );
+		
+		GlStateManager.enableLighting();
+		RenderHelper.enableStandardItemLighting();
+		
+		GlStateManager.popMatrix();
 	}
 	
 	public static void drawTexturedModalRect( Rectangle bounds, int textureX, int textureY ) {
@@ -61,6 +84,7 @@ public class RenderUtils {
         GlStateManager.popMatrix();
     }
 	
+	// TODO: We should ONLY care about the WordUtils.wrap functionality - parsing strings with /n is no longer supported
 	public static String[] splitLines( String string, int wrapLength, float scale ) {
 		List<String> totalLines = Lists.newLinkedList();
 		
@@ -68,8 +92,14 @@ public class RenderUtils {
 		for( int i = 0; i < lines.length; i++ ) {
 			if( StringUtils.isBlank( lines[ i ] ) )
 				continue;
-
-			String[] wrapped = WordUtils.wrap( lines[ i ],( int )( wrapLength / ( 6 * scale ) ) ).split( System.getProperty( "line.separator" ) );
+			
+			String line = new TextComponentTranslation( lines[ i ] ).getFormattedText();
+			String[] wrapped;
+			
+			if( wrapLength == -1 )
+				wrapped = new String[] { line };
+			else
+				wrapped = WordUtils.wrap( line,( int )( wrapLength / 6 / scale ) ).split( System.getProperty( "line.separator" ) );
 	
 			for( int j = 0; j < wrapped.length; j++ ) {
 				if( StringUtils.isBlank( wrapped[ j ] ) )
@@ -88,39 +118,55 @@ public class RenderUtils {
 		return totalLines.toArray( new String[ totalLines.size() ] );
 	}
 	
-	// TODO: AMEND THE OVERLAY TEXT TO USE THIS NEW SCALABLE VERSION OF DRAW STRING
-	public static RenderManualOutput drawString( String string, Alignment alignment, int x, int y, int color ) {
+	public static Rectangle drawString( String string, Alignment alignment, int x, int y, int color ) {
 		return drawString( string, alignment, x, y, color, 1F );
 	}
 	
-	public static RenderManualOutput drawString( String string, Alignment alignment, int x, int y, int color, float scale ) {
-		return drawStringInternal( string, alignment, x, y, color, scale, StringRenderType.CONTINUOUS, -1 );
+	public static Rectangle drawString( String string, Alignment alignment, boolean anchorBottom, int x, int y, int color ) {
+		return drawString( string, alignment, anchorBottom, x, y, color, 1F );
 	}
 	
-	public static RenderManualOutput drawStringWrapped( String string, int wrapLength, Alignment alignment, int x, int y, int color ) {
+	public static Rectangle drawString( String string, Alignment alignment, int x, int y, int color, float scale ) {
+		return drawString( string, alignment, false, x, y, color, scale );
+	}
+	
+	public static Rectangle drawString( String string, Alignment alignment, boolean anchorBottom, int x, int y, int color, float scale ) {
+		return drawStringInternal( string, alignment, anchorBottom, x, y, color, scale, StringRenderType.CONTINUOUS, -1 );
+	}
+	
+	public static Rectangle drawStringWrapped( String string, int wrapLength, Alignment alignment, int x, int y, int color ) {
 		return drawStringWrapped( string, wrapLength, alignment, x, y, color, 1F );
 	}
 	
-	public static RenderManualOutput drawStringWrapped( String string, int wrapLength, Alignment alignment, int x, int y, int color, float scale ) {
-		return drawStringInternal( string, alignment, x, y, color, scale, StringRenderType.WRAPPED, wrapLength );
+	public static Rectangle drawStringWrapped( String string, int wrapLength, Alignment alignment, boolean anchorBottom, int x, int y, int color ) {
+		return drawStringWrapped( string, wrapLength, alignment, anchorBottom, x, y, color, 1F );
 	}
 	
-	// TODO: Should use split lines function
-	private static RenderManualOutput drawStringInternal( String string, Alignment alignment, int x, int y, int color, float scale, StringRenderType type, int wrapLength ) {
-		int width = 0;
+	public static Rectangle drawStringWrapped( String string, int wrapLength, Alignment alignment, int x, int y, int color, float scale ) {
+		return drawStringWrapped( string, wrapLength, alignment, false, x, y, color, scale );
+	}
+	
+	public static Rectangle drawStringWrapped( String string, int wrapLength, Alignment alignment, boolean anchorBottom, int x, int y, int color, float scale ) {
+		return drawStringInternal( string, alignment, anchorBottom, x, y, color, scale, StringRenderType.WRAPPED, wrapLength );
+	}
+	
+	private static Rectangle drawStringInternal( String string, Alignment alignment, boolean anchorBottom, int x, int y, int color, float scale, StringRenderType type, int wrapLength ) {
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxWidth = Integer.MIN_VALUE;
+		int height = 0;
 		
 		GlStateManager.pushMatrix();
 		
 		int lineIndex = 0;
+		String[] splitLines = splitLines( string, wrapLength, scale );
 		
-		String[] lines = string.split( "\n" );
-		for( int i = 0; i < lines.length; i++ ) {
-			if( StringUtils.isBlank( lines[ i ] ) )
-				continue;
-			
-			int currentWidth = ( int )( Minecraft.getMinecraft().fontRenderer.getStringWidth( lines[ i ] ) / scale );
-			if( currentWidth >= width )
-				width = currentWidth;
+		int offsetY = anchorBottom ? splitLines.length * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) : 0;
+		
+		for( int i = 0; i < splitLines.length; i++ ) {
+			int currentWidth = ( int )( Minecraft.getMinecraft().fontRenderer.getStringWidth( splitLines[ i ] ) / scale );
+			if( currentWidth >= maxWidth )
+				maxWidth = currentWidth;
 			
 			int offsetX = 0;
 			switch( alignment ) {
@@ -131,42 +177,32 @@ public class RenderUtils {
 				offsetX = ( int )( currentWidth / ( 2 / scale ) );
 				break;
 			case RIGHT:
-				offsetX = currentWidth;
+				offsetX = ( int )( currentWidth * scale );
 				break;
 			}
 			
 			GlStateManager.scale( scale, scale, scale );
-
-			switch( type ) {
-			case CONTINUOUS:
-				Minecraft.getMinecraft().fontRenderer.drawString( lines[ i ], ( int )( ( x / scale ) - offsetX ), ( int )( y / scale ) + ( lineIndex * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) ), color );
-				lineIndex++;
-				break;
-			case WRAPPED:
-				String[] wrapped = WordUtils.wrap( lines[ i ],( int )( wrapLength / ( 6 * scale ) ) ).split( System.getProperty( "line.separator" ) );
-				for( int j = 0; j < wrapped.length; j++ ) {
-					if( StringUtils.isBlank( wrapped[ j ] ) )
-						continue;
-					
-					String[] finalWrap = wrapped[ j ].split( "\n" );
-					for( int k = 0; k < finalWrap.length; k++ ) {
-						if( StringUtils.isBlank( finalWrap[ k ] ) )
-							continue;
-						
-						Minecraft.getMinecraft().fontRenderer.drawString( finalWrap[ k ], ( int )( ( x / scale ) - offsetX ), ( int )( y / scale ) + ( lineIndex * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) ), color );
-						lineIndex++;
-					}
-				}
-				
-				break;
-			}
+			
+			int xPos = ( int )( ( x / scale ) - offsetX );
+			if( xPos < minX )
+				minX = xPos;
+			
+			int yOff = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3;
+			int yPos = ( int )( y / scale ) + ( lineIndex * yOff ) - offsetY;
+			if( yPos < minY )
+				minY = yPos;
+			
+			height += yOff;
+			
+			Minecraft.getMinecraft().fontRenderer.drawString( splitLines[ i ], xPos, yPos, color );
+			lineIndex++;
 			
 			GlStateManager.scale( 1 / scale, 1 / scale, 1 / scale );
 		}
 		
 		GlStateManager.popMatrix();
 		
-		return new RenderManualOutput( new Vec2f( width, lineIndex * ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) ), lineIndex );
+		return new Rectangle( minX, minY, maxWidth, height );
 	}
 	
 	private static enum StringRenderType {

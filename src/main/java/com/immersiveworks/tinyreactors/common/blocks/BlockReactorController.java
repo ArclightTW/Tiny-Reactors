@@ -1,8 +1,14 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.manual.IManualEntryBlock;
 import com.immersiveworks.tinyreactors.api.temperature.ITemperatureStorage;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
+import com.immersiveworks.tinyreactors.client.gui.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.client.gui.manual.pages.ManualPageReactorBlock;
+import com.immersiveworks.tinyreactors.client.gui.manual.pages.ManualPageText;
+import com.immersiveworks.tinyreactors.client.gui.manual.pages.ManualPageReactorBlock.Requirement;
 import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork.Priority;
+import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.storage.StorageReactor;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorController;
@@ -23,7 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-public class BlockReactorController extends BlockTinyTile<TileEntityReactorController> implements IEnergyNetworkBlockRenderer {
+public class BlockReactorController extends BlockTinyTile<TileEntityReactorController> implements IEnergyNetworkBlockRenderer, IManualEntryBlock {
 
 	public BlockReactorController() {
 		super( Material.IRON, TileEntityReactorController.class );
@@ -140,6 +146,34 @@ public class BlockReactorController extends BlockTinyTile<TileEntityReactorContr
 				String.format( "Status: %s", controller.isManuallyActive() ? controller.isActive() ? "Operational" : "Auto-Cooling" : "Deactivated" ),
 				tempString,
 				String.format( "Energy: %,d RF/t", structure.getEnergyGain() )
+		};
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_controller";
+	}
+	
+	@Override
+	public String getManualHeader() {
+		return getUnlocalizedName() + ".name";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 0.9F;
+	}
+	
+	@Override
+	public ItemStack getManualIcon() {
+		return new ItemStack( Blocks.REACTOR_CONTROLLER );
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageReactorBlock( Requirement.REQUIRED, "tiny_manual:page.required" ),
+				new ManualPageText( "tiny_manual:header.details", "tiny_manual:page.reactor_controller" )
 		};
 	}
 	

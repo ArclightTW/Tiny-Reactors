@@ -11,59 +11,75 @@ import com.immersiveworks.tinyreactors.client.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.TextTable.Alignment;
 
+// TODO: We might need a new way of doing this (back to custom resource locations?)
 public class GuiManualSection {
 
-	private Rectangle prevBounds;
-	
 	private String header;
+	private float headerScale;
+	
+	private ItemStack icon;
+	
 	private int pageIndex;
 	
-	private List<ManualPage> sourcePages;
 	private List<ManualPage> pages;
 	private ManualPage page;
 	
-	public GuiManualSection( String header, ManualPage... pages ) {
+	public GuiManualSection( String header, float headerScale, ItemStack icon, ManualPage... pages ) {
 		this.header = header;
-		this.pages = Lists.newLinkedList();
-
-		sourcePages = Lists.newArrayList( pages );
-		if( sourcePages.size() > 0 )
-			page = sourcePages.get( 0 );
+		this.headerScale = headerScale;
+		this.icon = icon;
+		this.pages = Lists.newArrayList( pages );
+		
+		if( this.pages.size() > pageIndex )
+			this.page = this.pages.get( pageIndex );
+	}
+	
+	public void onGuiResized( ScaledResolution sr ) {
+		List<ManualPage> tempPages = Lists.newLinkedList();
+		for( int i = 0; i < pages.size(); i++ ) {
+			if( !pages.get( i ).hasOverflow( getPageBounds() ) ) {
+				tempPages.add( pages.get( i ) );
+				continue;
+			}
+			
+			ManualPage[] overflow = pages.get( i ).getOverflowPages( getPageBounds() );
+			for( int j = 0; j < overflow.length; j++)
+				tempPages.add( overflow[ j ] );
+		}
+		pages.clear();
+		pages.addAll( tempPages );
+		
+		if( pages.size() <= pageIndex )
+			pageIndex = pages.size() - 1;
+		page = pages.get( pageIndex );
 	}
 	
 	public void drawScreen( GuiTinyManual manual, ScaledResolution sr, int mouseX, int mouseY, float partialTicks ) {
 		if( page == null )
 			return;
 		
-		Rectangle pageBounds = new Rectangle( sr.getScaledWidth() / 2 - 146 / 2, sr.getScaledHeight() / 2 - 180 / 2, 146, 180 );
-		
-		// TODO: This should only be called once, ever
-//		if( prevBounds != pageBounds ) {
-		if( prevBounds == null ) {
-			prevBounds = pageBounds;
-			pages.clear();
-			
-			for( int i = 0; i < sourcePages.size(); i++ )
-				setPages( sourcePages.get( i ).getOverflowPages( pageBounds ) );
-		}
-		
 		GlStateManager.pushMatrix();
 		GlStateManager.color( 1, 1, 1, 1 );
 		Minecraft.getMinecraft().getTextureManager().bindTexture( page.getBackground() );
-		RenderUtils.drawTexturedModalRect( pageBounds, 0, 0 );
+		RenderUtils.drawTexturedModalRect( getPageBounds(), 0, 0 );
 		GlStateManager.popMatrix();
 		
 		if( page.shouldDrawHeader() )
-			RenderUtils.drawString( TextFormatting.BLACK + header, Alignment.CENTER, sr.getScaledWidth() / 2, pageBounds.getY() + 12, 0xFFFFFF, 1F );
+			RenderUtils.drawString( header, Alignment.CENTER, sr.getScaledWidth() / 2, getPageBounds().getY() + 10, 0xFFFFFF, headerScale );
 		
-		if( page.shouldDrawTitle() )
-			RenderUtils.drawString( TextFormatting.DARK_AQUA + page.getTitle(), Alignment.CENTER, sr.getScaledWidth() / 2, pageBounds.getY() + 24, 0xFFFFFF, 0.75F );
+		if( page.shouldDrawTitle() ) {
+			RenderUtils.drawString( page.getTitle(), Alignment.CENTER, sr.getScaledWidth() / 2, getPageBounds().getY() + 22, 0xFFFFFF, 0.75F );
+			
+			if( page.totalCount > 0 )
+				RenderUtils.drawString( TextFormatting.DARK_AQUA + String.format( "%d/%d", page.currentIndex, page.totalCount ), Alignment.RIGHT, getPageBounds().getX() + getPageBounds().getWidth() - 15, getPageBounds().getY() + 22, 0xFFFFFF, 0.75F );
+		}
 		
 		GlStateManager.pushMatrix();
-		page.drawScreen( manual, sr, pageBounds, mouseX, mouseY, partialTicks );
+		page.drawScreen( manual, sr, getPageBounds(), mouseX, mouseY, partialTicks );
 		GlStateManager.popMatrix();
 		
 		if( page.shouldDrawWidgets() )
@@ -71,30 +87,38 @@ public class GuiManualSection {
 	}
 	
 	public boolean nextPage() {
-		pageIndex++;
-		boolean value = pageIndex >= pages.size();
-		
-		if( pageIndex >= pages.size() )
-			pageIndex = pages.size() - 1;
-		
-		page = pages.get( pageIndex );
-		return value;
+		boolean shouldBail = pageIndex + 1 >= pages.size();
+		setPageIndex( pageIndex + 1 );
+		return shouldBail;
 	}
 	
 	public boolean previousPage() {
-		pageIndex--;
-		boolean value = pageIndex < 0;
-		
-		if( pageIndex <= 0 )
-			pageIndex = 0;
-		
-		page = pages.get( pageIndex );
-		return value;
+		boolean shouldBail = pageIndex - 1 < 0;
+		setPageIndex( pageIndex - 1 );
+		return shouldBail;
 	}
 	
-	private void setPages( ManualPage... pages ) {
-		for( int i = 0; i < pages.length; i++ )
-			this.pages.add( pages[ i ] );
+	public void setPageIndex( int index ) {
+		if( index <= 0 )
+			index = 0;
+		if( index >= pages.size() )
+			index = pages.size() - 1;
+		
+		pageIndex = index;
+		page = pages.get( pageIndex );
+	}
+	
+	public String getHeader() {
+		return header;
+	}
+	
+	public ItemStack getIcon() {
+		return icon;
+	}
+	
+	private Rectangle getPageBounds() {
+		ScaledResolution sr = new ScaledResolution( Minecraft.getMinecraft() );
+		return new Rectangle( sr.getScaledWidth() / 2 - 146 / 2, sr.getScaledHeight() / 2 - 180 / 2, 146, 180 );
 	}
 	
 }

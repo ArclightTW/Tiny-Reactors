@@ -14,7 +14,10 @@ public class WidgetContainer {
 	
 	public void drawWidgets( int mouseX, int mouseY, float partialTicks ) {
 		for( int i = 0; i < widgets.size(); i++ )
-			widgets.get( i ).draw( mouseX, mouseY, partialTicks );
+			widgets.get( i ).drawBackground( mouseX, mouseY, partialTicks );
+		
+		for( int i = 0; i < widgets.size(); i++ )
+			widgets.get( i ).drawForeground( mouseX, mouseY, partialTicks );
 	}
 	
 	public void mouseClicked( int mouseX, int mouseY, int mouseButton ) {

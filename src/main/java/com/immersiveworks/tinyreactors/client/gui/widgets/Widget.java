@@ -21,6 +21,9 @@ public abstract class Widget {
 	public void mouseClicked( int mouseButton ) {
 	}
 	
-	public abstract void draw( int mouseX, int mouseY, float partialTicks );
+	public void drawForeground( int mouseX, int mouseY, float partialTicks ) {
+	}
+	
+	public abstract void drawBackground( int mouseX, int mouseY, float partialTicks );
 	
 }

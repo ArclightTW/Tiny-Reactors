@@ -98,8 +98,8 @@ public class Configs {
 	
 	// UI Settings
 	
-	public static int WRENCH_OVERLAY_SCALE = 0;
-	public static String WRENCH_OVERLAY_SCALE_LABEL = "The scale factor of the Tiny Wrench overlay.";
+	public static float WRENCH_OVERLAY_SCALE_FACTOR = 1F;
+	public static String WRENCH_OVERLAY_SCALE_FACTOR_LABEL = "The scale factor of the Tiny Wrench overlay.";
 	
 	private static String WRENCH_OVERLAY_ANCHOR = "CENTER_MIDDLE";
 	
@@ -172,9 +172,13 @@ public class Configs {
 		TRANSFER_LIQUID_ENERGY_USAGE = config.getInt( "Liquid Energy Usage", category, TRANSFER_LIQUID_ENERGY_USAGE, 0, Integer.MAX_VALUE, TRANSFER_LIUQUID_ENERGY_USAGE_LABEL );
 		
 		category = "UI";
+		config.addCustomCategoryComment( category, "Settings related to UI elements" );
+		
+		WRENCH_OVERLAY_SCALE_FACTOR = config.getFloat( "Wrench Overlay Scale Factor", category, WRENCH_OVERLAY_SCALE_FACTOR, 0.5F, 2.5F, WRENCH_OVERLAY_SCALE_FACTOR_LABEL );
+		
+		category = "DO_NOT_CHANGE";
 		config.addCustomCategoryComment( category, "Do not change these settings via the Configuration file or Mod-Options screen, use the Tiny Wrench Overlay Configuration screen." );
 		
-//		WRENCH_OVERLAY_SCALE = config.getInt( "Wrench Overlay Scale", category, WRENCH_OVERLAY_SCALE, 0, 2, WRENCH_OVERLAY_SCALE_LABEL );
 		WRENCH_OVERLAY_ANCHOR = config.getString( "Wrench Overlay Anchor", category, WRENCH_OVERLAY_ANCHOR, WRENCH_OVERLAY_DO_NOT_USE_LABEL );
 		
 		Reactants.populate();

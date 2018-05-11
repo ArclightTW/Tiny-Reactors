@@ -1,15 +1,30 @@
 package com.immersiveworks.tinyreactors.api.manual;
 
-import com.immersiveworks.tinyreactors.client.gui.manual.GuiManualSection;
 import com.immersiveworks.tinyreactors.client.gui.manual.GuiTinyManual;
+import com.immersiveworks.tinyreactors.client.gui.manual.pages.ManualPage;
+
+import net.minecraft.item.ItemStack;
 
 public interface IManualEntryBlock {
 	
-	String getKey();
-	GuiManualSection getSection();
+	String getManualKey();
+	String getManualHeader();
+	ItemStack getManualIcon();
+	
+	ManualPage[] getManualPages();
+	
+	default float getManualHeaderScale() {
+		return 1F;
+	}
 	
 	default void registerSection() {
-		GuiTinyManual.instance.registerSection( getKey(), getSection() );
+		GuiTinyManual.instance.registerSection(
+				getManualKey(),
+				getManualHeader(),
+				getManualHeaderScale(),
+				getManualIcon(),
+				getManualPages()
+				);
 	}
 	
 }

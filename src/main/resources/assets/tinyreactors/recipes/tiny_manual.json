@@ -1,0 +1,19 @@
+{
+	"type"							: "forge:ore_shapeless",
+	"group"							: "tinyreactors:tiny_manual",
+	
+	"result"						: {
+		"item"						: "tinyreactors:tiny_manual",
+		"count"						: 1,
+		"data"						: 0
+	},
+	
+	"ingredients"					: [
+		{
+			"item"					: "minecraft:book"
+		},
+		{
+			"item"					: "tinyreactors:tiny_wrench"
+		}
+	]
+}
