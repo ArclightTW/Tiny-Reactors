@@ -2,6 +2,11 @@ package com.immersiveworks.tinyreactors.common.blocks;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextStructure;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement.Requirement;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorSurgeProtector;
 
@@ -178,6 +183,25 @@ public class BlockReactorSurgeProtector extends BlockTinyTile<TileEntityReactorS
 				String.format( "Minimum Threshold: %,d C", surge.getMinimumThreshold() ),
 				String.format( "Maximum Threshold: %,d C", surge.getMaximumThreshold() )
 			};
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_surge_protector";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 0.9F;
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageRequirement( Requirement.OPTIONAL ),
+				new ManualPageTextDetails( this ),
+				new ManualPageTextStructure( this )
+		};
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.immersiveworks.tinyreactors.common.helpers;
+package com.immersiveworks.tinyreactors.api.helpers;
 
 public class HashHelper {
 

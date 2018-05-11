@@ -1,5 +1,10 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextStructure;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement.Requirement;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorGlass;
 
 import net.minecraft.block.SoundType;
@@ -61,6 +66,20 @@ public class BlockReactorGlass extends BlockTinyTile<TileEntityReactorGlass> {
 	@Override
 	public boolean isFullCube( IBlockState state ) {
 		return false;
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_glass";
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageRequirement( Requirement.OPTIONAL ),
+				new ManualPageTextDetails( this ),
+				new ManualPageTextStructure( this )
+		};
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityEnergyRelay;
@@ -140,6 +142,18 @@ public class BlockEnergyRelay extends BlockTinyTile<TileEntityEnergyRelay> imple
 	@Override
 	public boolean isFullCube( IBlockState state ) {
 		return false;
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "energy_relay";
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageTextDetails( this )
+		};
 	}
 	
 }

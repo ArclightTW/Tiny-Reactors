@@ -1,7 +1,7 @@
 package com.immersiveworks.tinyreactors.common.items;
 
-import com.immersiveworks.tinyreactors.api.manual.IManualEntryBlock;
-import com.immersiveworks.tinyreactors.client.gui.manual.GuiTinyManual;
+import com.immersiveworks.tinyreactors.api.manual.IManualEntry;
+import com.immersiveworks.tinyreactors.client.gui.GuiTinyManual;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,8 +29,8 @@ public class ItemTinyManual extends ItemTiny {
 	@Override
 	public EnumActionResult onItemUseFirst( EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand ) {
 		Block block = world.getBlockState( pos ).getBlock();
-		if( block instanceof IManualEntryBlock ) {
-			GuiTinyManual.instance.openPage( ( IManualEntryBlock )block );
+		if( block instanceof IManualEntry ) {
+			GuiTinyManual.instance.openPage( ( IManualEntry )block );
 			return EnumActionResult.SUCCESS;
 		}
 		

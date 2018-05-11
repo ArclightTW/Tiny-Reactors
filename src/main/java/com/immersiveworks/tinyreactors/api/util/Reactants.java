@@ -1,10 +1,9 @@
-package com.immersiveworks.tinyreactors.common.util;
+package com.immersiveworks.tinyreactors.api.util;
 
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import com.immersiveworks.tinyreactors.common.helpers.HashHelper;
-import com.immersiveworks.tinyreactors.common.inits.Configs;
+import com.immersiveworks.tinyreactors.api.helpers.HashHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -15,11 +14,11 @@ public class Reactants {
 
 	private static Map<String, Reactant> reactants = Maps.newHashMap();
 	
-	public static void populate() {
+	public static void populate( String[] reactantList ) {
 		reactants.clear();
 		
-		for( int i = 0; i < Configs.REACTANTS.length; i++ ) {
-			String line = Configs.REACTANTS[ i ];
+		for( int i = 0; i < reactantList.length; i++ ) {
+			String line = reactantList[ i ];
 			line = line.replaceAll( " ", "" );
 			
 			String[] parts = line.split( "=" );

@@ -2,7 +2,7 @@ package com.immersiveworks.tinyreactors.client.gui.widgets;
 
 import java.util.function.Consumer;
 
-import com.immersiveworks.tinyreactors.client.util.RenderUtils;
+import com.immersiveworks.tinyreactors.api.util.RenderUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;

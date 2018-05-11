@@ -1,13 +1,19 @@
 package com.immersiveworks.tinyreactors.common;
 
+import com.immersiveworks.tinyreactors.api.events.ManualRegistrationEvent;
 import com.immersiveworks.tinyreactors.api.temperature.CapabilityTemperature;
+import com.immersiveworks.tinyreactors.api.util.Processes;
+import com.immersiveworks.tinyreactors.client.gui.GuiTinyManual;
+import com.immersiveworks.tinyreactors.common.events.ManualEvents;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.proxy.IProxy;
-import com.immersiveworks.tinyreactors.common.util.Processes;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -27,15 +33,21 @@ public class TinyReactors {
 	@Mod.EventHandler
 	public void onPreInit( FMLPreInitializationEvent event ) {
 		Configs.initialize( event.getSuggestedConfigurationFile() );
+		CapabilityTemperature.register();
+		
+		IReloadableResourceManager irrm = ( IReloadableResourceManager )Minecraft.getMinecraft().getResourceManager();
+		irrm.registerReloadListener( new ManualEvents.ReloadListener() );
 		
 		proxy.onPreInit();
-		
-		CapabilityTemperature.register();
 	}
 	
 	@Mod.EventHandler
 	public void onInit( FMLInitializationEvent event ) {
 		NetworkRegistry.INSTANCE.registerGuiHandler( instance, proxy );
+		
+		// N.B. This needs to be sent twice for some reason, not sure why?
+		MinecraftForge.EVENT_BUS.post( new ManualRegistrationEvent( GuiTinyManual.createInstance() ) );
+		MinecraftForge.EVENT_BUS.post( new ManualRegistrationEvent( GuiTinyManual.createInstance() ) );
 	}
 	
 	@Mod.EventHandler

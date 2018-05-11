@@ -1,5 +1,10 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextStructure;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement.Requirement;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPreigniter;
@@ -57,6 +62,25 @@ public class BlockReactorPreigniter extends BlockTinyTile<TileEntityReactorPreig
 			InventoryHelper.spawnItemStack( world, pos.getX(), pos.getY(), pos.getZ(), preigniter.getInternalItem().getStackInSlot( i ) );
 		
 		super.breakBlock( world, pos, state );
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_preigniter";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 0.9F;
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageRequirement( Requirement.OPTIONAL ),
+				new ManualPageTextDetails( this ),
+				new ManualPageTextStructure( this )
+		};
 	}
 	
 }

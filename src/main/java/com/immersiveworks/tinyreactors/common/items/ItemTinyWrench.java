@@ -2,7 +2,7 @@ package com.immersiveworks.tinyreactors.common.items;
 
 import java.util.List;
 
-import com.immersiveworks.tinyreactors.api.IWrenchable;
+import com.immersiveworks.tinyreactors.api.wrench.IWrenchable;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityEnergyRelay;
 

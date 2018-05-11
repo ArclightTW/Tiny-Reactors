@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.immersiveworks.tinyreactors.api.util.Reactor;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
-import com.immersiveworks.tinyreactors.common.util.Reactor;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;

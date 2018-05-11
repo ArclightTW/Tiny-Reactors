@@ -1,4 +1,4 @@
-package com.immersiveworks.tinyreactors.api;
+package com.immersiveworks.tinyreactors.api.wrench;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

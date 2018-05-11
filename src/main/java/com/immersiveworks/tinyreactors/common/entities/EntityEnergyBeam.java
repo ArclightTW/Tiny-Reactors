@@ -1,8 +1,8 @@
 package com.immersiveworks.tinyreactors.common.entities;
 
+import com.immersiveworks.tinyreactors.api.helpers.PlayerHelper;
 import com.immersiveworks.tinyreactors.client.fx.FXTypes;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
-import com.immersiveworks.tinyreactors.common.helpers.PlayerHelper;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityEnergyRelay;
 
 import net.minecraft.client.Minecraft;

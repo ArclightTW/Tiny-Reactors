@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockTinyTile<T extends TileEntity> extends BlockTiny {
+public abstract class BlockTinyTile<T extends TileEntity> extends BlockTiny {
 
 	private Class<T> clazz;
 	private BiFunction<World, IBlockState, T> constructor;

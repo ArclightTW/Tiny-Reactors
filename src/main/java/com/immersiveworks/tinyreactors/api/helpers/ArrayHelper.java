@@ -1,4 +1,4 @@
-package com.immersiveworks.tinyreactors.common.helpers;
+package com.immersiveworks.tinyreactors.api.helpers;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +12,9 @@ public class ArrayHelper {
 		
 		for( int i = 0; i < array.length; i++ )
 			combined += array[ i ] + separator;
+		
+		if( array.length > 0 )
+			combined = combined.substring( 0, combined.length() - separator.length() );
 		
 		return combined;
 	}

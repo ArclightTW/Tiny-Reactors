@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.immersiveworks.tinyreactors.api.util.Processes;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.blocks.BlockEnergyConduit;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorCasing;
 import com.immersiveworks.tinyreactors.common.blocks.BlockReactorHeatSink;
 import com.immersiveworks.tinyreactors.common.processes.ProcessEnergyNetworkRefresh;
-import com.immersiveworks.tinyreactors.common.util.Processes;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;

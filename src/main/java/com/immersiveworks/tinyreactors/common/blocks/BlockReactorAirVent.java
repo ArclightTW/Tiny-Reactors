@@ -2,6 +2,11 @@ package com.immersiveworks.tinyreactors.common.blocks;
 
 import java.util.List;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextStructure;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement.Requirement;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.inits.Items;
@@ -154,6 +159,25 @@ public class BlockReactorAirVent extends BlockTinyTile<TileEntityReactorAirVent>
 			InventoryHelper.spawnItemStack( world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack( Items.VENTILATION_FAN, 1, airVent.getVentType().ordinal() - 1 ) );
 		
 		super.breakBlock( world, pos, state );
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_air_vent";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 0.9F;
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageRequirement( Requirement.OPTIONAL ),
+				new ManualPageTextDetails( this ),
+				new ManualPageTextStructure( this )
+		};
 	}
 	
 }

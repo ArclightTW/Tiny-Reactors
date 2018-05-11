@@ -31,6 +31,11 @@ minecraft {
 
 version = "${mcversion}-${modversion}"
 
+configurations {
+	api
+	compile.extendsFrom api
+}
+
 processResources {
 	inputs.property "version", project.version
 	inputs.property "mcversion", project.minecraft.version
@@ -43,4 +48,21 @@ processResources {
 	from( sourceSets.main.resources.srcDirs ) {
 		exclude 'mcmod.info'
 	}
+}
+
+task sourcesJar( type: Jar ) {
+	from zipTree( 'build/retromapping/retromappedReplacedMain.jar' )
+	classifier = 'sources'
+}
+
+task apiJar( type: Jar ) {
+	from sourceSets.main.allSource
+	from sourceSets.main.output
+	include 'com/immersiveworks/tinyreactors/api/**'
+	classifier = 'api'
+}
+
+artifacts {
+	archives sourcesJar
+	archives apiJar
 }

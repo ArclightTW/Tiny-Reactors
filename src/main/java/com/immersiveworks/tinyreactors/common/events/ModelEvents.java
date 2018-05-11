@@ -1,9 +1,9 @@
 package com.immersiveworks.tinyreactors.common.events;
 
+import com.immersiveworks.tinyreactors.api.util.Registries;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Items;
-import com.immersiveworks.tinyreactors.common.util.Registries;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;

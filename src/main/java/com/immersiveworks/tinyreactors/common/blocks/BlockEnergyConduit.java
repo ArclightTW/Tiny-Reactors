@@ -1,5 +1,7 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.properties.EnumConnection;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityEnergyConduit;
@@ -102,6 +104,18 @@ public class BlockEnergyConduit extends BlockTinyTile<TileEntityEnergyConduit> {
 	@Override
 	public boolean isFullCube( IBlockState state ) {
 		return false;
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "energy_conduit";
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageTextDetails( this )
+		};
 	}
 	
 }

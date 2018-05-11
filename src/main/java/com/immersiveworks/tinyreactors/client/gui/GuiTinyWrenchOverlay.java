@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.immersiveworks.tinyreactors.api.item.IInternalInventory;
+import com.immersiveworks.tinyreactors.api.util.RenderUtils;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
-import com.immersiveworks.tinyreactors.client.util.RenderUtils;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 
 import net.minecraft.block.state.IBlockState;

@@ -1,6 +1,7 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
-import com.immersiveworks.tinyreactors.api.IWrenchable;
+import com.immersiveworks.tinyreactors.api.manual.IManualEntry;
+import com.immersiveworks.tinyreactors.api.wrench.IWrenchable;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork.Priority;
 import com.immersiveworks.tinyreactors.common.energy.IEnergyNetworkBlock;
@@ -23,7 +24,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockTiny extends Block implements IEnergyNetworkBlock, IWrenchable {
+public abstract class BlockTiny extends Block implements IEnergyNetworkBlock, IWrenchable, IManualEntry {
 
 	public BlockTiny( Material material ) {
 		super( material );
@@ -42,6 +43,21 @@ public class BlockTiny extends Block implements IEnergyNetworkBlock, IWrenchable
 	@Override
 	public boolean onWrenched( World world, BlockPos pos, EnumFacing facing, EntityPlayer player, ItemStack itemstack, float hitX, float hitY, float hitZ ) {
 		return onWrenched( world, pos, facing, player, itemstack );
+	}
+	
+	@Override
+	public String getManualHeader() {
+		return getUnlocalizedName() + ".name";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 1F;
+	}
+	
+	@Override
+	public ItemStack getManualIcon() {
+		return new ItemStack( this );
 	}
 	
 	@Override

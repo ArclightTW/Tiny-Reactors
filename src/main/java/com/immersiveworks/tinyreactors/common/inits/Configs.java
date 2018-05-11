@@ -2,10 +2,10 @@ package com.immersiveworks.tinyreactors.common.inits;
 
 import java.io.File;
 
+import com.immersiveworks.tinyreactors.api.util.Reactants;
 import com.immersiveworks.tinyreactors.client.gui.GuiTinyWrenchOverlay;
 import com.immersiveworks.tinyreactors.client.gui.GuiTinyWrenchOverlay.GridAlignment;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
-import com.immersiveworks.tinyreactors.common.util.Reactants;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -181,7 +181,7 @@ public class Configs {
 		
 		WRENCH_OVERLAY_ANCHOR = config.getString( "Wrench Overlay Anchor", category, WRENCH_OVERLAY_ANCHOR, WRENCH_OVERLAY_DO_NOT_USE_LABEL );
 		
-		Reactants.populate();
+		Reactants.populate( REACTANTS );
 		
 		GuiTinyWrenchOverlay.setAnchor( GridAlignment.valueOf( WRENCH_OVERLAY_ANCHOR ) );
 		

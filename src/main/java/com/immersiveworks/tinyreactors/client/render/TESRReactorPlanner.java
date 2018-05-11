@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
+import com.immersiveworks.tinyreactors.api.util.Reactor;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPlanner;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorPlanner.EnumColorOverlay;
-import com.immersiveworks.tinyreactors.common.util.Reactor;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

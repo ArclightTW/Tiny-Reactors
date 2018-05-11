@@ -1,9 +1,9 @@
 package com.immersiveworks.tinyreactors.common.events;
 
+import com.immersiveworks.tinyreactors.api.util.Processes;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.energy.EnergyNetwork;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
-import com.immersiveworks.tinyreactors.common.util.Processes;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

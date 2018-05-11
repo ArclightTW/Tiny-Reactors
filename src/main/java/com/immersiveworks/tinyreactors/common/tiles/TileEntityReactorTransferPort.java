@@ -3,9 +3,9 @@ package com.immersiveworks.tinyreactors.common.tiles;
 import com.immersiveworks.tinyreactors.api.item.IInternalInventory;
 import com.immersiveworks.tinyreactors.api.item.IItemHandlerNBT;
 import com.immersiveworks.tinyreactors.api.item.ItemHandlerNBT;
+import com.immersiveworks.tinyreactors.api.util.Reactants;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.properties.EnumTransferPort;
-import com.immersiveworks.tinyreactors.common.util.Reactants;
 
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.item.ItemStack;

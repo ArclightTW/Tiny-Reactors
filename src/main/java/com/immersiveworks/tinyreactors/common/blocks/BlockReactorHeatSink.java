@@ -2,6 +2,11 @@ package com.immersiveworks.tinyreactors.common.blocks;
 
 import java.util.List;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextStructure;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement.Requirement;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Configs;
 import com.immersiveworks.tinyreactors.common.tiles.TileEntityReactorHeatSink;
@@ -42,6 +47,25 @@ public class BlockReactorHeatSink extends BlockTinyTile<TileEntityReactorHeatSin
 			return new String[] { TextFormatting.RED + "No operational usage" };
 		
 		return new String[] { };
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_heat_sink";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 0.9F;
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageRequirement( Requirement.OPTIONAL ),
+				new ManualPageTextDetails( this ),
+				new ManualPageTextStructure( this )
+		};
 	}
 	
 }

@@ -1,10 +1,11 @@
-package com.immersiveworks.tinyreactors.common.util;
+package com.immersiveworks.tinyreactors.api.util;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
-import com.immersiveworks.tinyreactors.common.TinyReactors;
+import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -22,8 +23,21 @@ public class Registries {
 		
 		public int counter;
 		
+		private Map<String, T> entries;
+		
+		public Registry() {
+			entries = Maps.newHashMap();
+		}
+		
+		public T getEntry( String name ) {
+			if( !entries.containsKey( name ) )
+				return null;
+			
+			return entries.get( name );
+		}
+		
 		@SuppressWarnings( "unchecked" )
-		public void registerAll( Class<?> clazz, BiConsumer<T, String> registrar ) {
+		public void iterateAll( Class<?> clazz, BiConsumer<T, String> action ) {
 			for( Field field : clazz.getDeclaredFields() ) {
 				try {
 					Object value = field.get( null );
@@ -31,13 +45,19 @@ public class Registries {
 						continue;
 					
 					T obj = ( T )value;
-					counter++;
-					registrar.accept( obj, String.format( "%s:%s", TinyReactors.ID, field.getName().toLowerCase( Locale.ENGLISH ) ) );
+					action.accept( obj, String.format( "%s:%s", "tinyreactors", field.getName().toLowerCase( Locale.ENGLISH ) ) );
 				}
 				catch( Exception e ) {
-					
 				}
 			}
+		}
+		
+		public void registerAll( Class<?> clazz, BiConsumer<T, String> registrar ) {
+			iterateAll( clazz, ( entry, name ) -> {
+				counter++;
+				entries.put( name.substring( "tinyreactors:".length() ), entry );
+				registrar.accept( entry, name );
+			} );
 		}
 		
 	}

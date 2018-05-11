@@ -1,5 +1,10 @@
 package com.immersiveworks.tinyreactors.common.blocks;
 
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPage;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextDetails;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageTextStructure;
+import com.immersiveworks.tinyreactors.api.manual.pages.ManualPageRequirement.Requirement;
 import com.immersiveworks.tinyreactors.client.energy.IEnergyNetworkBlockRenderer;
 import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.properties.EnumTransferPort;
@@ -120,6 +125,25 @@ public class BlockReactorTransferPort extends BlockTinyTile<TileEntityReactorTra
 				String.format( "Mode: %s", transferPort.getTransferMode().getDisplay() ),
 				String.format( "Status: %s", transferPort.getStatus() ),
 				String.format( "Power: %,d RF", transferPort.getInternalEnergy().getEnergyStored() )
+		};
+	}
+	
+	@Override
+	public String getManualKey() {
+		return "reactor_transfer_port";
+	}
+	
+	@Override
+	public float getManualHeaderScale() {
+		return 0.9F;
+	}
+	
+	@Override
+	public ManualPage[] getManualPages() {
+		return new ManualPage[] {
+				new ManualPageRequirement( Requirement.REQUIRED ),
+				new ManualPageTextDetails( this ),
+				new ManualPageTextStructure( this )
 		};
 	}
 	

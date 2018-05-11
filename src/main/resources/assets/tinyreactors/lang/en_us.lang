@@ -1,36 +1,49 @@
+#PARSE_ESCAPES
+# This language file is now being read as a Java properties file.
+# 
+# As a result, ':' is equivalent to '=' meaning the below format breaks;
+# tile.tinyreactors:energy_relay.name=Energy Relay
+#
+# The solution to this is to escape the ':' with a backslash:
+# tile.tinyreactors\:energy_relay.name=Energy Relay
+#
+# Please take note when creating localization files to ensure this is loaded properly.
+# Please ensure ':' in the localized string are also escaped correctly.
+# Please also ensure that the first line of the file reads '#PARSE_ESCAPES' as above.
+
 ##################
 # Blocks         #
 ##################
 
-tile.tinyreactors:energy_relay.name=Energy Relay
-tile.tinyreactors:energy_conduit.name=Energy Conduit
-tile.tinyreactors:energy_cell.name=Energy Cell
+tile.tinyreactors\:energy_relay.name=Energy Relay
+tile.tinyreactors\:energy_conduit.name=Energy Conduit
+tile.tinyreactors\:energy_cell.name=Energy Cell
 
-tile.tinyreactors:reactor_controller.name=Reactor Controller
-tile.tinyreactors:reactor_transfer_port.name=Reactor Transfer Port
-tile.tinyreactors:reactor_heat_sink.name=Reactor Heat Sink
-tile.tinyreactors:reactor_air_vent.name=Reactor Air Vent
-tile.tinyreactors:reactor_casing.name=Reactor Casing
-tile.tinyreactors:reactor_glass.name=Reactor Glass
+tile.tinyreactors\:reactor_controller.name=Reactor Controller
+tile.tinyreactors\:reactor_transfer_port.name=Reactor Transfer Port
+tile.tinyreactors\:reactor_heat_sink.name=Reactor Heat Sink
+tile.tinyreactors\:reactor_air_vent.name=Reactor Air Vent
+tile.tinyreactors\:reactor_casing.name=Reactor Casing
+tile.tinyreactors\:reactor_glass.name=Reactor Glass
 
-tile.tinyreactors:reactor_surge_protector.name=Reactor Surge Protector
-tile.tinyreactors:reactor_preigniter.name=Reactor Preigniter
+tile.tinyreactors\:reactor_surge_protector.name=Reactor Surge Protector
+tile.tinyreactors\:reactor_preigniter.name=Reactor Preigniter
 
-tile.tinyreactors:reactor_planner.name=Reactor Planner
+tile.tinyreactors\:reactor_planner.name=Reactor Planner
 
 ##################
 # Items          #
 ##################
 
-item.tinyreactors:tiny_wrench.name=Tiny Wrench
+item.tinyreactors\:tiny_wrench.name=Tiny Wrench
 
-item.tinyreactors:ventilation_fan_wood.name=Ventilation Fan (Wood)
-item.tinyreactors:ventilation_fan_stone.name=Ventilation Fan (Stone)
-item.tinyreactors:ventilation_fan_iron.name=Ventilation Fan (Iron)
-item.tinyreactors:ventilation_fan_gold.name=Ventilation Fan (Gold)
-item.tinyreactors:ventilation_fan_diamond.name=Ventilation Fan (Diamond)
+item.tinyreactors\:ventilation_fan_wood.name=Ventilation Fan (Wood)
+item.tinyreactors\:ventilation_fan_stone.name=Ventilation Fan (Stone)
+item.tinyreactors\:ventilation_fan_iron.name=Ventilation Fan (Iron)
+item.tinyreactors\:ventilation_fan_gold.name=Ventilation Fan (Gold)
+item.tinyreactors\:ventilation_fan_diamond.name=Ventilation Fan (Diamond)
 
-item.tinyreactors:tiny_manual.name=Tiny Manual
+item.tinyreactors\:tiny_manual.name=Tiny Manual
 
 ##################
 # Misc           #
@@ -50,20 +63,68 @@ key.tinyreactors.overlayGui=Tiny Wrench Overlay Config
 # These will be parsed at runtime and the Tiny Manual will separate overflowed lines so don't worry about formatting or space! =]
 ##################
 
-tiny_manual:section.overview=Overview
-tiny_manual:header.introduction=Introduction
-tiny_manual:page.introduction=Welcome to the Tiny Manual, your one-stop guide to everything you need to know about Tiny Reactors! Use the quick-access bookmarks to quickly jump to the required topic or click on the block you want to investigate with the Manual to open directly to it.
+tiny_manual.section.overview=Overview
 
-tiny_manual:page.reactor_controller=The Reactor Controller is the heart of the Reactor structure.  Only §lone§r is permitted per structure and it handles the operating of the entire structure.  The Reactor structure can be activated and deactivated by shift-right-clicking with the Tiny Wrench.  The Reactor Surge Protector is also capable of enabling/disabling the Reactor structure automatically (more information can be found on the relevant page).
+tiny_manual.header.introduction=Introduction
+tiny_manual.page.introduction=Welcome to the Tiny Manual, your one-stop guide to everything you need to know about Tiny Reactors!\nUse the quick-access bookmarks to quickly jump to the required topic or click on the block you want to investigate with the Manual to open directly to it.
+
+tiny_manual.header.structure_overview_side=Structure Overview (Side)
+
+tiny_manual.page.reactor_controller.details=The Reactor Controller is the heart of the Reactor structure. Only one is permitted per structure and it handles the operating of the entire structure. The Reactor structure can be activated and deactivated by shift-right-clicking with the Tiny Wrench.\nThe Reactor Surge Protector is also capable of enabling/disabling the Reactor structure automatically (more information can be found on the relevant page).
+tiny_manual.page.reactor_controller.structure=The Reactor Controller can be placed in most places within the Reactor structure. It can be operated from any orientation, although it is most beneficial to have the Controller facing outwards from the structure.
+
+tiny_manual.page.reactor_transfer_port.details=Reactor Transfer Port Details
+tiny_manual.page.reactor_transfer_port.structure=Reactor Transfer Port Structure
+
+tiny_manual.page.reactor_surge_protector.details=Reactor Surge Protector Details
+tiny_manual.page.reactor_surge_protector.structure=Reactor Surge Protector Structure
+
+tiny_manual.page.reactor_preigniter.details=Reactor Preigniter Details
+tiny_manual.page.reactor_preigniter.structure=Reactor Preigniter Structure
+
+tiny_manual.page.reactor_air_vent.details=Reactor Air Vent Details
+tiny_manual.page.reactor_air_vent.structure=Reactor Air Vent Structure
+
+tiny_manual.page.reactor_heat_sink.details=Reactor Heat Sink Details
+tiny_manual.page.reactor_heat_sink.structure=Reactor Heat Sink Structure
+
+tiny_manual.page.reactor_casing.details=Reactor Casing Details
+tiny_manual.page.reactor_casing.structure=Reactor Casing Structure
+
+tiny_manual.page.reactor_glass.details=Reactor Glass Details
+tiny_manual.page.reactor_glass.structure=Reactor Glass Structure
+
+tiny_manual.page.reactor_planner.details=Reactor Planner Details
+
+tiny_manual.page.energy_conduit.details=Energy Conduit Details
+tiny_manual.page.energy_relay.details=Energy Relay Details
+tiny_manual.page.energy_cell.details=Energy Cell Details
 
 ##################
 # Misc Manual Translations
 ##################
 
-tiny_manual:header.details=Detailed Info
+tiny_manual.header.details=Detailed Info
+tiny_manual.header.structure=Structure Placement
 
-tiny_manual:page.required=This block is required for a Reactor structure to be validated.
-tiny_manual:page.optional=This block is not required for a Reactor structure to be validated.
+tiny_manual.reactor.top_corner=Top Corner
+tiny_manual.reactor.top_edge=Top Edge
+tiny_manual.reactor.top_interior=Top Interior
 
-tiny_manual:block_type_required=Block Type: Required
-tiny_manual:block_type_optional=Block Type: Optional
+tiny_manual.reactor.bottom_corner=Bottom Corner
+tiny_manual.reactor.bottom_edge=Bottom Edge
+tiny_manual.reactor.bottom_interior=Bottom Interior
+
+tiny_manual.reactor.middle_corner=Middle Corner
+tiny_manual.reactor.middle_edge=Middle Edge
+
+tiny_manual.page.structure=Per the <link>structure_overview</link> page, this block can be placed in the following places
+
+tiny_manual.page.required=This block is required for a Reactor structure to be validated.
+tiny_manual.page.optional=This block is not required for a Reactor structure to be validated.
+
+tiny_manual.block_type_required=Block Type\: Required
+tiny_manual.block_type_optional=Block Type\: Optional
+
+
+

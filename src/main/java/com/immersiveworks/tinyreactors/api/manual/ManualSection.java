@@ -1,22 +1,20 @@
-package com.immersiveworks.tinyreactors.client.gui.manual;
+package com.immersiveworks.tinyreactors.api.manual;
 
 import java.util.List;
 
 import org.lwjgl.util.Rectangle;
 
 import com.google.common.collect.Lists;
-import com.immersiveworks.tinyreactors.client.gui.manual.pages.ManualPage;
-import com.immersiveworks.tinyreactors.client.util.RenderUtils;
+import com.immersiveworks.tinyreactors.api.helpers.ArrayHelper;
+import com.immersiveworks.tinyreactors.api.util.RenderUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.TextTable.Alignment;
 
-// TODO: We might need a new way of doing this (back to custom resource locations?)
-public class GuiManualSection {
+public class ManualSection implements IManualSection {
 
 	private String header;
 	private float headerScale;
@@ -25,10 +23,10 @@ public class GuiManualSection {
 	
 	private int pageIndex;
 	
-	private List<ManualPage> pages;
-	private ManualPage page;
+	private List<IManualPage> pages;
+	private IManualPage page;
 	
-	public GuiManualSection( String header, float headerScale, ItemStack icon, ManualPage... pages ) {
+	public ManualSection( String header, float headerScale, ItemStack icon, IManualPage... pages ) {
 		this.header = header;
 		this.headerScale = headerScale;
 		this.icon = icon;
@@ -38,17 +36,20 @@ public class GuiManualSection {
 			this.page = this.pages.get( pageIndex );
 	}
 	
+	@Override
 	public void onGuiResized( ScaledResolution sr ) {
-		List<ManualPage> tempPages = Lists.newLinkedList();
+		List<IManualPage> tempPages = Lists.newLinkedList();
 		for( int i = 0; i < pages.size(); i++ ) {
 			if( !pages.get( i ).hasOverflow( getPageBounds() ) ) {
 				tempPages.add( pages.get( i ) );
 				continue;
 			}
+
+			IManualPage page = pages.get( i );
 			
-			ManualPage[] overflow = pages.get( i ).getOverflowPages( getPageBounds() );
-			for( int j = 0; j < overflow.length; j++)
-				tempPages.add( overflow[ j ] );
+			List<String[]> lines = ArrayHelper.split( page.getSplitLines( getPageBounds() ), getPageBounds().getHeight() / ( Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 3 ) );
+			for( int j = 0; j < lines.size(); j++ )
+				tempPages.add( page.getNewInstance( lines.get( j ) ) );
 		}
 		pages.clear();
 		pages.addAll( tempPages );
@@ -58,9 +59,12 @@ public class GuiManualSection {
 		page = pages.get( pageIndex );
 	}
 	
-	public void drawScreen( GuiTinyManual manual, ScaledResolution sr, int mouseX, int mouseY, float partialTicks ) {
-		if( page == null )
+	@Override
+	public void drawScreen( ITinyManual manual, ScaledResolution sr, int mouseX, int mouseY, float partialTicks ) {
+		if( page == null ) {
+			previousPage();
 			return;
+		}
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.color( 1, 1, 1, 1 );
@@ -69,14 +73,10 @@ public class GuiManualSection {
 		GlStateManager.popMatrix();
 		
 		if( page.shouldDrawHeader() )
-			RenderUtils.drawString( header, Alignment.CENTER, sr.getScaledWidth() / 2, getPageBounds().getY() + 10, 0xFFFFFF, headerScale );
+			RenderUtils.drawString( header, Alignment.CENTER, sr.getScaledWidth() / 2, getPageBounds().getY() + 10, 0x000000, headerScale );
 		
-		if( page.shouldDrawTitle() ) {
-			RenderUtils.drawString( page.getTitle(), Alignment.CENTER, sr.getScaledWidth() / 2, getPageBounds().getY() + 22, 0xFFFFFF, 0.75F );
-			
-			if( page.totalCount > 0 )
-				RenderUtils.drawString( TextFormatting.DARK_AQUA + String.format( "%d/%d", page.currentIndex, page.totalCount ), Alignment.RIGHT, getPageBounds().getX() + getPageBounds().getWidth() - 15, getPageBounds().getY() + 22, 0xFFFFFF, 0.75F );
-		}
+		if( page.shouldDrawTitle() )
+			RenderUtils.drawString( page.getTitle(), Alignment.CENTER, sr.getScaledWidth() / 2, getPageBounds().getY() + 22, 0x00AAAA, 0.75F );
 		
 		GlStateManager.pushMatrix();
 		page.drawScreen( manual, sr, getPageBounds(), mouseX, mouseY, partialTicks );
@@ -86,18 +86,12 @@ public class GuiManualSection {
 			manual.drawWidgets( mouseX, mouseY, partialTicks );
 	}
 	
-	public boolean nextPage() {
-		boolean shouldBail = pageIndex + 1 >= pages.size();
-		setPageIndex( pageIndex + 1 );
-		return shouldBail;
+	@Override
+	public void addPage( IManualPage page ) {
+		
 	}
 	
-	public boolean previousPage() {
-		boolean shouldBail = pageIndex - 1 < 0;
-		setPageIndex( pageIndex - 1 );
-		return shouldBail;
-	}
-	
+	@Override
 	public void setPageIndex( int index ) {
 		if( index <= 0 )
 			index = 0;
@@ -108,10 +102,26 @@ public class GuiManualSection {
 		page = pages.get( pageIndex );
 	}
 	
+	@Override
+	public boolean nextPage() {
+		boolean shouldBail = pageIndex + 1 >= pages.size();
+		setPageIndex( pageIndex + 1 );
+		return shouldBail;
+	}
+	
+	@Override
+	public boolean previousPage() {
+		boolean shouldBail = pageIndex - 1 < 0;
+		setPageIndex( pageIndex - 1 );
+		return shouldBail;
+	}
+	
+	@Override
 	public String getHeader() {
 		return header;
 	}
 	
+	@Override
 	public ItemStack getIcon() {
 		return icon;
 	}

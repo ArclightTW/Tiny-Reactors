@@ -1,16 +1,16 @@
 package com.immersiveworks.tinyreactors.client.gui.widgets;
 
-import com.immersiveworks.tinyreactors.client.gui.manual.GuiManualSection;
-import com.immersiveworks.tinyreactors.client.gui.manual.GuiTinyManual;
-import com.immersiveworks.tinyreactors.client.util.RenderUtils;
+import com.immersiveworks.tinyreactors.api.manual.IManualSection;
+import com.immersiveworks.tinyreactors.api.util.RenderUtils;
+import com.immersiveworks.tinyreactors.client.gui.GuiTinyManual;
 
 import net.minecraftforge.common.util.TextTable.Alignment;
 
 public class WidgetManualBookmark extends WidgetButton {
 
-	private GuiManualSection section;
+	private IManualSection section;
 	
-	public WidgetManualBookmark( GuiManualSection section, int x, int y, int width, int height ) {
+	public WidgetManualBookmark( IManualSection section, int x, int y, int width, int height ) {
 		super( x, y, width, height, null );
 		this.section = section;
 	}

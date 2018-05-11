@@ -1,12 +1,11 @@
 package com.immersiveworks.tinyreactors.common.events;
 
-import com.immersiveworks.tinyreactors.api.manual.IManualEntryBlock;
+import com.immersiveworks.tinyreactors.api.util.Registries;
 import com.immersiveworks.tinyreactors.common.TinyReactors;
 import com.immersiveworks.tinyreactors.common.inits.Blocks;
 import com.immersiveworks.tinyreactors.common.inits.Entities;
 import com.immersiveworks.tinyreactors.common.inits.Items;
 import com.immersiveworks.tinyreactors.common.inits.Recipes;
-import com.immersiveworks.tinyreactors.common.util.Registries;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -35,11 +34,8 @@ public class RegistryEvents {
 	
 	@SubscribeEvent
 	public static void onRegisterItem( RegistryEvent.Register<Item> event ) {
-		Registries.BLOCKS.registerAll( Blocks.class, ( block, name ) -> {
+		Registries.BLOCKS.iterateAll( Blocks.class, ( block, name ) -> {
 			event.getRegistry().register( new ItemBlock( block ).setRegistryName( name ) );
-			
-			if( block instanceof IManualEntryBlock )
-				( ( IManualEntryBlock )block ).registerSection();
 		} );
 		
 		Registries.ITEMS.registerAll( Items.class, ( item, name ) -> {
