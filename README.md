@@ -1,4 +1,4 @@
-
+# N.B. Development on the Tiny Reactors has stalled for a period of time due to events out of my control.  I have had to take a temporary step back from Minecraft modding to get my personal circumstances in order and have now had time to do this.  Development will resume on Tiny Reactors, taking on board all Issues currently raised on the project.  I hope to have a newer and cleaner feeling build released shortly.  Thank you for your continued support on the project and patience with the slow rate of development.
 
 [![Github All Releases](https://img.shields.io/github/downloads/ArclightTW/Tiny-Reactors/total.svg?style=for-the-badge)](https://github.com/ArclightTW/Tiny-Reactors/releases)
 [![GitHub issues](https://img.shields.io/github/issues/ArclightTW/Tiny-Reactors.svg?style=for-the-badge)](https://github.com/ArclightTW/Tiny-Reactors/issues)
